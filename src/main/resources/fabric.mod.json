@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "betteranvil",
+  "version": "${version}",
+  "name": "BetterAnvil",
+  "description": "Quick renaming of items of the CIT system in anvils!",
+  "authors": [
+    "LopyMine"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/better-anvil",
+    "issues": "https://discord.gg/NZzxdkrV4s"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/betteranvil/icon/BetterAnvilIcon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "net.lopymine.betteranvil.client.BetterAnvilClient"
+    ],
+    "main": [
+      "net.lopymine.betteranvil.BetterAnvil"
+    ],
+    "modmenu": [
+      "net.lopymine.betteranvil.modmenu.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "betteranvil.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">0.14.17",
+    "fabric": "*",
+    "minecraft": "1.19.2"
+  }
+}
