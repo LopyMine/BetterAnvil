@@ -3,5 +3,7 @@
   "gui.betteranvil.menu": "CIT Меню",
   "gui.betteranvil.button.copy": "Скопировать",
   "gui.betteranvil.button.select": "o",
-  "gui.betteranvil.gui.label.empty": "Тут пусто..."
+  "gui.betteranvil.gui.label.empty": "Тут пусто...",
+  "gui.betteranvil.textfield.search": "Поиск",
+  "gui.betteranvil.textfield.search.empty": "Ничего не найдено..."
 }

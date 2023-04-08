@@ -37,12 +37,6 @@ public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
     private void drawForeground(MatrixStack ms, int mouseX, int mouseY, CallbackInfo ci) {
         MinecraftClient mc = MinecraftClient.getInstance();
         ItemRenderer renderer = mc.getItemRenderer();
-        //BlockModelRenderer bmr = mc.getBlockRenderManager().getModelRenderer();
-//
-        //BlockRenderManager brm = mc.getBlockRenderManager();
-//
-        //VertexConsumerProvider provider = mc.getBufferBuilders().getEffectVertexConsumers();
-        //VertexConsumer vertexConsumer = provider.getBuffer(RenderLayer.LINE_STRIP);
 
         Slot slot = ((AnvilScreenHandler) this.handler).getSlot(0);
 
@@ -50,11 +44,10 @@ public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
 
 
         ButtonWidget buttonWidget = new ButtonWidget(this.width / 2 + 95, this.height / 2 - 80, 25, 20, Text.of(" "), (button) -> {
-            mc.setScreen(new CottonClientScreen(new AnvilGui(this, slot.getStack()) {
+            mc.setScreen(new CottonClientScreen(new AnvilGui(this, slotStack) {
                 @Override
-                protected void rename(String name) {
+                protected void renameMethod(String name) {
                     onRenamed(name);
-                    System.out.println(name);
                 }
             }));
 
@@ -63,23 +56,9 @@ public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
             this.clearChildren();
             this.addDrawableChild(buttonWidget);
             renderer.renderInGui(new ItemStack(Items.NAME_TAG), 187, 4);
-            //ButtonWidget clearButtonWidget = new ButtonWidget(this.width / 2 + 95, this.height / 2 - 55, 50, 20, Text.translatable("gui.betteranvil.button.clear"), (button1) -> {
-            //    if (!slot.getStack().isEmpty()) {
-            //        //slot.getStack().removeCustomName();
-            //        this.onRenamed(slot.getStack().getItem().asItem().getName().getString());
-            //    }
-            //});
-            //this.addDrawableChild(clearButtonWidget);
             return;
         }
         this.clearChildren();
-        //ButtonWidget clearButtonWidget = new ButtonWidget(this.width / 2 + 95, this.height / 2 - 80, 50, 20, Text.translatable("gui.betteranvil.button.clear"), (button1) -> {
-        //    if (!slot.getStack().isEmpty()) {
-        //        //slot.getStack().removeCustomName();
-        //        this.onRenamed(slot.getStack().getItem().asItem().getName().getString());
-        //    }
-        //});
-        //this.addDrawableChild(clearButtonWidget);
         return;
     }
 }

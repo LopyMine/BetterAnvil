@@ -3,5 +3,7 @@
   "gui.betteranvil.menu": "CIT Menu",
   "gui.betteranvil.button.copy": "Copy",
   "gui.betteranvil.button.select": "o",
-  "gui.betteranvil.gui.label.empty": "It's empty.."
+  "gui.betteranvil.gui.label.empty": "It's empty..",
+  "gui.betteranvil.textfield.search": "Search",
+  "gui.betteranvil.textfield.search.empty": "Nothing found..."
 }

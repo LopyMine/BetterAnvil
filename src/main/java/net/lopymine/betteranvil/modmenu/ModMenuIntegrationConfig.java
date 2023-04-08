@@ -14,25 +14,29 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.function.Consumer;
+
 public class ModMenuIntegrationConfig extends LightweightGuiDescription {
     public ModMenuIntegrationConfig(Screen previous){
         WGridPanel root = new WGridPanel();
         root.setSize(128,128);
         root.setInsets(Insets.ROOT_PANEL);
-
-        //setRootPanel(root);
-
-
         setRootPanel(root);
+        root.setBackgroundPainter(BackgroundPainter.VANILLA);
 
+        WToggleButton wToggleButton = new WToggleButton(Text.translatable("option.libgui.darkmode"));
+        wToggleButton.setOnToggle(on -> {
+            LibGuiClient.config.darkMode = on;
+            LibGuiClient.saveConfig(LibGuiClient.config);
+        });
+
+        root.add(wToggleButton,1,0);
 
         WButton doneButton = new WButton(ScreenTexts.BACK);
         doneButton.setOnClick(()->{
             MinecraftClient.getInstance().setScreen(previous);
         });
-        root.add(doneButton, 0, 3, 3, 1);
-
-        root.setBackgroundPainter(BackgroundPainter.VANILLA);
+        root.add(doneButton, 5, 0, 3, 1);
 
         root.validate(this);
     }
