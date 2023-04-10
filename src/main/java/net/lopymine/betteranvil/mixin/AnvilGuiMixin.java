@@ -2,6 +2,7 @@ package net.lopymine.betteranvil.mixin;
 
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import net.lopymine.betteranvil.gui.AnvilGui;
+import net.lopymine.betteranvil.gui.TestGui;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
@@ -44,6 +45,7 @@ public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
 
 
         ButtonWidget buttonWidget = new ButtonWidget(this.width / 2 + 95, this.height / 2 - 80, 25, 20, Text.of(" "), (button) -> {
+            //mc.setScreen(new CottonClientScreen(new TestGui()));
             mc.setScreen(new CottonClientScreen(new AnvilGui(this, slotStack) {
                 @Override
                 protected void renameMethod(String name) {

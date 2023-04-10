@@ -1,6 +1,7 @@
 package net.lopymine.betteranvil.gui;
 
 import io.github.cottonmc.cotton.gui.widget.*;
+import net.lopymine.betteranvil.gui.my.widget.WFavoriteButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -17,7 +18,7 @@ public class MyWListPanel extends WPlainPanel {
 
     WButton select;
 
-
+    WFavoriteButton favoriteButton;
     public MyWListPanel() {
         fieldName = new WSprite(new Identifier("betteranvil", "gui/namefieldfocus.png"));
         this.add(fieldName, 24, 3, 110, 15);
@@ -34,6 +35,8 @@ public class MyWListPanel extends WPlainPanel {
         select = new WButton(Text.translatable("gui.betteranvil.button.select"));
         this.add(select, 138, 0, 20, 20);
 
+        favoriteButton = new WFavoriteButton();
+        this.add(favoriteButton, 162, 2);
         //item = new WItem(new ItemStack(Items.BARRIER));
         //this.add(item, 0, 0, 32, 32);
 

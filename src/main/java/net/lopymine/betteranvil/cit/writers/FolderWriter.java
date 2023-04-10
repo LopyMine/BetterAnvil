@@ -78,7 +78,6 @@ public class FolderWriter {
                         CitItems citItems1 = new CitItems(item, customname, damage);
                         citItems1Collection.add(citItems1);
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
