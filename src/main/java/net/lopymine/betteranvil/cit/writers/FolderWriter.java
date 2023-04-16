@@ -11,20 +11,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
-
+import static net.lopymine.betteranvil.cit.ConfigParser.*;
 public class FolderWriter {
 
-    private static final String pathToConfigFolder = "config/betteranvil/";
-    private static final String jsonFormat = ".json";
-    private static final String pathToCitFolder = "/assets/minecraft/optifine/cit/";
-    private static final String pathToResourcePacks = "resourcepacks/";
-
     public static void writeConfig(String rpName, Gson gson) {
-        if(getCitFolderFiles(rpName).getCitItemsCollection().isEmpty()){
+
+        CitCollection citCollection = new CitCollection(getCitFolderFiles(rpName).getCitItemsCollection());
+
+        if(citCollection.getCitItemsCollection().isEmpty()){
             return;
         }
 
-        String json = gson.toJson(getCitFolderFiles(rpName));
+        String json = gson.toJson(citCollection);
         File dir = new File(pathToConfigFolder);
         if (!dir.exists()) {
             boolean success = dir.mkdir();
@@ -93,10 +91,6 @@ public class FolderWriter {
 
     public static boolean hasCitFolder(String path) {
         File file = new File(path);
-        if (file.exists()) {
-            return true;
-        } else {
-            return false;
-        }
+        return file.exists();
     }
 }

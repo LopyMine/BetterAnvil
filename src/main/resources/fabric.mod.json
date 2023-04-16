@@ -12,7 +12,7 @@
     "issues": "https://discord.gg/NZzxdkrV4s"
   },
   "license": "All-Rights-Reserved",
-  "icon": "assets/betteranvil/icon/BetterAnvilIcon.png",
+  "icon": "assets/betteranvil/icon/betteranvil.png",
   "environment": "client",
   "entrypoints": {
     "client": [

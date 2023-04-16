@@ -34,7 +34,12 @@ public class PropHandler {
     }
 
     public static String getCustomName(String line){
-        return StringEscapeUtils.unescapeJava(line.replaceAll("iregex:", "").replaceAll("ipattern:", "").replaceAll("regex:", "").replaceAll("pattern:", "").replace("(", "").replace(")", "").replaceAll("nbt.display.Name=", ""));
+        String upLine = StringEscapeUtils.unescapeJava(line.replaceAll("iregex:", "").replaceAll("ipattern:", "").replaceAll("regex:", "").replaceAll("pattern:", "").replace("(", "").replace(")", "").replaceAll("nbt.display.Name=", ""));
+
+        if(upLine.contains("*")){
+            return upLine.replace("*", "") + " ";
+        }
+        return upLine;
     }
 
 
@@ -88,6 +93,8 @@ public class PropHandler {
         }
         return newNames;
     }
+
+
 
 }
 

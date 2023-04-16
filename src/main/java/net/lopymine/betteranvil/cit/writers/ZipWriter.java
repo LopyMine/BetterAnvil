@@ -11,39 +11,32 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
+import static net.lopymine.betteranvil.cit.ConfigParser.*;
 
 public class ZipWriter {
-
-    private static final String pathToConfigFolder = "config/betteranvil/";
-    private static final String jsonFormat = ".json";
-    private static final String pathToCitFolder = "/assets/minecraft/optifine/cit/";
-    private static final String pathToResourcePacks = "resourcepacks/";
-
     public static void writeConfig(String rpName, Gson gson) {
         if(getCitFolderFiles(rpName).getCitItemsCollection().isEmpty()){
             return;
         }
 
+
         String json = gson.toJson(getCitFolderFiles(rpName));
-        File dir = new File(pathToConfigFolder);
+        File dir = new File(pathToConfig);
         if (!dir.exists()) {
             boolean success = dir.mkdir();
             if (success) {
-                MYLOGGER.info("Directory created successfully!");
-                try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
-                    writer.write(json);
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                File rp = new File(pathToConfigFolder);
+                if(rp.mkdir()){
+                    try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
+                        writer.write(json);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            } else {
-                MYLOGGER.info("Failed to create directory");
             }
         } else {
             try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
                 writer.write(json);
-                writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -64,7 +57,6 @@ public class ZipWriter {
                     String item = null;
                     String customname = null;
                     String damage = null;
-                    String enchantments = null;
 
                     while ((line = reader.readLine()) != null) {
                         if (PropHandler.isItem(line)) {
@@ -76,9 +68,6 @@ public class ZipWriter {
                         if(PropHandler.isDamage(line)){
                             damage = PropHandler.getDamageString(line);
                         }
-                        //if(PropHandler.isEnchantment(line)){
-//                      //      enchantments = PropHandler.get
-                        //}
                     }
 
                     if(item != null && customname != null){

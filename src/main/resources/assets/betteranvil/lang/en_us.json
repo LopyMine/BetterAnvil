@@ -5,5 +5,6 @@
   "gui.betteranvil.button.select": "o",
   "gui.betteranvil.gui.label.empty": "It's empty..",
   "gui.betteranvil.textfield.search": "Search",
-  "gui.betteranvil.textfield.search.empty": "Nothing found..."
+  "gui.betteranvil.textfield.search.empty": "Nothing found...",
+  "gui.betteranvil.tooltip.textfield": "Favorite"
 }
