@@ -3,11 +3,9 @@ package net.lopymine.betteranvil;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.pack.PackScreen;
+import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.resource.ResourcePackManager;
 import org.slf4j.Logger;
-
-import java.util.Collection;
 
 
 public class BetterAnvil implements ModInitializer {
@@ -22,7 +20,6 @@ public class BetterAnvil implements ModInitializer {
     @Override
     public void onInitialize() {
         MYLOGGER.info("Better Anvil Initialize");
-
     }
 
     public static MinecraftClient getMinecraftInstance() {

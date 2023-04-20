@@ -8,6 +8,7 @@ public class CitItems {
     private final String customname;
     private final String damage;
     private final String enchantments;
+    private String resourcePack = null;
 
     public CitItems(String item, String customname, String other) {
         this.items = item;
@@ -30,6 +31,13 @@ public class CitItems {
         return items;
     }
 
+    public Boolean isMoreNames() {
+        return getCustomNames().size() > 0;
+    }
+    public Boolean isMoreItems() {
+        return getCustomNames().size() > 0;
+    }
+
     public ArrayList<String> getItems() {
         String[] names = items.split(" "); // split the string by "|" delimiter
         return new ArrayList<String>(Arrays.asList(names));
@@ -49,6 +57,13 @@ public class CitItems {
         return damageList;
     }
 
+    public void setResourcePack(String resourcePack){
+        this.resourcePack = resourcePack;
+    }
+
+    public String getResourcePack() {
+        return resourcePack;
+    }
     //public ArrayList<String> getEnchantments(){
 //
     //}

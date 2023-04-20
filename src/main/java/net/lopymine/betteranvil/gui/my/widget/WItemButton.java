@@ -3,6 +3,7 @@ package net.lopymine.betteranvil.gui.my.widget;
 import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
+import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
 import io.github.cottonmc.cotton.gui.widget.WItem;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -28,6 +29,7 @@ public class WItemButton extends WWidget {
     private WItem itemIcon;
     private Text text;
     private Runnable onClick;
+    private Text toolTip;
 
     private final Identifier actualTexture;
 
@@ -80,6 +82,13 @@ public class WItemButton extends WWidget {
     }
 
     @Override
+    public void addTooltip(TooltipBuilder tooltip) {
+        if(toolTip != null){
+            tooltip.add(toolTip);
+        }
+    }
+
+    @Override
     public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
 
         ScreenDrawing.texturedRect(matrices, x, y, 155, 32, actualTexture, 0xFFFFFFFF);
@@ -99,6 +108,16 @@ public class WItemButton extends WWidget {
             ScreenDrawing.drawStringWithShadow(matrices, text.asOrderedText(), HorizontalAlignment.LEFT, x + 30, y + 12, width, color);
 
         }
+       //if(toolTip != null){
+       //    TooltipBuilder tooltipBuilder = new TooltipBuilder();
+       //    tooltipBuilder.add(toolTip);
+       //    addTooltip(tooltipBuilder);
+       //    super.renderTooltip(matrices, x, y, 10,10);
+       //}
+    }
+
+    public void setToolTip(Text toolTip) {
+        this.toolTip = toolTip;
     }
 
     public void setOnClick(@Nullable Runnable onClick) {

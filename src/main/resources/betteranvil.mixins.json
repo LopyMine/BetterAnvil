@@ -3,11 +3,12 @@
   "minVersion": "0.8",
   "package": "net.lopymine.betteranvil.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [],
-  "client": [
+  "mixins": [
     "AnvilGuiMixin",
-    "ReloadableResourceManagerImplMixin"
+    "ReloadableResourceManagerImplMixin",
+    "ResourcePackMenu"
   ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   }

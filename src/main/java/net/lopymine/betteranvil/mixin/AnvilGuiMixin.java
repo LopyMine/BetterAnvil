@@ -1,10 +1,8 @@
 package net.lopymine.betteranvil.mixin;
 
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
-import io.github.cottonmc.cotton.gui.widget.WButton;
-import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon;
-import net.lopymine.betteranvil.gui.AnvilGui;
-import net.lopymine.betteranvil.gui.TestGui;
+import net.lopymine.betteranvil.gui.AnvilGuiDescription;
+import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
@@ -28,15 +26,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AnvilScreen.class)
 public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
 
-    @Shadow protected abstract void setup();
+    @Shadow
+    protected abstract void setup();
 
     public AnvilGuiMixin(AnvilScreenHandler handler, PlayerInventory playerInventory, Text title, Identifier texture) {
         super(handler, playerInventory, title, texture);
     }
 
-    @Shadow private TextFieldWidget nameField;
+    @Shadow
+    private TextFieldWidget nameField;
 
-    @Inject(at = @At("RETURN"), method = "drawForeground")
+    @Inject(at = @At("HEAD"), method = "drawForeground")
     private void drawForeground(MatrixStack ms, int mouseX, int mouseY, CallbackInfo ci) {
         MinecraftClient mc = MinecraftClient.getInstance();
         ItemRenderer renderer = mc.getItemRenderer();
@@ -45,25 +45,38 @@ public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
 
         ItemStack slotStack = slot.getStack();
 
+        ButtonWidget buttonWidgetRight = ButtonWidget.builder(Text.of(" "), (button -> mc.setScreen(new CottonClientScreen(new AnvilGuiDescription(this, slotStack) {
+            @Override
+            protected void renameMethod(String name) {
+                nameField.setText(name);
+                nameField.setEditable(true);
+            }
+        })))).dimensions(this.width / 2 + 95, this.height / 2 - 80, 24, 20).build();
 
-        ButtonWidget buttonWidget = new ButtonWidget(this.width / 2 + 95, this.height / 2 - 80, 25, 20, Text.of(" "), (button) -> {
-            //mc.setScreen(new CottonClientScreen(new TestGui()));
-            mc.setScreen(new CottonClientScreen(new TestGui(this, slotStack) {
-                @Override
-                protected void renameMethod(String name) {
-                    nameField.setText(name);
-                }
-            }));
+        ButtonWidget buttonWidgetLeft = ButtonWidget.builder(Text.of(" "), (button -> mc.setScreen(new CottonClientScreen(new AnvilGuiDescription(this, slotStack) {
+            @Override
+            protected void renameMethod(String name) {
+                nameField.setText(name);
+                nameField.setEditable(true);
+            }
+        })))).dimensions(this.width / 2 + 95, this.height / 2 - 80, 24, 20).build();
 
-        });
+
         if (!slot.getStack().isEmpty()) {
             this.clearChildren();
-            this.addDrawableChild(buttonWidget);
-            renderer.renderInGui(new ItemStack(Items.NAME_TAG), 187, 4);
+            switch (BetterAnvilConfigManager.read().position) {
+                case RIGHT -> {
+                    this.addDrawableChild(buttonWidgetRight);
+                    renderer.renderInGui(new ItemStack(Items.NAME_TAG), 187, 4);
+                }
+                case LEFT -> {
+                    this.addDrawableChild(buttonWidgetLeft);
+                    renderer.renderInGui(new ItemStack(Items.NAME_TAG), -25, 4);
+                }
+            }
             return;
         }
         this.clearChildren();
-        return;
     }
 }
 
