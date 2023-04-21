@@ -24,6 +24,7 @@ public class BetterAnvil implements ModInitializer {
         MYLOGGER.info("Better Anvil Initialize");
 
     }
+    //
 
     public static MinecraftClient getMinecraftInstance() {
         return mc;

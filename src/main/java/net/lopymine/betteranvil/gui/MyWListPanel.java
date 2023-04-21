@@ -32,4 +32,4 @@ public class MyWListPanel extends WPlainPanel {
 
         this.setSize(200, 300);
     }
-}
+}//

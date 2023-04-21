@@ -291,4 +291,4 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
     private Identifier getDarkOrWhiteTexture(Identifier dark, Identifier white) {
         return LibGui.isDarkMode() ? dark : white;
     }
-}
+}//

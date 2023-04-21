@@ -4,4 +4,4 @@ public enum ResourcePackJsonWriting {
     LAUNCH,
     BUTTON,
     OFF
-}
+}//

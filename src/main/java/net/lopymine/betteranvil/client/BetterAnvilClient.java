@@ -13,4 +13,4 @@ public class BetterAnvilClient implements ClientModInitializer {
     public void onInitializeClient() {
         MYLOGGER.info("Better Anvil Client Initialize");
     }
-}
+}//

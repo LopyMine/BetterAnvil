@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PropHandler {
 
-    private static ArrayList<String> enchantments = new ArrayList<>();
+    private static ArrayList<String> enchantments = new ArrayList<>();//
 
     private static final ArrayList<String> itemsProp = new ArrayList<>();
 

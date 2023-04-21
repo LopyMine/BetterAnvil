@@ -60,7 +60,7 @@ public class FavoriteWriter {
         citItems.remove(s);
         CitCollection citCollection = new CitCollection(citItems);
         String json = gson.toJson(citCollection);
-
+//
         try (FileWriter writer = new FileWriter(getPath())) {
             writer.write(json);
         } catch (IOException e) {

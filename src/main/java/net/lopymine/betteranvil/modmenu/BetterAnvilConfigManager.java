@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class BetterAnvilConfigManager {
-
+    //
     public PositionButton position = PositionButton.RIGHT;
     public ResourcePackJsonWriting start = ResourcePackJsonWriting.LAUNCH;
     private static final File FILE_PATH = new File(FabricLoader.getInstance().getConfigDir().toFile(), "betteranvil.json");

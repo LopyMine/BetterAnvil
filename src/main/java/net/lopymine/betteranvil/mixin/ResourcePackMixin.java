@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ResourcePackMixin extends Screen{
 
     @Shadow private ButtonWidget doneButton;
-
+    //
     protected ResourcePackMixin(Text title) {
         super(title);
     }

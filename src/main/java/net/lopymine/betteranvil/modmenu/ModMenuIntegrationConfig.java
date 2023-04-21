@@ -18,7 +18,7 @@ public class ModMenuIntegrationConfig {
                 .setParentScreen(parentScreen)
                 .setTitle(Text.translatable("gui.betteranvil.modmenu.title"))
                 .setSavingRunnable(config::write);
-
+//
         PositionButton[] psButtons = new PositionButton[2];
         psButtons[0] = PositionButton.RIGHT;
         psButtons[1] = PositionButton.LEFT;
