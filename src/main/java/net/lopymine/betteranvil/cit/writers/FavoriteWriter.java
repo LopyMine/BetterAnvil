@@ -2,7 +2,6 @@ package net.lopymine.betteranvil.cit.writers;
 
 import net.lopymine.betteranvil.cit.CitCollection;
 import net.lopymine.betteranvil.cit.CitItems;
-import net.lopymine.betteranvil.cit.ConfigParser;
 import net.minecraft.item.ItemStack;
 
 import java.io.FileReader;
@@ -20,65 +19,71 @@ public class FavoriteWriter {
 
         CitCollection citCollection = new CitCollection(new ArrayList<>());
 
-        try (FileReader reader = new FileReader(pathToConfig + "favorite" + jsonFormat)) {
+        try (FileReader reader = new FileReader(getPath())) {
             citCollection = gson.fromJson(reader, CitCollection.class);
             reader.close();
             return citCollection;
+        } catch (IOException s) {
+            return createConfig();
+        }
+    }
+
+    private static CitCollection createConfig(){
+        CitCollection citCollection = new CitCollection(new ArrayList<>());
+
+        String json = gson.toJson(citCollection);
+
+        try (FileWriter writer = new FileWriter(getPath())) {
+            writer.write(json);
         } catch (IOException e) {
-            e.printStackTrace();
+            return citCollection;
         }
         return citCollection;
     }
+    public static Collection<CitItems> getWithItem(Collection<CitItems> citItems, ItemStack itemStack){
 
-    public static ArrayList<String> getItemNames(ItemStack itemStack){
-        return ConfigParser.parseItemsFromConfig("favorite", itemStack, pathToConfig);
-    }
+        String itemName = itemStack.getItem().getTranslationKey().replaceAll("item.minecraft.", "").replaceAll("block.minecraft.", "");
 
-    public static void removeItem(String s){
-
-        Collection<CitItems> citItems = readConfig().getCitItemsCollection();
-
-        if(citItems.isEmpty()){
-            return;
-        }
-
-        Collection<CitItems> citNewItems = new ArrayList<>();
-
-        for(CitItems citItem : citItems){
-            for(String rp : citItem.getCustomNames()){
-                if(!rp.equals(s)){
-                    citNewItems.add(citItem);
-                    break;
+        Collection<CitItems> citItemsArrayList = new ArrayList<>();
+        for(CitItems citItem  : citItems){
+            for(String rp : getClearResourcePackNames()){
+                if(citItem.getItem().equals(itemName) && citItem.getResourcePack().equals(rp)) {
+                    citItemsArrayList.add(citItem);
                 }
             }
         }
 
-        CitCollection citCollection = new CitCollection(citNewItems);
+        return citItemsArrayList;
+    }
+
+    public static void removeItem(Collection<CitItems> citItems, CitItems s) {
+        citItems.remove(s);
+        CitCollection citCollection = new CitCollection(citItems);
         String json = gson.toJson(citCollection);
 
-        try (FileWriter writer = new FileWriter(pathToConfig + "favorite" + jsonFormat)) {
+        try (FileWriter writer = new FileWriter(getPath())) {
+            writer.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void addItem(CitItems s) {
+
+        Collection<CitItems> citItems = new ArrayList<>(readConfig().getCitItemsCollection());
+        citItems.add(s);
+        CitCollection citCollection = new CitCollection(citItems);
+
+        String json = gson.toJson(citCollection);
+
+        try (FileWriter writer = new FileWriter(getPath())) {
             writer.write(json);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void addItem(String s, ItemStack itemStack){
-
-        Collection<CitItems> citItems = readConfig().getCitItemsCollection();
-
-        String itemName = itemStack.getItem().getTranslationKey().replaceAll("item.minecraft.", "").replaceAll("block.minecraft.", "");
-
-        citItems.add(new CitItems(itemName, s, null));
-
-        CitCollection citCollection = new CitCollection(citItems);
-        String json = gson.toJson(citCollection);
-
-        try (FileWriter writer = new FileWriter(pathToConfig + "favorite" + jsonFormat)) {
-            writer.write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static String getPath(){
+        return pathToConfig + "favorite" + jsonFormat;
     }
 
 }

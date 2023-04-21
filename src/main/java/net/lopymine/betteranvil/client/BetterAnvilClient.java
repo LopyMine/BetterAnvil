@@ -1,8 +1,6 @@
 package net.lopymine.betteranvil.client;
 
-import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ClientModInitializer;
-import org.slf4j.Logger;
 
 import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
 

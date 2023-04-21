@@ -6,7 +6,8 @@
   "mixins": [],
   "client": [
     "AnvilGuiMixin",
-    "ReloadableResourceManagerImplMixin"
+    "ReloadableResourceManagerImplMixin",
+    "ResourcePackMixin"
   ],
   "injectors": {
     "defaultRequire": 1

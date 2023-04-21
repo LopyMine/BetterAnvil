@@ -23,9 +23,7 @@ import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
 import static net.lopymine.betteranvil.BetterAnvil.getResourcePackManager;
 
 public class ConfigParser {
-
     public static final String pathToConfigFolder = "config/betteranvil/resourcepacks/";
-
     public static final String pathToConfig = "config/betteranvil/";
     public static final String jsonFormat = ".json";
     public static final String pathToCitFolder = "/assets/minecraft/optifine/cit/";
@@ -33,28 +31,85 @@ public class ConfigParser {
 
     private static final Identifier UNKNOWN_PACK = new Identifier("minecraft:textures/misc/unknown_pack.png");
 
-    public static ArrayList<String> parseItemNames(ItemStack item) {
-        ArrayList<String> itemNames = new ArrayList<>();
+    public static Collection<CitItems> parseAllItemNames(ItemStack item) {
+        Collection<CitItems> itemNames = new ArrayList<>();
 
         Gson gson = new Gson();
 
         String itemName = item.getItem().getTranslationKey().replaceAll("item.minecraft.", "").replaceAll("block.minecraft.", "");
 
-        ArrayList<String> rpNames = getClearResourcePackNames();
-
-        for (String rpName : rpNames) {
+        for (String rpName : getClearResourcePackNames()) {
             try (FileReader reader = new FileReader(pathToConfigFolder + rpName + jsonFormat)) {
 
                 CitCollection citCollection = gson.fromJson(reader, CitCollection.class);
                 reader.close();
-                //System.out.println(getNames(myOb.getCitItemsCollection(), itemName));
-                itemNames.addAll(getItemNames(citCollection.getCitItemsCollection(), itemName));
-                } catch (IOException ignored) {
+
+                itemNames.addAll(transformCitItems(setCitItemsRP(citCollection, rpName), itemName));
+            } catch (IOException ignored) {
             }
         }
 
         return itemNames;
     }
+
+    public static Collection<CitItems> parseItemsFromConfig(String configFileName, ItemStack anvilItem, String path) {
+        Collection<CitItems> items = new ArrayList<>();
+
+        Gson gson = new Gson();
+
+        String itemName = anvilItem.getItem().getTranslationKey().replaceAll("item.minecraft.", "").replaceAll("block.minecraft.", "");
+
+        if(!hasFile((path + configFileName + jsonFormat))){
+            return items;
+        }
+        try (FileReader reader = new FileReader(path + configFileName + jsonFormat)) {
+
+            CitCollection citCollection = gson.fromJson(reader, CitCollection.class);
+            reader.close();
+
+            items.addAll(transformCitItems(setCitItemsRP(citCollection, configFileName), itemName));
+        } catch (IOException ignored) {
+        }
+        return items;
+    }
+
+    public static Collection<CitItems> setCitItemsRP(CitCollection citCollection, String resourcePackName) {
+        Collection<CitItems> citItemsCollection = new ArrayList<>();
+        for(CitItems citItem : citCollection.getCitItemsCollection()){
+            citItem.setResourcePack(resourcePackName);
+            citItemsCollection.add(citItem);
+        }
+        return citItemsCollection;
+    }
+
+    public static Collection<CitItems> transformCitItems(Collection<CitItems> citItemsCollection, String item) {
+        Collection<CitItems> citItemsCollectionnew = new ArrayList<>();
+
+        for (CitItems citItem : citItemsCollection) {
+            for (String itemm : citItem.getItems()) {
+                for (String name : citItem.getCustomNames()){
+                    CitItems citItemnew = new CitItems(itemm, name, null);
+                    citItemnew.setResourcePack(citItem.getResourcePack());
+                    if(citItemnew.getItem().equals(item) && !contains(citItemsCollectionnew, citItemnew)){
+                        citItemsCollectionnew.add(citItemnew);
+                    }
+                }
+            }
+        }
+        //Set<CitItems> noDuplicateCustomNames = new LinkedHashSet<>(citItemsCollectionnew);
+        //return new ArrayList<>(noDuplicateCustomNames);
+        return citItemsCollectionnew;
+    }
+
+    private static boolean contains(Collection<CitItems> citItems, CitItems c){
+        for(CitItems s : citItems){
+            if(s.getCustomName().equals(c.getCustomName()) && s.getItem().equals(c.getItem())){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static ArrayList<String> getClearResourcePackNames() {
         Collection<String> resourcePackCollection = getResourcePackManager().getEnabledNames();
@@ -62,18 +117,6 @@ public class ConfigParser {
         for (String name : resourcePackCollection.stream().toList()) {
             if (name.startsWith("file/")) {
                 newNames.add(name.replaceAll("file/", "").replaceAll(".zip", ""));
-                continue;
-            }
-        }
-        return newNames;
-    }
-
-    public static ArrayList<String> getResourcePackNames() {
-        Collection<String> resourcePackCollection = getResourcePackManager().getEnabledNames();
-        ArrayList<String> newNames = new ArrayList<>();
-        for (String name : resourcePackCollection.stream().toList()) {
-            if (name.startsWith("file/")) {
-                newNames.add(name.replaceAll("file/", ""));
                 continue;
             }
         }
@@ -95,108 +138,16 @@ public class ConfigParser {
         return resourcePackProfiles;
     }
 
-    public static ArrayList<String> parseItemsFromConfig(String configFileName, ItemStack anvilItem, String path) {
-        ArrayList<String> items = new ArrayList<>();
-
-        Gson gson = new Gson();
-
-        String itemName = anvilItem.getItem().getTranslationKey().replaceAll("item.minecraft.", "").replaceAll("block.minecraft.", "");
-
-        if(!hasFile((path + configFileName + jsonFormat))){
-            return items;
-        }
-        try (FileReader reader = new FileReader(path + configFileName + jsonFormat)) {
-
-            CitCollection citCollection = gson.fromJson(reader, CitCollection.class);
-            reader.close();
-
-            items.addAll(getItemNames(citCollection.getCitItemsCollection(), itemName));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return items;
-        }
-        return items;
-    }
-
-    private static ArrayList<String> getItemNames(Collection<CitItems> citItemsCollection, String item) {
-        ArrayList<String> customNames = new ArrayList<>();
-
-        for (CitItems citItem : citItemsCollection) {
-            if (!(citItem.getCustomName() == null) && !(citItem.getItems() == null)) {
-                for (String name : citItem.getCustomNames()) {
-                    if (citItem.getItems().contains(item)) {
-                        customNames.add(name);
-                    }
-                }
+    public static ArrayList<String> getResourcePackNames() {
+        Collection<String> resourcePackCollection = getResourcePackManager().getEnabledNames();
+        ArrayList<String> newNames = new ArrayList<>();
+        for (String name : resourcePackCollection.stream().toList()) {
+            if (name.startsWith("file/")) {
+                newNames.add(name.replaceAll("file/", ""));
+                continue;
             }
         }
-        Set<String> noDuplicateCustomNames = new LinkedHashSet<>(customNames);
-        return new ArrayList<>(noDuplicateCustomNames);
-    }
-
-    public static Identifier loadPackIcon(TextureManager textureManager, ResourcePackProfile resourcePackProfile) {
-        try {
-            ResourcePack resourcePack = resourcePackProfile.createResourcePack();
-
-            Identifier var5;
-            label84: {
-                Identifier var8;
-                try {
-                    InputStream inputStream = resourcePack.openRoot("pack.png");
-
-                    label86: {
-                        try {
-                            if (inputStream != null) {
-                                String string = resourcePackProfile.getName();
-                                String var10003 = Util.replaceInvalidChars(string, Identifier::isPathCharacterValid);
-                                Identifier identifier = new Identifier("minecraft", "pack/" + var10003 + "/" + Hashing.sha1().hashUnencodedChars(string) + "/icon");
-                                NativeImage nativeImage = NativeImage.read(inputStream);
-                                textureManager.registerTexture(identifier, new NativeImageBackedTexture(nativeImage));
-                                var8 = identifier;
-                                break label86;
-                            }
-
-                            var5 = UNKNOWN_PACK;
-                        } catch (Throwable var11) {
-                            try {
-                                inputStream.close();
-                            } catch (Throwable var10) {
-                                var11.addSuppressed(var10);
-                            }
-
-                            throw var11;
-                        }
-
-                        break label84;
-                    }
-
-                    inputStream.close();
-                } catch (Throwable var12) {
-                    if (resourcePack != null) {
-                        try {
-                            resourcePack.close();
-                        } catch (Throwable var9) {
-                            var12.addSuppressed(var9);
-                        }
-                    }
-
-                    throw var12;
-                }
-
-                resourcePack.close();
-
-                return var8;
-            }
-
-            resourcePack.close();
-
-            return var5;
-        } catch (FileNotFoundException ignored) {
-        } catch (Exception var14) {
-            MYLOGGER.warn("Failed to load icon from pack {}", resourcePackProfile.getName(), var14);
-        }
-
-        return UNKNOWN_PACK;
+        return newNames;
     }
 
     public static boolean hasFile(String path) {

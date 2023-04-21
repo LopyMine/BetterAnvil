@@ -1,6 +1,7 @@
 package net.lopymine.betteranvil.cit.writers;
 
 import com.google.gson.Gson;
+import net.lopymine.betteranvil.BetterAnvil;
 import net.lopymine.betteranvil.cit.CitCollection;
 import net.lopymine.betteranvil.cit.CitItems;
 import net.lopymine.betteranvil.cit.properties.PropHandler;
@@ -35,10 +36,24 @@ public class ZipWriter {
                 }
             }
         } else {
-            try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
-                writer.write(json);
-            } catch (IOException e) {
-                e.printStackTrace();
+            File dirr = new File(pathToConfigFolder);
+            if(!dirr.exists()){
+                boolean success = dirr.mkdir();
+                if(success) {
+                    try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
+                        writer.write(json);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    BetterAnvil.MYLOGGER.info("Failed to create resource pack folder..");
+                }
+            } else {
+                try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
+                    writer.write(json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
