@@ -66,11 +66,11 @@ public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
             switch (BetterAnvilConfigManager.read().position) {
                 case RIGHT -> {
                     this.addDrawableChild(buttonWidgetRight);
-                    renderer.renderInGui(new ItemStack(Items.NAME_TAG), 187, 4);
+                    renderer.renderInGui(ms,new ItemStack(Items.NAME_TAG), 187, 4);
                 }
                 case LEFT -> {
                     this.addDrawableChild(buttonWidgetLeft);
-                    renderer.renderInGui(new ItemStack(Items.NAME_TAG), -25, 4);
+                    renderer.renderInGui(ms,new ItemStack(Items.NAME_TAG), -25, 4);
                 }
             }
             return;

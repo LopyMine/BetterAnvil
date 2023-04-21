@@ -118,7 +118,7 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
                 createFavoriteNameList(favorite, dataF);
                 return;
             }
-            createFavoriteNameList(favorite, getSearchData(textFieldF));
+            createFavoriteNameList(favorite, getSearchData(textFieldF, dataF));
         });
 
         favorite.add(textFieldF, 45, 40, 110, 10);
@@ -216,7 +216,7 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
                               createAllNameList(panel, dataD);
                               return;
                           }
-                  createAllNameList(panel, getSearchData(wTextFieldD));
+                  createAllNameList(panel, getSearchData(wTextFieldD, dataD));
               });
         panel.add(wTextFieldD, 35, 40, 130, 10);
 
@@ -239,9 +239,9 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         }
     }
 
-    private ArrayList<CitItems> getSearchData(WTextField wTextField) {
+    private ArrayList<CitItems> getSearchData(WTextField wTextField, ArrayList<CitItems> data) {
         ArrayList<CitItems> dataSearch = new ArrayList<>();
-        for (CitItems dt : dataD) {
+        for (CitItems dt : data) {
             if (dt.getCustomName().toLowerCase().replace("ё", "е").contains(wTextField.getText().toLowerCase().replace("ё", "е"))) {
                 dataSearch.add(dt);
             }
