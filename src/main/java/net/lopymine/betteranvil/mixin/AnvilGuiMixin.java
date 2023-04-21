@@ -44,7 +44,6 @@ public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
         Slot slot = this.handler.getSlot(0);
 
         ItemStack slotStack = slot.getStack();
-
         ButtonWidget buttonWidgetRight = ButtonWidget.builder(Text.of(" "), (button -> mc.setScreen(new CottonClientScreen(new AnvilGuiDescription(this, slotStack) {
             @Override
             protected void renameMethod(String name) {
@@ -59,7 +58,7 @@ public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
                 nameField.setText(name);
                 nameField.setEditable(true);
             }
-        })))).dimensions(this.width / 2 + 95, this.height / 2 - 80, 24, 20).build();
+        })))).dimensions(this.width / 2 - 117, this.height / 2 - 80, 24, 20).build();
 
 
         if (!slot.getStack().isEmpty()) {

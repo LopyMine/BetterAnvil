@@ -29,8 +29,8 @@
     "betteranvil.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">0.14.17",
-    "fabric": "*",
+    "fabricloader": ">=0.14.19",
+    "fabric": ">=0.76.1",
     "minecraft": "1.19.3",
     "cloth-config": ">=7"
   }

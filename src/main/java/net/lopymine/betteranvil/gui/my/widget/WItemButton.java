@@ -99,13 +99,13 @@ public class WItemButton extends WWidget {
         }
 
         if (itemIcon != null) {
-            itemIcon.paint(matrices, x + 8,y + 8, mouseX, mouseY);
+            itemIcon.paint(matrices, x + 7,y + 7, mouseX, mouseY);
         }
 
         if(text != null){
             int color = 0xE0E0E0;
 
-            ScreenDrawing.drawStringWithShadow(matrices, text.asOrderedText(), HorizontalAlignment.LEFT, x + 30, y + 12, width, color);
+            ScreenDrawing.drawStringWithShadow(matrices, text.asOrderedText(), HorizontalAlignment.LEFT, x + 31, y + 12, width, color);
 
         }
        //if(toolTip != null){

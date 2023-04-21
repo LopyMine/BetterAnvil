@@ -13,5 +13,6 @@
   "gui.betteranvil.modmenu.resourcepackwriter.when": "Overwriting json",
   "gui.betteranvil.modmenu.resourcepackwriter.tooltip": "Overwriting json resource packs files.",
   "gui.betteranvil.modmenu.darkmode": "Dark Mode",
-  "gui.betteranvil.modmenu.darkmode.tooltip": "Set dark theme for CIT menu"
+  "gui.betteranvil.modmenu.darkmode.tooltip": "Set dark theme for CIT menu",
+  "gui.betteranvil.resource.pack.tooltip": "Json overwrite mode selected when Done button is clicked"
 }

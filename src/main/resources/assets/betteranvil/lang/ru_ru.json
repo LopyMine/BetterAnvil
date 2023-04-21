@@ -13,5 +13,6 @@
   "gui.betteranvil.modmenu.resourcepackwriter.when": "Перезапись Json",
   "gui.betteranvil.modmenu.resourcepackwriter.tooltip": "Когда нужно перезаписывать Json файлы ресурспаков.",
   "gui.betteranvil.modmenu.darkmode": "Тёмный режим",
-  "gui.betteranvil.modmenu.darkmode.tooltip": "Установить тёмную тему для CIT меню."
+  "gui.betteranvil.modmenu.darkmode.tooltip": "Установить тёмную тему для CIT меню.",
+  "gui.betteranvil.resource.pack.tooltip": "Выбран режим перезаписывания json при нажатии на кнопку Готово"
 }

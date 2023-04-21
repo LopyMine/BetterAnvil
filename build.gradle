@@ -37,8 +37,6 @@ dependencies {
 
     modImplementation "com.terraformersmc:modmenu:${project.modmenu}"
 
-    modCompileOnly "maven.modrinth:cit-resewn-defaults:${project.citresewn}"
-
     modApi(modApi "me.shedaniel.cloth:cloth-config-fabric:${project.cloth}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
