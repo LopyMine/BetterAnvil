@@ -2,6 +2,7 @@ package net.lopymine.betteranvil.cit;
 
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -28,7 +29,6 @@ public class ConfigParser {
     public static final String jsonFormat = ".json";
     public static final String pathToCitFolder = "/assets/minecraft/optifine/cit/";
     public static final String pathToResourcePacks = "resourcepacks/";
-
     private static final Identifier UNKNOWN_PACK = new Identifier("minecraft:textures/misc/unknown_pack.png");
 
     public static Collection<CitItems> parseAllItemNames(ItemStack item) {
@@ -45,7 +45,8 @@ public class ConfigParser {
                 reader.close();
 
                 itemNames.addAll(transformCitItems(setCitItemsRP(citCollection, rpName), itemName));
-                } catch (IOException ignored) {
+            } catch (IOException ignored) {
+                MYLOGGER.warn("Not found json file: " + pathToConfigFolder + rpName + jsonFormat);
             }
         }
 
@@ -155,4 +156,4 @@ public class ConfigParser {
         return file.exists();
     }
 
-}
+}//

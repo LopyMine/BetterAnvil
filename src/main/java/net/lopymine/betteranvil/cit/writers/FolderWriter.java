@@ -1,13 +1,14 @@
 package net.lopymine.betteranvil.cit.writers;
 
 import com.google.gson.Gson;
-import net.lopymine.betteranvil.BetterAnvil;
 import net.lopymine.betteranvil.cit.CitCollection;
 import net.lopymine.betteranvil.cit.CitItems;
 import net.lopymine.betteranvil.cit.properties.PropHandler;
 
 import java.io.*;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -22,35 +23,55 @@ public class FolderWriter {
         if(citCollection.getCitItemsCollection().isEmpty()){
             return;
         }
-
         String json = gson.toJson(citCollection);
         File dir = new File(pathToConfigFolder);
-        if (!dir.exists()) {
-            boolean success = dir.mkdir();
-            if (success) {
-                MYLOGGER.info("Directory created successfully!");
-                try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName + jsonFormat)) {
-                    writer.write(json);
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                MYLOGGER.info("Failed to create directory");
+        if(dir.exists()){
+            try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName + jsonFormat)) {
+                writer.write(json);
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+
+            }
+            return;
+        }
+        if(dir.mkdirs()){
+            try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName + jsonFormat)) {
+                writer.write(json);
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         } else {
-            File dirr = new File(pathToConfigFolder);
-            boolean success = dirr.mkdir();
-            if(success) {
-                try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
-                    writer.write(json);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                BetterAnvil.MYLOGGER.info("Failed to create resource pack folder..");
-            }
+            MYLOGGER.warn("Failed to create Better Anvil config folder! (Folder)");
         }
+
+        //if (!dir.exists()) {
+        //    boolean success = dir.mkdir();
+        //    if (success) {
+        //        MYLOGGER.info("Directory created successfully!");
+        //        try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName + jsonFormat)) {
+        //            writer.write(json);
+        //            writer.close();
+        //        } catch (IOException e) {
+        //            e.printStackTrace();
+        //        }
+        //    } else {
+        //        MYLOGGER.info("Failed to create directory");
+        //    }
+        //} else {
+        //    File dirr = new File(pathToConfigFolder);
+        //    boolean success = dirr.mkdir();
+        //    if(success) {
+        //        try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
+        //            writer.write(json);
+        //        } catch (IOException e) {
+        //            e.printStackTrace();
+        //        }
+        //    } else {
+        //        BetterAnvil.MYLOGGER.info("Failed to create resource pack folder..");
+        //    }
+        //}
     }
     private static CitCollection getCitFolderFiles(String resourcePackName) {
         Path resourcePackPath = Paths.get(pathToResourcePacks + resourcePackName + pathToCitFolder);
@@ -99,4 +120,4 @@ public class FolderWriter {
         File file = new File(path);
         return file.exists();
     }
-}
+}//
