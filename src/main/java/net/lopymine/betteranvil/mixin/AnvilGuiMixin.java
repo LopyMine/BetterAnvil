@@ -1,6 +1,7 @@
 package net.lopymine.betteranvil.mixin;
 
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
+import net.fabricmc.loader.api.FabricLoader;
 import net.lopymine.betteranvil.gui.AnvilGuiDescription;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.minecraft.client.MinecraftClient;
@@ -76,5 +77,6 @@ public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
             return;
         }
         this.clearChildren();
+
     }
 }

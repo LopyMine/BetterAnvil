@@ -22,7 +22,7 @@ public class PropHandler {
         return false;
     }
     public static String getItem(String line){
-        return line.replaceAll("matchItems=", "").replaceAll("items=","").replaceAll("minecraft:", "");
+        return line.replaceAll("matchItems=", "").replaceAll("items=","").replaceAll("minecraft:", "").replaceAll("\\\\", "");
     }
 
     public static boolean isCustomName(String line){
@@ -34,12 +34,10 @@ public class PropHandler {
     }
 
     public static String getCustomName(String line){
-        String upLine = StringEscapeUtils.unescapeJava(line.replaceAll("iregex:", "").replaceAll("ipattern:", "").replaceAll("regex:", "").replaceAll("pattern:", "").replace("(", "").replace(")", "").replaceAll("nbt.display.Name=", ""));
-
-        if(upLine.contains("*")){
-            return upLine.replace("*", "") + " ";
-        }
-        return upLine;
+        String l2 = line.replaceAll("iregex", "").replaceAll("ipattern", "").replaceAll("regex", "").replaceAll("pattern", "").replace("(", "").replace(")", "").replaceAll("nbt.display.Name=", "").replaceAll(":", "").replaceAll("\\.", "").replaceAll("\\^", "").replaceAll("\\[", "").replaceAll("]", "").replaceAll("\\$", "").replace("*", "");
+        String l3 = StringEscapeUtils.unescapeJava(l2.replace("\\\\", "\\"));
+        String upLine3 = l3.replaceAll("/", "").replaceAll("\\\\", "");
+        return upLine3;
     }
 
 
