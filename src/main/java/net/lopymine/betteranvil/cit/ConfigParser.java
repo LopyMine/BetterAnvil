@@ -46,7 +46,7 @@ public class ConfigParser {
 
                 itemNames.addAll(transformCitItems(setCitItemsRP(citCollection, rpName), itemName));
             } catch (IOException ignored) {
-                MYLOGGER.warn("Not found Better Anvil Folder!");
+                MYLOGGER.warn("Not found json file: " + pathToConfigFolder + rpName + jsonFormat);
             }
         }
 

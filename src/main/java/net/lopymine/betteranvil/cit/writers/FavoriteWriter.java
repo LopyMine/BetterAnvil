@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
 import static net.lopymine.betteranvil.cit.ConfigParser.*;
 import static net.lopymine.betteranvil.cit.ConfigWriter.gson;
 
@@ -30,7 +31,7 @@ public class FavoriteWriter {
 
     private static CitCollection createConfig(){
         CitCollection citCollection = new CitCollection(new ArrayList<>());
-
+        MYLOGGER.info("Create favorite config!");
         String json = gson.toJson(citCollection);
 
         try (FileWriter writer = new FileWriter(getPath())) {
