@@ -26,16 +26,17 @@ public class FolderWriter {
         String json = gson.toJson(citCollection);
         File dir = new File(pathToConfigFolder);
         if(dir.exists()){
+            MYLOGGER.info("Config folder found! (Folder)" + "(" + rpName + ")");
             try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName + jsonFormat)) {
                 writer.write(json);
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
-
             }
             return;
         }
         if(dir.mkdirs()){
+            MYLOGGER.info("Successfully created Better Anvil config folder! (Folder)" + "(" + rpName + ")");
             try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName + jsonFormat)) {
                 writer.write(json);
                 writer.close();
@@ -43,7 +44,7 @@ public class FolderWriter {
                 e.printStackTrace();
             }
         } else {
-            MYLOGGER.warn("Failed to create Better Anvil config folder! (Folder)");
+            MYLOGGER.warn("Failed to create Better Anvil config folder! (Folder)" + "(" + rpName + ")");
         }
 
         //if (!dir.exists()) {

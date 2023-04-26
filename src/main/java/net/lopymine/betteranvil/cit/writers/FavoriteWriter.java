@@ -25,18 +25,21 @@ public class FavoriteWriter {
             reader.close();
             return citCollection;
         } catch (IOException s) {
+            s.printStackTrace();
             return createConfig();
         }
     }
 
     private static CitCollection createConfig(){
         CitCollection citCollection = new CitCollection(new ArrayList<>());
-        MYLOGGER.info("Create favorite config!");
+        MYLOGGER.info("Create favorite config! (Favorite)");
         String json = gson.toJson(citCollection);
 
         try (FileWriter writer = new FileWriter(getPath())) {
             writer.write(json);
         } catch (IOException e) {
+            MYLOGGER.info("Failed to create favorite config! (Favorite)");
+            e.printStackTrace();
             return citCollection;
         }
         return citCollection;
@@ -61,7 +64,7 @@ public class FavoriteWriter {
         citItems.remove(s);
         CitCollection citCollection = new CitCollection(citItems);
         String json = gson.toJson(citCollection);
-//
+
         try (FileWriter writer = new FileWriter(getPath())) {
             writer.write(json);
         } catch (IOException e) {
