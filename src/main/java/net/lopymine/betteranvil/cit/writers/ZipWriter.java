@@ -27,7 +27,6 @@ public class ZipWriter {
         String json = gson.toJson(citCollection);
         File dir = new File(pathToConfigFolder);
         if(dir.exists()){
-            MYLOGGER.info("Config folder found! (Zip)" + "(" + rpName + ")");
             try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
                 writer.write(json);
                 writer.close();
@@ -37,7 +36,6 @@ public class ZipWriter {
             return;
         }
         if(dir.mkdirs()){
-            MYLOGGER.info("Successfully created Better Anvil config folder! (Zip)" + "(" + rpName + ")");
             try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
                 writer.write(json);
                 writer.close();
@@ -45,7 +43,7 @@ public class ZipWriter {
                 e.printStackTrace();
             }
         } else {
-            MYLOGGER.warn("Failed to create Better Anvil config folder! (Zip)" + "(" + rpName + ")");
+            MYLOGGER.warn("Failed to create Better Anvil config folder! (Zip)");
         }
         //if (!dir.exists()) {
         //    boolean success = dir.mkdir();

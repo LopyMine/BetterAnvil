@@ -25,7 +25,6 @@ public class FavoriteWriter {
             reader.close();
             return citCollection;
         } catch (IOException s) {
-            s.printStackTrace();
             return createConfig();
         }
     }
