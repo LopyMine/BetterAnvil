@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
+import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.resource.ResourcePackManager;
 import org.slf4j.Logger;
 

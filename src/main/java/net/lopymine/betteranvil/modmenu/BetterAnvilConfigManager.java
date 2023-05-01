@@ -3,8 +3,10 @@ package net.lopymine.betteranvil.modmenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.lopymine.betteranvil.modmenu.interfaces.PositionButton;
-import net.lopymine.betteranvil.modmenu.interfaces.ResourcePackJsonWriting;
+import net.lopymine.betteranvil.modmenu.enums.CITButtonTexture;
+import net.lopymine.betteranvil.modmenu.enums.PositionButton;
+import net.lopymine.betteranvil.modmenu.enums.ResourcePackJsonWriting;
+import net.lopymine.betteranvil.modmenu.enums.ResourcePackParserVersion;
 
 import java.io.File;
 import java.io.FileReader;
@@ -13,8 +15,11 @@ import java.io.IOException;
 
 public class BetterAnvilConfigManager {
 
-    public PositionButton position = PositionButton.RIGHT;
-    public ResourcePackJsonWriting start = ResourcePackJsonWriting.LAUNCH;
+    public PositionButton POSITION = PositionButton.RIGHT;
+    public ResourcePackParserVersion PARSER_VERSION = ResourcePackParserVersion.V2;
+    public Integer BUTTON_HEIGHT = 30;
+    public CITButtonTexture BUTTON_TEXTURE = CITButtonTexture.THEME;
+    public ResourcePackJsonWriting START = ResourcePackJsonWriting.LAUNCH;
     private static final File FILE_PATH = new File(FabricLoader.getInstance().getConfigDir().toFile(), "betteranvil.json");
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static final BetterAnvilConfigManager INSTANCE = read();

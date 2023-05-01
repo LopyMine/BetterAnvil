@@ -14,5 +14,11 @@
   "gui.betteranvil.modmenu.resourcepackwriter.tooltip": "Overwriting json resource packs files.",
   "gui.betteranvil.modmenu.darkmode": "Dark Mode",
   "gui.betteranvil.modmenu.darkmode.tooltip": "Set dark theme for CIT menu",
-  "gui.betteranvil.resource.pack.tooltip": "Json overwrite mode selected when Done button is clicked"
+  "gui.betteranvil.resource.pack.tooltip": "Json overwrite mode selected when Done button is clicked",
+  "gui.betteranvil.modmenu.button.reset": "Reset",
+  "gui.betteranvil.modmenu.gui.button.texture": "Button texture",
+  "gui.betteranvil.modmenu.gui.button.height": "Button height.",
+  "gui.betteranvil.modmenu.gui.button.height.tooltip": "Button height in CIT Menu list.",
+  "gui.betteranvil.modmenu.parsersystem": "Resource pack parser",
+  "gui.betteranvil.modmenu.parsersystem.tooltip": "Parser for getting item names from resource packs.\n Version - Load \n    V1    - §b Small §r \n    V2    - §c Big §r"
 }

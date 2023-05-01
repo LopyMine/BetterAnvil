@@ -2,17 +2,15 @@ package net.lopymine.betteranvil.gui.my.widget;
 
 import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
 import io.github.cottonmc.cotton.gui.widget.WItem;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import net.lopymine.betteranvil.BetterAnvil;
+import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
+import net.lopymine.betteranvil.modmenu.enums.CITButtonTexture;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
@@ -23,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 public class WItemButton extends WWidget {
 
     private Identifier MY_BUTTON = new Identifier(BetterAnvil.MOD_ID, "gui/mybutton.png");
-
+    private Identifier MY_BUTTON_RENAME = new Identifier(BetterAnvil.MOD_ID, "gui/mybuttonrename.png");
     private final Identifier MY_BUTTON_DARK = new Identifier(BetterAnvil.MOD_ID, "gui/mybuttondark.png");
     private static final Identifier MY_BUTTON_FOCUS = new Identifier(BetterAnvil.MOD_ID, "gui/mybuttonfocus.png");
     private WItem itemIcon;
@@ -36,14 +34,14 @@ public class WItemButton extends WWidget {
     public WItemButton(Text text, WItem itemIcon){
         this.text = text;
         this.itemIcon = itemIcon;
-        this.actualTexture = getDarkOrWhiteTexture();
+        this.actualTexture = getActualTexture();
     }
     public WItemButton(Text text){
         this.text = text;
-        this.actualTexture = getDarkOrWhiteTexture();
+        this.actualTexture = getActualTexture();
     }
     public WItemButton(){
-        this.actualTexture = getDarkOrWhiteTexture();
+        this.actualTexture = getActualTexture();
     }
 
     @Override
@@ -124,8 +122,22 @@ public class WItemButton extends WWidget {
         this.onClick = onClick;
     }
 
-    private Identifier getDarkOrWhiteTexture(){
-        return LibGui.isDarkMode() ? MY_BUTTON_DARK : MY_BUTTON;
+    private Identifier getActualTexture(){
+        //return LibGui.isDarkMode() ? MY_BUTTON_DARK : MY_BUTTON;
+        CITButtonTexture citButtonTexture = BetterAnvilConfigManager.read().BUTTON_TEXTURE;
+        if(citButtonTexture == CITButtonTexture.THEME){
+            return LibGui.isDarkMode() ? MY_BUTTON_DARK : MY_BUTTON;
+        }
+        if(citButtonTexture == CITButtonTexture.RENAME){
+            return MY_BUTTON_RENAME;
+        }
+        if(citButtonTexture == CITButtonTexture.RENAME_DARK_THEME){
+            return LibGui.isDarkMode() ? MY_BUTTON_RENAME : MY_BUTTON;
+        }
+        if(citButtonTexture == CITButtonTexture.RENAME_WHITE_THEME){
+            return LibGui.isDarkMode() ? MY_BUTTON_DARK : MY_BUTTON_RENAME;
+        }
+        return MY_BUTTON;
     }
 
 }

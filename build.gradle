@@ -33,6 +33,8 @@ dependencies {
         // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+    implementation  include('com.github.mifmif:generex:1.0.2')
+
     modImplementation include("io.github.cottonmc:LibGui:${project.libgui}")
 
     modImplementation "com.terraformersmc:modmenu:${project.modmenu}"

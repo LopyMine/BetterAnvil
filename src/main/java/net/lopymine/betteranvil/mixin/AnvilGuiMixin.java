@@ -63,7 +63,7 @@ public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
 
         if (!slot.getStack().isEmpty()) {
             this.clearChildren();
-            switch (BetterAnvilConfigManager.read().position) {
+            switch (BetterAnvilConfigManager.read().POSITION) {
                 case RIGHT -> {
                     this.addDrawableChild(buttonWidgetRight);
                     renderer.renderInGui(ms,new ItemStack(Items.NAME_TAG), 187, 4);

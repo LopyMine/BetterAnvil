@@ -14,5 +14,10 @@
   "gui.betteranvil.modmenu.resourcepackwriter.tooltip": "Когда нужно перезаписывать Json файлы ресурспаков.",
   "gui.betteranvil.modmenu.darkmode": "Тёмный режим",
   "gui.betteranvil.modmenu.darkmode.tooltip": "Установить тёмную тему для CIT меню.",
-  "gui.betteranvil.resource.pack.tooltip": "Выбран режим перезаписывания json при нажатии на кнопку Готово"
+  "gui.betteranvil.resource.pack.tooltip": "Выбран режим перезаписывания json при нажатии на кнопку Готово.",
+  "gui.betteranvil.modmenu.gui.button.texture": "Текстура кнопки",
+  "gui.betteranvil.modmenu.gui.button.height": "Размер кнопки предмета",
+  "gui.betteranvil.modmenu.gui.button.height.tooltip": "Размер кнопки предмета в CIT Меню.",
+  "gui.betteranvil.modmenu.parsersystem": "Парсер ресурспаков",
+  "gui.betteranvil.modmenu.parsersystem.tooltip": "Парсер получения имён предметов из ресурспаков.\n Версия - Нагрузка \n    V1    - §b Малая §r \n    V2    - §c Большая §r"
 }
