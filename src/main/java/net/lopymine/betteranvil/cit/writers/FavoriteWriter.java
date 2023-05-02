@@ -84,7 +84,6 @@ public class FavoriteWriter {
             e.printStackTrace();
         }
     }
-
     public static String getPath(){
         return pathToConfig + "favorite" + jsonFormat;
     }

@@ -1,4 +1,4 @@
-package net.lopymine.betteranvil.modmenu.interfaces;
+package net.lopymine.betteranvil.modmenu.enums;
 
 public enum ResourcePackJsonWriting {
     LAUNCH,

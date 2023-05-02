@@ -1,7 +1,11 @@
 package net.lopymine.betteranvil.cit;
 
+import com.mifmif.common.regex.Generex;
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CitItems {
     private final String items;
@@ -18,8 +22,18 @@ public class CitItems {
     }
 
     public ArrayList<String> getCustomNames() {
-        String[] words = customname.split("\\|"); // split the string by "|" delimiter
-        return new ArrayList<>(Arrays.asList(words));
+        String[] words = StringEscapeUtils.unescapeJava(customname).split("\\|"); // split the string by "|" delimiter
+
+        ArrayList<String> names = new ArrayList<>();
+        for(String n : Arrays.stream(words).toList()){
+            if(!n.equals(" ")){
+                String nn = n.strip();
+                names.add(nn);
+            }
+        }
+        //Generex generator = new Generex(StringEscapeUtils.unescapeJava(customname));
+        //List<String> names = generator.getAllMatchedStrings();
+        return new ArrayList<>(names);
     }
 
     public String getCustomName() {
@@ -67,4 +81,4 @@ public class CitItems {
     //public ArrayList<String> getEnchantments(){
 //
     //}
-}//
+}

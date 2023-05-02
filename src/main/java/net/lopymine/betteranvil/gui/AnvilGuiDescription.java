@@ -13,6 +13,7 @@ import net.lopymine.betteranvil.cit.CitItems;
 import net.lopymine.betteranvil.cit.ConfigParser;
 import net.lopymine.betteranvil.cit.writers.FavoriteWriter;
 import net.lopymine.betteranvil.gui.my.widget.WFavoriteButton;
+import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -27,7 +28,9 @@ import java.util.function.BiConsumer;
 
 public abstract class AnvilGuiDescription extends LightweightGuiDescription {
     @Override
-    public void addPainters() {}
+    public void addPainters() {
+
+    }
     protected abstract void renameMethod(String name);
     public static final int maxLength = 18;
     public static final int maxLengthBigLabel = 20;
@@ -36,29 +39,40 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
     private static WLabel emptyD;
     private static WListPanel<CitItems, MyWListPanel> wListPanelD;
     private static boolean favoriteWindowOn;
-    private final BiConsumer<CitItems, MyWListPanel> configuratorF;
-    private final BiConsumer<CitItems, MyWListPanel> configuratorD;
-    private final ArrayList<CitItems> dataF;
-    private final Collection<CitItems> dataFAll;
-    private final ArrayList<CitItems> dataD;
+    private BiConsumer<CitItems, MyWListPanel> configuratorF;
+    private BiConsumer<CitItems, MyWListPanel> configuratorD;
+    private ArrayList<CitItems> dataF;
+    private Collection<CitItems> dataFAll;
+    private ArrayList<CitItems> dataD;
     public final Identifier bigFieldNameTextureFocusDark = new Identifier(BetterAnvil.MOD_ID, "gui/namefieldfocusdark.png");
     public final Identifier bigFieldNameTextureNotFocusDark = new Identifier(BetterAnvil.MOD_ID, "gui/namefielddark.png");
     public final Identifier bigFieldNameTextureFocus = new Identifier(BetterAnvil.MOD_ID, "gui/namefieldfocus.png");
     public final Identifier bigFieldNameTextureNotFocus = new Identifier(BetterAnvil.MOD_ID, "gui/namefield.png");
     public final Identifier bfnTexture = getDarkOrWhiteTexture(bigFieldNameTextureNotFocusDark, bigFieldNameTextureNotFocus);
     public final Identifier bfnTextureFocus = getDarkOrWhiteTexture(bigFieldNameTextureFocusDark, bigFieldNameTextureFocus);
-
-    private final WPlainPanel panel;
+    private WPlainPanel panel;
+    private int height;
+    private int width;
+    private int panelDHeight;
+    private int panelDWidth = 203;
+    private int ots = 8;
+    private int copyButtonPos;
+    private int favoriteButtonPos = 9;
+    private final int buttonHeight = BetterAnvilConfigManager.read().BUTTON_HEIGHT;
 
     public AnvilGuiDescription(Screen parent, ItemStack anvilItem) {
         WPlainPanel root = new WPlainPanel();
+        MinecraftClient mc = MinecraftClient.getInstance();
         root.setInsets(Insets.ROOT_PANEL);
-        root.setSize(800, 500);
+        height = mc.currentScreen.height;
+        width = mc.currentScreen.width;
+        root.setSize(width, height);
 
+        panelDHeight = height;
+        copyButtonPos = panelDHeight - 70;
         ArrayList<WButton> buttons = new ArrayList<>();
 
         WSprite bigFieldName = new WSprite(bfnTexture);
-        MinecraftClient mc = MinecraftClient.getInstance();
         WLabel itemName = new WLabel(Text.of(" "));
         WItemSlot anvilSlot = new WItemSlot(new PlayerInventory(mc.player), 1, 1, 1, true);
         anvilSlot.setIcon(new ItemIcon(anvilItem));
@@ -67,7 +81,6 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         favorite.setSize(204, 230);
         favorite.setHost(this);
         favorite.add(new WLabel(Text.translatable("gui.betteranvil.tooltip.textfield")).setHorizontalAlignment(HorizontalAlignment.CENTER), 95, 15);
-
         panel = new WPlainPanel();
         panel.setBackgroundPainter(BackgroundPainter.VANILLA);
         dataD = new ArrayList<>(ConfigParser.parseAllItemNames(anvilItem));
@@ -133,7 +146,7 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
             createFavoriteNameList(favorite, dataF);
 
             if (favoriteWindowOn) {
-                root.add(favorite, 84, 53);
+                root.add(favorite, (width / 2 - (panelDWidth / 2)) - 210, ots / 2);
                 favorite.setBackgroundPainter(BackgroundPainter.VANILLA);
                 //favorite.setBackgroundPainter(MyWListPanel.backgroundPainter);
                 favorite.layout();
@@ -149,22 +162,22 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         WLabel labelD = new WLabel(Text.translatable("gui.betteranvil.menu"));
         labelD.setSize(6, 5);
         labelD.setVerticalAlignment(VerticalAlignment.TOP).setHorizontalAlignment(HorizontalAlignment.CENTER);
-        panel.add(labelD, 85, 15);
+        panel.add(labelD, 85, favoriteButtonPos);
 
-        panel.add(wFavoriteButton, 10, 10);
+        panel.add(wFavoriteButton, 10, favoriteButtonPos);
 
         WButton copyButton = new WButton(Text.translatable("gui.betteranvil.button.copy"));
         buttons.add(copyButton);
-        panel.add(copyButton, 14, 347, 175, 50);
+        panel.add(copyButton, 14, copyButtonPos, 175, 50);
         WButton closeButtonD = new WButton(Text.literal("х"));
         closeButtonD.setOnClick(() -> {
             mc.setScreen(parent);
         });
-        panel.add(closeButtonD, 172, 5, 25, 5);
-        panel.add(bigFieldName, 18, 320, 165, 24);
+        panel.add(closeButtonD, 172, favoriteButtonPos, 25, 5);
+        panel.add(bigFieldName, 18, copyButtonPos - 26, 165, 24); // 26 because height 24 + 2
 
-        panel.add(itemName, 93, 329);
-        panel.add(anvilSlot, 90, 375);
+        panel.add(itemName, 93, copyButtonPos - 16);
+        panel.add(anvilSlot, 90, copyButtonPos + 26);
 
 
         configuratorD = (CitItems s, MyWListPanel destination) -> {
@@ -218,10 +231,13 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
             }
             createAllNameList(panel, getSearchData(wTextFieldD, dataD));
         });
-        panel.add(wTextFieldD, 35, 40, 130, 10);
+        panel.add(wTextFieldD, 35, favoriteButtonPos + 24, 130, 10);
 
 
-        root.add(panel, 293, 53, 203, 405);
+        root.add(panel, width / 2 - (panelDWidth / 2), ots / 2, panelDWidth, panelDHeight - (ots * 2));//(panel, 293, 53, 203, 405);
+        System.out.println(panelDHeight);
+        System.out.println(panelDHeight - (ots * 2));
+        System.out.println(height);
 
         setRootPanel(root);
         root.validate(this);
@@ -261,7 +277,7 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         } else {
             wListPanelF = new WListPanel<>(data, MyWListPanel::new, configuratorF);
             wListPanelF.getScrollBar().setHost(this);
-            wListPanelF.setListItemHeight(30);
+            wListPanelF.setListItemHeight(buttonHeight);
             wListPanelF.setBackgroundPainter(MyWListPanel.backgroundPainter);
             wListPanelF.layout();
             //180 200
@@ -274,21 +290,23 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         root.remove(wListPanelD);
         if (data.isEmpty()) {
             emptyD = new WLabel(Text.translatable("gui.betteranvil.textfield.search.empty"));
-            root.add(emptyD, 90, 170);
+            root.add(emptyD, 90, panelDHeight / 2 - 20);
             emptyD.setHorizontalAlignment(HorizontalAlignment.CENTER);
             emptyD.setVerticalAlignment(VerticalAlignment.CENTER);
         } else {
             wListPanelD = new WListPanel<>(data, MyWListPanel::new, configuratorD);
             wListPanelD.getScrollBar().setHost(this);
-            wListPanelD.setListItemHeight(30);
+            wListPanelD.setListItemHeight(buttonHeight);
             wListPanelD.setBackgroundPainter(MyWListPanel.backgroundPainter);
             wListPanelD.layout();
             //(200, 400);
-            root.add(wListPanelD, 5, 70, 192, 245);
+            root.add(wListPanelD, 5, favoriteButtonPos + 50, 192, copyButtonPos - 88);
         }
     }
 
     private Identifier getDarkOrWhiteTexture(Identifier dark, Identifier white) {
         return LibGui.isDarkMode() ? dark : white;
     }
-}//
+
+
+}

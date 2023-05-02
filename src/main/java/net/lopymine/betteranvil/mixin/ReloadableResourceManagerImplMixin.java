@@ -2,7 +2,7 @@ package net.lopymine.betteranvil.mixin;
 
 import net.lopymine.betteranvil.cit.ConfigWriter;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
-import net.lopymine.betteranvil.modmenu.interfaces.ResourcePackJsonWriting;
+import net.lopymine.betteranvil.modmenu.enums.ResourcePackJsonWriting;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceReload;
@@ -24,10 +24,10 @@ public class ReloadableResourceManagerImplMixin {
 
     @Inject(at = @At("HEAD"), method = "reload")
     private void scan(Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage, List<ResourcePack> packs, CallbackInfoReturnable<ResourceReload> cir){
-        if (Objects.requireNonNull(BetterAnvilConfigManager.read().start) == ResourcePackJsonWriting.LAUNCH) {
+        if (Objects.requireNonNull(BetterAnvilConfigManager.read().START) == ResourcePackJsonWriting.LAUNCH) {
             MYLOGGER.info("Writing resource packs to json config...");
             ConfigWriter.writePackConfig();
         }
     }
-//
+
 }
