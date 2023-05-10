@@ -7,6 +7,8 @@ import io.github.cottonmc.cotton.gui.widget.WItem;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.lopymine.betteranvil.BetterAnvil;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.lopymine.betteranvil.modmenu.enums.CITButtonTexture;
@@ -27,8 +29,8 @@ public class WItemButton extends WWidget {
     private WItem itemIcon;
     private Text text;
     private Runnable onClick;
-    private Text toolTip;
-
+    private Text itemNameToolTip = Text.of("");
+    private Text resourcePackToolTip = Text.of("");
     private final Identifier actualTexture;
 
     public WItemButton(Text text, WItem itemIcon){
@@ -46,11 +48,6 @@ public class WItemButton extends WWidget {
 
     @Override
     public boolean canResize() {
-        return true;
-    }
-
-    @Override
-    public boolean canFocus() {
         return true;
     }
 
@@ -81,9 +78,8 @@ public class WItemButton extends WWidget {
 
     @Override
     public void addTooltip(TooltipBuilder tooltip) {
-        if(toolTip != null){
-            tooltip.add(toolTip);
-        }
+        tooltip.add(itemNameToolTip);
+        tooltip.add(resourcePackToolTip);
     }
 
     @Override
@@ -114,8 +110,12 @@ public class WItemButton extends WWidget {
         //}
     }
 
-    public void setToolTip(Text toolTip) {
-        this.toolTip = toolTip;
+    public void setItemNameToolTip(Text itemNameToolTip) {
+        this.itemNameToolTip = itemNameToolTip;
+    }
+
+    public void setResourcePackToolTip(Text resourcePackToolTip) {
+        this.resourcePackToolTip = resourcePackToolTip;
     }
 
     public void setOnClick(@Nullable Runnable onClick) {
@@ -138,6 +138,11 @@ public class WItemButton extends WWidget {
             return LibGui.isDarkMode() ? MY_BUTTON_DARK : MY_BUTTON_RENAME;
         }
         return MY_BUTTON;
+    }
+
+    @Override
+    public boolean canFocus() {
+        return true;
     }
 
 }

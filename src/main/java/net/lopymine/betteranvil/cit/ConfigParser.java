@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 

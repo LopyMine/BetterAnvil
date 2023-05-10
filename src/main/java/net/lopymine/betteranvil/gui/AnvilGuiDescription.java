@@ -91,7 +91,7 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
 
             destination.favoriteButton.setToggle(true);
 
-            destination.wItemButton.setToolTip(Text.of(s.getCustomName()));
+            destination.wItemButton.setItemNameToolTip(Text.of(s.getCustomName()));
 
             ItemStack anvilItemNew = new ItemStack(anvilItem.getItem().asItem());
             anvilItemNew.setCustomName(Text.of(s.getCustomName()));
@@ -183,7 +183,8 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         configuratorD = (CitItems s, MyWListPanel destination) -> {
             destination.wItemButton.setText(Text.literal(cutString(s.getCustomName(), maxLength)));
 
-            destination.wItemButton.setToolTip(Text.of(s.getCustomName()));
+            destination.wItemButton.setItemNameToolTip(Text.of(s.getCustomName()));
+            destination.wItemButton.setResourcePackToolTip(Text.of(s.getResourcePack()));
 
             ItemStack anvilItemNew = new ItemStack(anvilItem.getItem().asItem());
             anvilItemNew.setCustomName(Text.of(s.getCustomName()));

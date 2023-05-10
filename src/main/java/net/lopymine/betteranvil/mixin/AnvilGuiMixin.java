@@ -62,21 +62,23 @@ public abstract class AnvilGuiMixin extends ForgingScreen<AnvilScreenHandler> {
             }
         }))));
 
-        if (!slot.getStack().isEmpty()) {
-            this.clearChildren();
-            switch (BetterAnvilConfigManager.read().POSITION) {
-                case RIGHT -> {
-                    this.addDrawableChild(buttonWidgetRight);
-                    renderer.renderInGui(new ItemStack(Items.NAME_TAG), 187, 4);
-                }
-                case LEFT -> {
-                    this.addDrawableChild(buttonWidgetLeft);
-                    renderer.renderInGui(new ItemStack(Items.NAME_TAG), -25, 4);
-                }
+        switch (BetterAnvilConfigManager.read().POSITION) {
+            case RIGHT -> {
+                this.addDrawableChild(buttonWidgetRight);
+                buttonWidgetRight.active = false;
+                renderer.renderInGui(new ItemStack(Items.NAME_TAG), 187, 4);
             }
-            return;
+            case LEFT -> {
+                this.addDrawableChild(buttonWidgetLeft);
+                buttonWidgetLeft.active = false;
+                renderer.renderInGui(new ItemStack(Items.NAME_TAG), -25, 4);
+            }
         }
-        this.clearChildren();
+
+        if (!slot.getStack().isEmpty()) {
+            buttonWidgetLeft.active = true;
+            buttonWidgetRight.active = true;
+        }
 
     }
 }

@@ -7,6 +7,8 @@ import io.github.cottonmc.cotton.gui.widget.WToggleButton;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.lopymine.betteranvil.BetterAnvil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -53,10 +55,6 @@ public class WFavoriteButton extends WWidget {
     }
 
     @Override
-    public boolean canFocus() {
-        return false;
-    }
-    @Override
     public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         ScreenDrawing.texturedRect(matrices, x, y, 16,16, getActualTexture(),0xFFFFFFFF);
 
@@ -89,4 +87,9 @@ public class WFavoriteButton extends WWidget {
             this.onToggle.accept(on);
         }
     }
+    @Override
+    public boolean canFocus() {
+        return true;
+    }
+
 }
