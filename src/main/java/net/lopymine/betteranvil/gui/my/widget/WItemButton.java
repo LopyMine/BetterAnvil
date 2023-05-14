@@ -18,18 +18,24 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+
 public class WItemButton extends WWidget {
 
-    private Identifier MY_BUTTON = new Identifier(BetterAnvil.MOD_ID, "gui/mybutton.png");
-    private Identifier MY_BUTTON_RENAME = new Identifier(BetterAnvil.MOD_ID, "gui/mybuttonrename.png");
+    private final Identifier MY_BUTTON = new Identifier(BetterAnvil.MOD_ID, "gui/mybutton.png");
+    private final Identifier MY_BUTTON_RENAME = new Identifier(BetterAnvil.MOD_ID, "gui/mybuttonrename.png");
     private final Identifier MY_BUTTON_DARK = new Identifier(BetterAnvil.MOD_ID, "gui/mybuttondark.png");
     private static final Identifier MY_BUTTON_FOCUS = new Identifier(BetterAnvil.MOD_ID, "gui/mybuttonfocus.png");
     private WItem itemIcon;
     private Text text;
     private Runnable onClick;
-    private Text toolTip;
-
+    private Runnable onCtrlClick;
+    private Text itemNameToolTip = Text.of("");
+    private Text resourcePackToolTip = Text.of("");
+    private static boolean keyBoolean = false;
+    private static boolean ctrl = false;
     private final Identifier actualTexture;
+    private ArrayList<String> lore = new ArrayList<>();
 
     public WItemButton(Text text, WItem itemIcon){
         this.text = text;
@@ -71,8 +77,12 @@ public class WItemButton extends WWidget {
 
     @Override
     public InputResult onClick(int x, int y, int button) {
-
         MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+
+        if (ctrl) {
+            onCtrlClick.run();
+            return InputResult.PROCESSED;
+        }
 
         if (onClick!=null) onClick.run();
         return InputResult.PROCESSED;
@@ -81,8 +91,19 @@ public class WItemButton extends WWidget {
 
     @Override
     public void addTooltip(TooltipBuilder tooltip) {
-        if(toolTip != null){
-            tooltip.add(toolTip);
+        tooltip.add(itemNameToolTip);
+
+        if(!lore.isEmpty()){
+            tooltip.add(Text.of(""));
+            for(String s : lore){
+                tooltip.add(Text.of("§8" + s));
+            }
+        }
+
+        if (keyBoolean) {
+            tooltip.add(Text.of(""));
+            tooltip.add(Text.translatable("gui.betteranvil.citmenu.itembutton.tooltip"));
+            tooltip.add(resourcePackToolTip);
         }
     }
 
@@ -94,6 +115,7 @@ public class WItemButton extends WWidget {
 
         if (isHovered() || isFocused()) {
             ScreenDrawing.texturedRect(matrices, x, y, 155, 32, MY_BUTTON_FOCUS , 0xFFFFFFFF);
+
         }
 
         if (itemIcon != null) {
@@ -106,16 +128,14 @@ public class WItemButton extends WWidget {
             ScreenDrawing.drawStringWithShadow(matrices, text.asOrderedText(), HorizontalAlignment.LEFT, x + 31, y + 12, width, color);
 
         }
-        //if(toolTip != null){
-        //    TooltipBuilder tooltipBuilder = new TooltipBuilder();
-        //    tooltipBuilder.add(toolTip);
-        //    addTooltip(tooltipBuilder);
-        //    super.renderTooltip(matrices, x, y, 10,10);
-        //}
     }
 
-    public void setToolTip(Text toolTip) {
-        this.toolTip = toolTip;
+    public void setItemNameToolTip(Text itemNameToolTip) {
+        this.itemNameToolTip = itemNameToolTip;
+    }
+
+    public void setResourcePackToolTip(Text resourcePackToolTip) {
+        this.resourcePackToolTip = resourcePackToolTip;
     }
 
     public void setOnClick(@Nullable Runnable onClick) {
@@ -140,4 +160,33 @@ public class WItemButton extends WWidget {
         return MY_BUTTON;
     }
 
+    public void setOnCtrlClick(@Nullable Runnable onClick) {
+        this.onCtrlClick = onClick;
+    }
+
+    @Override
+    public void onKeyReleased(int ch, int key, int modifiers) {
+        if (key == 42) {
+            keyBoolean = false;
+        }
+        if(key == 29){
+            ctrl = false;
+        }
+        super.onKeyReleased(ch, key, modifiers);
+    }
+
+    @Override
+    public void onKeyPressed(int ch, int key, int modifiers) {
+        if (key == 42) {
+            keyBoolean = true;
+        }
+        if(key == 29){
+            ctrl = true;
+        }
+        super.onKeyPressed(ch, key, modifiers);
+    }
+
+    public void setLore(ArrayList<String> lore) {
+        this.lore = lore;
+    }
 }

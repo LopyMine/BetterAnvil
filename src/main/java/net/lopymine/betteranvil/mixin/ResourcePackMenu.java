@@ -28,7 +28,7 @@ public abstract class ResourcePackMenu extends Screen{
     private void init(CallbackInfo ci) {
         this.remove(doneButton);
 
-        this.doneButton = (ButtonWidget)this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, (button) -> {
+        this.doneButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, (button) -> {
             this.close();
             if(BetterAnvilConfigManager.read().START == ResourcePackJsonWriting.BUTTON){
                 ConfigWriter.writePackConfig();
@@ -36,12 +36,5 @@ public abstract class ResourcePackMenu extends Screen{
             }
         }).dimensions(this.width / 2 + 4, this.height - 48, 150, 20).build());
 
-
-        //this.doneButton = (ButtonWidget)this.addDrawableChild(new ButtonWidget(this.width / 2 + 4, this.height - 48, 150, 20, ScreenTexts.DONE, (button) -> {
-        //    this.close();
-        //    if(BetterAnvilConfigManager.read().start == ResourcePackJsonWriting.BUTTON){
-        //        ConfigWriter.writePackConfig();
-        //    }
-        //}));
     }
 }

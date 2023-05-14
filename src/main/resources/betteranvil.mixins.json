@@ -4,6 +4,7 @@
   "package": "net.lopymine.betteranvil.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ServerResourcePackMixin"
   ],
   "client": [
     "AnvilGuiMixin",
