@@ -12,13 +12,16 @@ public class CitItems {
     private final String customname;
     private final String damage;
     private final String enchantments;
+    private ArrayList<String> lore;
     private String resourcePack = null;
+    private String serverResourcePack = null;
 
     public CitItems(String item, String customname, String other) {
         this.items = item;
         this.customname = customname;
         this.damage = other;
         this.enchantments = null;
+        lore = null;
     }
 
     public ArrayList<String> getCustomNames() {
@@ -78,7 +81,29 @@ public class CitItems {
     public String getResourcePack() {
         return resourcePack;
     }
-    //public ArrayList<String> getEnchantments(){
-//
-    //}
+
+    public void setServerResourcePack(String serverResourcePack) {
+        this.serverResourcePack = serverResourcePack;
+    }
+
+    public String getServerResourcePack() {
+        return serverResourcePack;
+    }
+
+    public void setLore(ArrayList<String> lore) {
+        this.lore = lore;
+    }
+
+    public ArrayList<String> getLore() {
+        return lore;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) return true;
+        if(!(obj instanceof CitItems citItem)) return false;
+        if(citItem.getResourcePack().equals(this.getResourcePack()) && citItem.getItem().equals(this.getItem()) && citItem.getCustomName().equals(this.getCustomName())) return true;
+
+        return super.equals(obj);
+    }
 }

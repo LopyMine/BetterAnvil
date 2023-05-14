@@ -1,85 +1,57 @@
 package net.lopymine.betteranvil.cit.writers;
 
-import com.google.gson.Gson;
 import net.lopymine.betteranvil.cit.CitCollection;
 import net.lopymine.betteranvil.cit.CitItems;
+import net.lopymine.betteranvil.cit.ConfigParser;
 import net.lopymine.betteranvil.cit.properties.PropHandler;
+import net.minecraft.client.MinecraftClient;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
 import static net.lopymine.betteranvil.cit.ConfigParser.*;
-public class FolderWriter {
-
-    public static void writeConfig(String rpName, Gson gson) {
-
-        CitCollection citCollection = new CitCollection(getCitFolderFiles(rpName).getCitItemsCollection());
+import static net.lopymine.betteranvil.cit.ConfigWriter.gson;
+public class ServerWriter {
+    public static void writeConfig(File serverResourcePackFile){
+        CitCollection citCollection = new CitCollection(getCitFolderFiles(serverResourcePackFile).getCitItemsCollection());
 
         if(citCollection.getCitItemsCollection().isEmpty()){
             return;
         }
+
         String json = gson.toJson(citCollection);
-        File dir = new File(pathToConfigFolder);
+        File dir = new File(pathToServerConfigFolder);
         if(dir.exists()){
-            try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName + jsonFormat)) {
+            try (FileWriter writer = new FileWriter(pathToServerConfigFolder + serverResourcePackFile.getName() + jsonFormat)) {
                 writer.write(json);
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
-
             }
             return;
         }
         if(dir.mkdirs()){
-            try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName + jsonFormat)) {
+            try (FileWriter writer = new FileWriter(pathToServerConfigFolder + serverResourcePackFile.getName() + jsonFormat)) {
                 writer.write(json);
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            MYLOGGER.warn("Failed to create Better Anvil config folder! (Folder)");
+            MYLOGGER.warn("Failed to create Better Anvil config folder! (Server)");
         }
-
-        //if (!dir.exists()) {
-        //    boolean success = dir.mkdir();
-        //    if (success) {
-        //        MYLOGGER.info("Directory created successfully!");
-        //        try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName + jsonFormat)) {
-        //            writer.write(json);
-        //            writer.close();
-        //        } catch (IOException e) {
-        //            e.printStackTrace();
-        //        }
-        //    } else {
-        //        MYLOGGER.info("Failed to create directory");
-        //    }
-        //} else {
-        //    File dirr = new File(pathToConfigFolder);
-        //    boolean success = dirr.mkdir();
-        //    if(success) {
-        //        try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
-        //            writer.write(json);
-        //        } catch (IOException e) {
-        //            e.printStackTrace();
-        //        }
-        //    } else {
-        //        BetterAnvil.MYLOGGER.info("Failed to create resource pack folder..");
-        //    }
-        //}
     }
-    private static CitCollection getCitFolderFiles(String resourcePackName) {
-        Path resourcePackPath = Paths.get(pathToResourcePacks + resourcePackName + pathToCitFolder);
 
-        Collection<CitItems> citItems1Collection = new ArrayList<>();
+    private static CitCollection getCitFolderFiles(File resourcePack) {
+        Collection<CitItems> citItemsCollection = new ArrayList<>();
 
-        try {
-            Files.walk(resourcePackPath).filter(path -> path.toString().endsWith(".properties")).forEach(propertiesFile -> {
+        try (FileSystem zipFS = FileSystems.newFileSystem(resourcePack.toPath())) {
+            Path citFolder = zipFS.getPath(pathToCitFolder);
+
+            Files.walk(citFolder).filter(path -> path.toString().endsWith(".properties")).forEach(propertiesFile -> {
                 try (InputStream inputStream = Files.newInputStream(propertiesFile);
                      BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
                     String line;
@@ -107,23 +79,28 @@ public class FolderWriter {
                         if(!lore.isEmpty()){
                             citItems.setLore(lore);
                         }
-                        citItems1Collection.add(citItems);
+                        citItemsCollection.add(citItems);
                     }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
-            return new CitCollection(citItems1Collection);
+            return new CitCollection(citItemsCollection);
         }
-
-
-        return new CitCollection(citItems1Collection);
+        return new CitCollection(citItemsCollection);
     }
 
-    public static boolean hasCitFolder(String path) {
-        File file = new File(path);
-        return file.exists();
+    public static boolean hasCitZipFolder(File resourcePack) {
+        try (FileSystem zipFS = FileSystems.newFileSystem(resourcePack.toPath())) {
+            Path citFolder = zipFS.getPath(pathToCitFolder);
+            return Files.isDirectory(citFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}//
+
+}
