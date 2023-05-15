@@ -40,10 +40,10 @@ public class ModMenuIntegrationConfig {
         variants[1] = ResourcePackJsonWriting.BUTTON;
         variants[2] = ResourcePackJsonWriting.OFF;
 
-        category.addEntry(entryBuilder.startSelector(Text.translatable("gui.betteranvil.modmenu.resourcepackwriter.when"), variants, config.START)
+        category.addEntry(entryBuilder.startSelector(Text.translatable("gui.betteranvil.modmenu.jsonwriter"), variants, config.START)
                 .setDefaultValue(ResourcePackJsonWriting.LAUNCH)
                 .setSaveConsumer(configneww -> config.START = configneww)
-                .setTooltip(Text.translatable("gui.betteranvil.modmenu.resourcepackwriter.tooltip"))
+                .setTooltip(Text.translatable("gui.betteranvil.modmenu.jsonwriter.tooltip"))
                 .build());
 
         boolean darkMode =  LibGuiClient.loadConfig().darkMode;

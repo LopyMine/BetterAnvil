@@ -45,40 +45,8 @@ public class ZipWriter {
         } else {
             MYLOGGER.warn("Failed to create Better Anvil config folder! (Zip)");
         }
-        //if (!dir.exists()) {
-        //    boolean success = dir.mkdir();
-        //    if (success) {
-        //        File rp = new File(pathToConfigFolder);
-        //        if(rp.mkdir()){
-        //            try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
-        //                writer.write(json);
-        //            } catch (IOException e) {
-        //                e.printStackTrace();
-        //            }
-        //        }
-        //    }
-        //} else {
-        //    File dirr = new File(pathToConfigFolder);
-        //    if(!dirr.exists()){
-        //        boolean success = dirr.mkdir();
-        //        if(success) {
-        //            try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
-        //                writer.write(json);
-        //            } catch (IOException e) {
-        //                e.printStackTrace();
-        //            }
-        //        } else {
-        //            BetterAnvil.MYLOGGER.info("Failed to create resource pack folder..");
-        //        }
-        //    } else {
-        //        try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
-        //            writer.write(json);
-        //        } catch (IOException e) {
-        //            e.printStackTrace();
-        //        }
-        //    }
-        //}
     }
+
     private static CitCollection getCitFolderFiles(String resourcePackName) {
         Path resourcePackPath = Paths.get(pathToResourcePacks + resourcePackName);
 
@@ -94,10 +62,14 @@ public class ZipWriter {
                     String item = null;
                     String customname = null;
                     String damage = null;
-
+                    String enchantments = null;
+                    ArrayList<String> lore = new ArrayList<>();
                     while ((line = reader.readLine()) != null) {
                         if (PropHandler.isItem(line)) {
                             item = PropHandler.getItem(line);
+                        }
+                        if(PropHandler.isLore(line)){
+                            lore.add(PropHandler.getLore(line));
                         }
                         if (PropHandler.isCustomName(line)) {
                             customname = PropHandler.getCustomName(line);
@@ -106,10 +78,12 @@ public class ZipWriter {
                             damage = PropHandler.getDamageString(line);
                         }
                     }
-
                     if(item != null && customname != null){
-                        CitItems citItems1 = new CitItems(item, customname, damage);
-                        citItemsCollection.add(citItems1);
+                        CitItems citItems = new CitItems(item, customname, damage);
+                        if(!lore.isEmpty()){
+                            citItems.setLore(lore);
+                        }
+                        citItemsCollection.add(citItems);
                     }
 
                 } catch (IOException e) {

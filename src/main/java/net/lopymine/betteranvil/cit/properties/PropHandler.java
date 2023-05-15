@@ -45,13 +45,24 @@ public class PropHandler {
             String upLine3 = l3.replaceAll("/", "").replaceAll("\\\\", "");
             return upLine3;
         } else {
-            String name1 = line.replaceAll("nbt.display.Name=", "").replaceAll("iregex", "").replaceAll("ipattern", "").replaceAll("regex", "").replaceAll("pattern", "").replaceAll(":", "");//.replaceAll("\\(","").replaceAll("\\)","").replaceAll("\\.", "").replaceAll("\\^", "").replaceAll("\\$", "").replace("*", "");
-            String name2 = name1.replaceAll("\\(\\\\ \\.\\*\\|\\$\\)", "").replaceAll("\\(\\.\\*\\\\ \\|\\^\\)", "");
-            String name3 = name2.replaceAll("\\(","").replaceAll("\\)","").replaceAll("\\.", "").replaceAll("\\^", "").replaceAll("\\$", "").replace("*", "");
+            String name = line.replaceAll("nbt.display.Name=", "").replaceAll("iregex", "").replaceAll("ipattern", "").replaceAll("regex", "").replaceAll("pattern", "").replaceAll(":", "");//.replaceAll("\\(","").replaceAll("\\)","").replaceAll("\\.", "").replaceAll("\\^", "").replaceAll("\\$", "").replace("*", "");
+            String namew = name.replaceAll("\\(\\\\ \\.\\*\\|\\$\\)", "").replaceAll("\\(\\.\\*\\\\ \\|\\^\\)", "");
+            String namee = namew.replaceAll("\\(","").replaceAll("\\)","").replaceAll("\\.", "").replaceAll("\\^", "").replaceAll("\\$", "").replace("*", "");
+            String named = StringEscapeUtils.unescapeJava(namee.strip());
 
-            String named = StringEscapeUtils.unescapeJava(name3.strip());
+            char[] chars = named.toCharArray();
 
-            Generex generator = new Generex(StringEscapeUtils.unescapeJava(named));
+            System.out.println(chars);
+            if(chars.length != 0){
+                if(chars[0] == '|'){
+                    chars[0] = ' ';
+                }
+                if(chars[chars.length-1] == '|'){
+                    chars[chars.length-1] = ' ';
+                }
+            }
+
+            Generex generator = new Generex(StringEscapeUtils.unescapeJava(String.valueOf(chars).strip()));
             List<String> names = generator.getAllMatchedStrings();
             StringJoiner sj = new StringJoiner("|");
             for (String word : names) {
@@ -97,42 +108,15 @@ public class PropHandler {
         return line.replaceAll("damage=", "");
     }
 
-    public static boolean isEnchantment(String line){
-        for(String en : enchantments){
-            if(en.equals(line)){
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    //private static String getEnchantmentString(String line){
-    //
-    //}
-//
-
-
-    public static boolean isStackSize(String line){
-        if(line.strip().startsWith("stackSize=")){
+    public static boolean isLore(String line) {
+        if(line.startsWith("nbt.display.Lore")){
             return true;
-        }else {
+        } else {
             return false;
         }
     }
-
-    public static ArrayList<String> getClearResourcePackNames(List<String> names) {
-        ArrayList<String> newNames = new ArrayList<>();
-        for (int i = 0; i < names.size(); i++) {
-            if (names.get(i).startsWith("file/")) {
-                newNames.add(names.get(i).replaceAll("file/", "").replaceAll(".zip", ""));
-                continue;
-            }
-        }
-        return newNames;
+    public static String getLore(String line) {
+        String l = line.replaceAll("iregex:", "").replaceAll("ipattern:", "").replaceAll("regex:", "").replaceAll("pattern:", "");
+        return StringEscapeUtils.unescapeJava(l.substring(l.indexOf('=')+1));
     }
-
-
-
 }
