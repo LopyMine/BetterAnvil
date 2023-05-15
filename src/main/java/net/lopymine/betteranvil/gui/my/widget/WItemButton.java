@@ -166,7 +166,6 @@ public class WItemButton extends WWidget {
 
     @Override
     public InputResult onKeyReleased(int ch, int key, int modifiers) {
-        System.out.println(key);
         if (key == 42) {
             keyBoolean = false;
         }
