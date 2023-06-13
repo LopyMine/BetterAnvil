@@ -20,6 +20,9 @@ public class BetterAnvilConfigManager {
     public Integer BUTTON_HEIGHT = 30;
     public CITButtonTexture BUTTON_TEXTURE = CITButtonTexture.THEME;
     public ResourcePackJsonWriting START = ResourcePackJsonWriting.LAUNCH;
+    public boolean CUSTOM_MODEL_DATA_SUPPORT = true;
+    public int SHIFT_KEY = 340;
+    public int CTRL_KEY = 341;
     private static final File FILE_PATH = new File(FabricLoader.getInstance().getConfigDir().toFile(), "betteranvil.json");
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static final BetterAnvilConfigManager INSTANCE = read();

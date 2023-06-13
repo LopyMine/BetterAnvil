@@ -1,12 +1,12 @@
-package net.lopymine.betteranvil.gui;
+package net.lopymine.betteranvil.gui.screen;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
-import net.lopymine.betteranvil.gui.my.widget.WItemButton;
+import net.lopymine.betteranvil.gui.widgets.buttons.WItemButton;
 
-public class BetterAnvilClientScreen extends CottonClientScreen {
-    public BetterAnvilClientScreen(GuiDescription description) {
+public class BetterAnvilScreen extends CottonClientScreen {
+    public BetterAnvilScreen(GuiDescription description) {
         super(description);
     }
 
@@ -23,4 +23,9 @@ public class BetterAnvilClientScreen extends CottonClientScreen {
         super.mouseMoved(mouseX, mouseY);
     }
 
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        this.mouseMoved(mouseX,mouseY);
+        return super.mouseScrolled(mouseX, mouseY, amount);
+    }
 }

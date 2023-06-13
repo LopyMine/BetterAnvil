@@ -1,4 +1,4 @@
-package net.lopymine.betteranvil.cit.properties;
+package net.lopymine.betteranvil.resourcepacks.properties;
 
 import com.mifmif.common.regex.Generex;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
@@ -6,7 +6,6 @@ import net.lopymine.betteranvil.modmenu.enums.ResourcePackParserVersion;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -52,7 +51,7 @@ public class PropHandler {
 
             char[] chars = named.toCharArray();
 
-            System.out.println(chars);
+            //System.out.println(chars);
             if(chars.length != 0){
                 if(chars[0] == '|'){
                     chars[0] = ' ';

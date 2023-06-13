@@ -1,33 +1,34 @@
-package net.lopymine.betteranvil.cit.writers;
+package net.lopymine.betteranvil.resourcepacks.cit.writers;
 
-import com.google.gson.Gson;
-import net.lopymine.betteranvil.BetterAnvil;
-import net.lopymine.betteranvil.cit.CitCollection;
-import net.lopymine.betteranvil.cit.CitItems;
-import net.lopymine.betteranvil.cit.properties.PropHandler;
+import net.lopymine.betteranvil.resourcepacks.cit.CITCollection;
+import net.lopymine.betteranvil.resourcepacks.cit.CITItem;
+import net.lopymine.betteranvil.resourcepacks.properties.PropHandler;
 
 import java.io.*;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
-import static net.lopymine.betteranvil.cit.ConfigParser.*;
+import static net.lopymine.betteranvil.resourcepacks.ConfigManager.*;
 
-public class ZipWriter {
-    public static void writeConfig(String rpName, Gson gson) {
-        CitCollection citCollection = new CitCollection(getCitFolderFiles(rpName).getCitItemsCollection());
+public class CITWriter {
+    public static void writeConfig(File file, boolean isZip, boolean isServer) {
+        CITCollection citCollection = new CITCollection(getCITItems(file, isZip, isServer).getItems());
 
-        if(citCollection.getCitItemsCollection().isEmpty()){
+        if(citCollection.getItems().isEmpty()){
             return;
         }
+        String path = pathToCITConfigFolder;
 
+        if(isServer){
+            path = pathToCITServerConfigFolder;
+        }
 
         String json = gson.toJson(citCollection);
-        File dir = new File(pathToConfigFolder);
+        File dir = new File(path);
         if(dir.exists()){
-            try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
+            try (FileWriter writer = new FileWriter(path + file.getName().replace(".zip", "") + jsonFormat)) {
                 writer.write(json);
                 writer.close();
             } catch (IOException e) {
@@ -36,26 +37,43 @@ public class ZipWriter {
             return;
         }
         if(dir.mkdirs()){
-            try (FileWriter writer = new FileWriter(pathToConfigFolder + rpName.replaceAll(".zip", "") + jsonFormat)) {
+            try (FileWriter writer = new FileWriter(path + file.getName().replace(".zip", "") + jsonFormat)) {
                 writer.write(json);
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            MYLOGGER.warn("Failed to create Better Anvil config folder! (Zip)");
+            MYLOGGER.warn("Failed to create Better Anvil config folder!");
         }
     }
 
-    private static CitCollection getCitFolderFiles(String resourcePackName) {
-        Path resourcePackPath = Paths.get(pathToResourcePacks + resourcePackName);
+    public static CITCollection getCITItems(File file, boolean isZip, boolean isServer) {
 
-        Collection<CitItems> citItemsCollection = new ArrayList<>();
+        ArrayList<CITItem> citItemsCollection = new ArrayList<>();
 
-        try (FileSystem zipFS = FileSystems.newFileSystem(resourcePackPath, (ClassLoader) null)) {
-            Path citFolder = zipFS.getPath(pathToCitFolder);
+        String p = pathToCITFolder;
 
-            Files.walk(citFolder).filter(path -> path.toString().endsWith(".properties")).forEach(propertiesFile -> {
+        if(!isZip){
+            return readFile(Path.of(file.toPath() + p));
+        }
+
+        try (FileSystem zipFS = FileSystems.newFileSystem(file.toPath(), (ClassLoader) null)) {
+            Path citFolder = zipFS.getPath(p);
+
+            return readFile(citFolder);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new CITCollection(citItemsCollection);
+        }
+    }
+
+    private static CITCollection readFile(Path folder){
+        ArrayList<CITItem> citItemsCollection = new ArrayList<>();
+
+        try{
+            Files.walk(folder).filter(path -> path.toString().endsWith(".properties")).forEach(propertiesFile -> {
                 try (InputStream inputStream = Files.newInputStream(propertiesFile);
                      BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
                     String line;
@@ -79,7 +97,7 @@ public class ZipWriter {
                         }
                     }
                     if(item != null && customname != null){
-                        CitItems citItems = new CitItems(item, customname, damage);
+                        CITItem citItems = new CITItem(item, customname, damage);
                         if(!lore.isEmpty()){
                             citItems.setLore(lore);
                         }
@@ -92,19 +110,7 @@ public class ZipWriter {
             });
         } catch (IOException e) {
             e.printStackTrace();
-            return new CitCollection(citItemsCollection);
         }
-        return new CitCollection(citItemsCollection);
+        return new CITCollection(citItemsCollection);
     }
-
-    public static boolean hasCitZipFolder(Path resourcePackPath) {
-        try (FileSystem zipFS = FileSystems.newFileSystem(resourcePackPath, (ClassLoader) null)) {
-            Path citFolder = zipFS.getPath(pathToCitFolder);
-            return Files.isDirectory(citFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-}//
+}

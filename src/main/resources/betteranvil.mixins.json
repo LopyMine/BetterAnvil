@@ -7,9 +7,11 @@
     "ServerResourcePackMixin"
   ],
   "client": [
-    "AnvilGuiMixin",
-    "ReloadableResourceManagerImplMixin",
-    "ResourcePackMenu"
+    "AnvilScreenMixin",
+    "ChatScreenMixin",
+    "ResourcePackEntryMixin",
+    "PackScreenMixin",
+    "ReloadableResourceManagerImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1
