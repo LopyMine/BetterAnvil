@@ -1,4 +1,4 @@
-package net.lopymine.betteranvil.gui.my.widget;
+package net.lopymine.betteranvil.gui.widgets.buttons;
 
 import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
@@ -8,11 +8,15 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import net.lopymine.betteranvil.BetterAnvil;
+import net.lopymine.betteranvil.client.BetterAnvilClient;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.lopymine.betteranvil.modmenu.enums.CITButtonTexture;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -27,26 +31,31 @@ public class WItemButton extends WWidget {
     private final Identifier MY_BUTTON_DARK = new Identifier(BetterAnvil.MOD_ID, "gui/mybuttondark.png");
     private static final Identifier MY_BUTTON_FOCUS = new Identifier(BetterAnvil.MOD_ID, "gui/mybuttonfocus.png");
     private WItem itemIcon;
+    private ItemStack stack;
     private Text text;
     private Runnable onClick;
     private Runnable onCtrlClick;
     private Text itemNameToolTip = Text.of("");
     private Text resourcePackToolTip = Text.of("");
-    private static boolean keyBoolean = false;
+    private static boolean shift = false;
     private static boolean ctrl = false;
     private final Identifier actualTexture;
     private ArrayList<String> lore = new ArrayList<>();
+    private final int SHIFT_KEY = BetterAnvilConfigManager.read().SHIFT_KEY;
+    private final int CTRL_KEY = BetterAnvilConfigManager.read().CTRL_KEY;
 
-    public WItemButton(Text text, WItem itemIcon){
+    public WItemButton(Text text, WItem itemIcon) {
         this.text = text;
         this.itemIcon = itemIcon;
         this.actualTexture = getActualTexture();
     }
-    public WItemButton(Text text){
+
+    public WItemButton(Text text) {
         this.text = text;
         this.actualTexture = getActualTexture();
     }
-    public WItemButton(){
+
+    public WItemButton() {
         this.actualTexture = getActualTexture();
     }
 
@@ -60,12 +69,12 @@ public class WItemButton extends WWidget {
         return true;
     }
 
-    public WItemButton setItemIcon(WItem itemIcon){
+    public WItemButton setItemIcon(WItem itemIcon) {
         this.itemIcon = itemIcon;
         return this;
     }
 
-    public WItemButton setText(Text text){
+    public WItemButton setText(Text text) {
         this.text = text;
         return this;
     }
@@ -84,7 +93,7 @@ public class WItemButton extends WWidget {
             return InputResult.PROCESSED;
         }
 
-        if (onClick!=null) onClick.run();
+        if (onClick != null) onClick.run();
         return InputResult.PROCESSED;
 
     }
@@ -93,18 +102,27 @@ public class WItemButton extends WWidget {
     public void addTooltip(TooltipBuilder tooltip) {
         tooltip.add(itemNameToolTip);
 
-        if(!lore.isEmpty()){
+        if (shift) {
+
             tooltip.add(Text.of(""));
-            for(String s : lore){
-                tooltip.add(Text.of("§8" + s));
+            tooltip.add(Text.translatable("gui.betteranvil.citmenu.itembutton.tooltip.resourcepack"));
+            tooltip.add(resourcePackToolTip);
+
+            if (!lore.isEmpty()) {
+                tooltip.add(Text.of(""));
+                tooltip.add(Text.translatable("gui.betteranvil.citmenu.itembutton.tooltip.lore"));
+                for (String s : lore) {
+                    tooltip.add(Text.of("§8" + s));
+                }
+            }
+
+            if (stack != null) {
+                tooltip.add(Text.of(""));
+                tooltip.add(Text.translatable("gui.betteranvil.citmenu.itembutton.tooltip.item"));
+                tooltip.add(stack.getItem().getName());
             }
         }
 
-        if (keyBoolean) {
-            tooltip.add(Text.of(""));
-            tooltip.add(Text.translatable("gui.betteranvil.citmenu.itembutton.tooltip"));
-            tooltip.add(resourcePackToolTip);
-        }
     }
 
     @Override
@@ -114,23 +132,25 @@ public class WItemButton extends WWidget {
 
 
         if (isHovered() || isFocused()) {
-            ScreenDrawing.texturedRect(matrices, x, y, 155, 32, MY_BUTTON_FOCUS , 0xFFFFFFFF);
+            ScreenDrawing.texturedRect(matrices, x, y, 155, 32, MY_BUTTON_FOCUS, 0xFFFFFFFF);
 
         }
 
         if (itemIcon != null) {
-            itemIcon.paint(matrices, x + 7,y + 7, mouseX, mouseY);
+            itemIcon.paint(matrices, x + 7, y + 7, mouseX, mouseY);
         }
 
-        if(text != null){
+        if (text != null) {
             int color = 0xE0E0E0;
-
-            ScreenDrawing.drawStringWithShadow(matrices, text.asOrderedText(), HorizontalAlignment.LEFT, x + 31, y + 12, width, color);
+            if (!LibGui.isDarkMode() && actualTexture != MY_BUTTON_RENAME) {
+                color = 0x262626;
+            }
+            ScreenDrawing.drawString(matrices, text.asOrderedText(), HorizontalAlignment.LEFT, x + 31, y + 12, width, color);
 
         }
     }
 
-    public void setItemNameToolTip(Text itemNameToolTip) {
+    public void setToolTip(Text itemNameToolTip) {
         this.itemNameToolTip = itemNameToolTip;
     }
 
@@ -142,19 +162,19 @@ public class WItemButton extends WWidget {
         this.onClick = onClick;
     }
 
-    private Identifier getActualTexture(){
+    private Identifier getActualTexture() {
         //return LibGui.isDarkMode() ? MY_BUTTON_DARK : MY_BUTTON;
         CITButtonTexture citButtonTexture = BetterAnvilConfigManager.read().BUTTON_TEXTURE;
-        if(citButtonTexture == CITButtonTexture.THEME){
+        if (citButtonTexture == CITButtonTexture.THEME) {
             return LibGui.isDarkMode() ? MY_BUTTON_DARK : MY_BUTTON;
         }
-        if(citButtonTexture == CITButtonTexture.RENAME){
+        if (citButtonTexture == CITButtonTexture.RENAME) {
             return MY_BUTTON_RENAME;
         }
-        if(citButtonTexture == CITButtonTexture.RENAME_DARK_THEME){
+        if (citButtonTexture == CITButtonTexture.RENAME_DARK_THEME) {
             return LibGui.isDarkMode() ? MY_BUTTON_RENAME : MY_BUTTON;
         }
-        if(citButtonTexture == CITButtonTexture.RENAME_WHITE_THEME){
+        if (citButtonTexture == CITButtonTexture.RENAME_WHITE_THEME) {
             return LibGui.isDarkMode() ? MY_BUTTON_DARK : MY_BUTTON_RENAME;
         }
         return MY_BUTTON;
@@ -166,27 +186,33 @@ public class WItemButton extends WWidget {
 
     @Override
     public void onKeyReleased(int ch, int key, int modifiers) {
-        if (key == 42) {
-            keyBoolean = false;
+        if (ch == SHIFT_KEY) {
+            shift = false;
         }
-        if(key == 29){
+        if (ch == CTRL_KEY) {
             ctrl = false;
         }
-        super.onKeyReleased(ch, key, modifiers);
     }
 
     @Override
     public void onKeyPressed(int ch, int key, int modifiers) {
-        if (key == 42) {
-            keyBoolean = true;
+        if (ch == SHIFT_KEY) {
+            shift = true;
         }
-        if(key == 29){
+        if (ch == CTRL_KEY) {
             ctrl = true;
         }
-        super.onKeyPressed(ch, key, modifiers);
     }
 
     public void setLore(ArrayList<String> lore) {
         this.lore = lore;
+    }
+
+    public void setStack(ItemStack stack) {
+        this.stack = stack;
+    }
+
+    public ItemStack getStack() {
+        return stack;
     }
 }
