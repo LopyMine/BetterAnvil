@@ -37,8 +37,7 @@ public class NoClothConfigScreen extends LightweightGuiDescription {
         WButton button = new WButton(ScreenTexts.BACK);
         button.setOnClick(()-> mc.setScreen(screen));
 
-        root.add(button,0,2, 60, 20);
-        button.setLocation(w-62,2);
+        root.add(button,w-63,4, 60, 20);
 
         setRootPanel(root);
     }
