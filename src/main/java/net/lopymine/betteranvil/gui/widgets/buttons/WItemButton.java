@@ -137,7 +137,7 @@ public class WItemButton extends WWidget {
         }
 
         if (itemIcon != null) {
-            itemIcon.paint(matrices, x + 7, y + 7, mouseX, mouseY);
+            itemIcon.paint(matrices, x + 8, y + 8, mouseX, mouseY);
         }
 
         if (text != null) {
