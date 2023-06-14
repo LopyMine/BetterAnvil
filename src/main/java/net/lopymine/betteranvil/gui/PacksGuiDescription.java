@@ -26,6 +26,7 @@ import net.lopymine.betteranvil.resourcepacks.utils.ItemList;
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.item.BundleItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -564,7 +565,22 @@ public class PacksGuiDescription extends LightweightGuiDescription {
 
         if (buttonsSub.isEmpty()) {
             MYLOGGER.warn("Buttons sub is empty");
-            return;
+            WTabButton wTabButton = new WTabButton();
+            wTabButton.setItem(new ItemStack(Items.NAME_TAG));
+            wTabButton.setOnToggle((on) -> {
+                active_pack = "all";
+
+                for (WTabButton tabButton : buttons) {
+                    if (!tabButton.equals(wTabButton)) {
+                        tabButton.setToggle(false);
+                    }
+                }
+
+                createAllNameList(panel, new ArrayList<>());
+
+            });
+
+            buttonsSub.add(wTabButton);
         }
 
         root.remove(panel);
