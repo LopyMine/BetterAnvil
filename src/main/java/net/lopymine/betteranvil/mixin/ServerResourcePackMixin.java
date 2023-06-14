@@ -1,7 +1,9 @@
 package net.lopymine.betteranvil.mixin;
 
-import net.lopymine.betteranvil.cit.ConfigParser;
-import net.lopymine.betteranvil.cit.writers.ServerWriter;
+import net.lopymine.betteranvil.resourcepacks.cit.writers.CITWriter;
+import net.lopymine.betteranvil.resourcepacks.ConfigManager;
+import net.lopymine.betteranvil.resourcepacks.PackManager;
+import net.lopymine.betteranvil.resourcepacks.custommodeldata.writers.CMDWriter;
 import net.minecraft.client.resource.ClientBuiltinResourcePackProvider;
 import net.minecraft.resource.ResourcePackSource;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,12 +21,25 @@ public class ServerResourcePackMixin {
 
     @Inject(at = @At("RETURN"), method = "loadServerPack(Ljava/io/File;Lnet/minecraft/resource/ResourcePackSource;)Ljava/util/concurrent/CompletableFuture;")
     private void init(File packZip, ResourcePackSource packSource, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
-        ConfigParser.setServerResourcePack(packZip.getName());
-        if(ServerWriter.hasCitZipFolder(packZip)){
-            ServerWriter.writeConfig(packZip);
+        PackManager.setServerResourcePack(packZip.getName());
+        System.out.println(PackManager.getServerResourcePack().get());
+
+        if (ConfigManager.hasZipCITFolder(packZip.toPath())) {
+            CITWriter.writeConfig(packZip, true, true);
+            System.out.println(PackManager.getServerResourcePack().get());
+            return;
         } else {
-            ConfigParser.setServerResourcePack(null);
+            PackManager.setServerResourcePack(null);
             MYLOGGER.info("This server resource pack does not have a cit folder");
         }
+
+        if(ConfigManager.hasZipCMDFolder(packZip.toPath())){
+            PackManager.setServerResourcePack(packZip.getName());
+            CMDWriter.writeConfig(packZip, true, true);
+        }  else {
+            PackManager.setServerResourcePack(null);
+            MYLOGGER.info("This server resource pack does not have a CMD folder");
+        }
+
     }
 }

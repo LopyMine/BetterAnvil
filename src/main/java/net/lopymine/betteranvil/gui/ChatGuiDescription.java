@@ -7,7 +7,6 @@ import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
-import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon;
 import net.lopymine.betteranvil.BetterAnvil;
 import net.lopymine.betteranvil.gui.panels.WMyListPanel;
 import net.lopymine.betteranvil.gui.widgets.WDroppedItem;
@@ -19,48 +18,47 @@ import net.lopymine.betteranvil.gui.widgets.enums.Switcher;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.lopymine.betteranvil.resourcepacks.PackManager;
 import net.lopymine.betteranvil.resourcepacks.cit.CITItem;
-import net.lopymine.betteranvil.resourcepacks.cit.CITParser;
-import net.lopymine.betteranvil.resourcepacks.cit.writers.FavoriteWriter;
+import net.lopymine.betteranvil.resourcepacks.custommodeldata.CMDItem;
+import net.lopymine.betteranvil.resourcepacks.custommodeldata.CMDParser;
+import net.lopymine.betteranvil.resourcepacks.custommodeldata.writers.CMDFavoriteWriter;
+import net.lopymine.betteranvil.resourcepacks.utils.ItemList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
 import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
 
-public abstract class AnvilGuiDescription extends LightweightGuiDescription {
+public abstract class ChatGuiDescription extends LightweightGuiDescription {
     @Override
     public void addPainters() {
 
     }
 
-    protected abstract void renameMethod(String name);
+    protected abstract void method(CMDItem item);
 
     private final ArrayList<WTabButton> buttons = new ArrayList<>();
     private int s = 0;
     private final ArrayList<WTabButton> buttonsSub = new ArrayList<>();
-    public static final int maxLength = 18;
-    public static final int maxLengthBigLabel = 20;
     private static WLabel emptyF;
-    private static WListPanel<CITItem, WMyListPanel> wListPanelF;
+    private static WListPanel<CMDItem, WMyListPanel> wListPanelF;
     private static WLabel emptyD;
-    private static WListPanel<CITItem, WMyListPanel> wListPanelD;
+    private static WListPanel<CMDItem, WMyListPanel> wListPanelD;
     private static boolean favoriteWindowOn;
-    private final BiConsumer<CITItem, WMyListPanel> configuratorF;
-    private final BiConsumer<CITItem, WMyListPanel> configuratorD;
-    private final ArrayList<CITItem> dataF;
-    private final ArrayList<CITItem> dataFAll;
-    private ArrayList<CITItem> dataD;
+    private final BiConsumer<CMDItem, WMyListPanel> configuratorF;
+    private final BiConsumer<CMDItem, WMyListPanel> configuratorD;
+    private final ArrayList<CMDItem> dataF;
+    private final ArrayList<CMDItem> dataD;
     public final Identifier bigFieldNameTextureFocusDark = new Identifier(BetterAnvil.MOD_ID, "gui/namefieldfocusdark.png");
     public final Identifier bigFieldNameTextureNotFocusDark = new Identifier(BetterAnvil.MOD_ID, "gui/namefielddark.png");
     public final Identifier bigFieldNameTextureFocus = new Identifier(BetterAnvil.MOD_ID, "gui/namefieldfocus.png");
@@ -83,12 +81,11 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
     private final WSwitcher switcherRight;
     private final int w;
     private final int h;
-    private final ItemStack stack;
     private final WPlainPanel favorite = new WPlainPanel();
-    private final Map<String, ArrayList<CITItem>> packs = new HashMap<>();
+    private final Map<String, ArrayList<CMDItem>> packs = new HashMap<>();
     private String active_pack = "all";
 
-    public AnvilGuiDescription(Screen parent, ItemStack anvilItem) {
+    public ChatGuiDescription(Screen parent) {
 
         // Main
 
@@ -99,8 +96,6 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         screenHeight = mc.currentScreen.height;
 
         root.setSize(screenWidth, screenHeight);
-
-        this.stack = anvilItem;
 
         int panel_height = screenHeight - (ind * 2);
 
@@ -120,11 +115,9 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         favorite.setSize(panelWidth, panelFHeight);
         favorite.setHost(this);
 
-        dataD = new ArrayList<>(CITParser.parseAllItems(anvilItem));
+        dataD = new ArrayList<>(CMDParser.parseCMDItems());
 
-        dataFAll = new ArrayList<>(FavoriteWriter.readConfig().getItems());
-
-        dataF = new ArrayList<>(FavoriteWriter.getWithItem(dataFAll, anvilItem));
+        dataF = new ArrayList<>(CMDFavoriteWriter.getFavoriteItems());
 
         // Widgets
 
@@ -140,7 +133,7 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         itemName.setHorizontalAlignment(HorizontalAlignment.CENTER);
         itemName.setVerticalAlignment(VerticalAlignment.CENTER);
 
-        WMyTextField textFieldF = new WMyTextField(PackManager.getPackNamesWithCITConfig(), Text.translatable("gui.betteranvil.citmenu.list.search"));
+        WMyTextField textFieldF = new WMyTextField(PackManager.getPackNamesWithCMDConfig(), Text.translatable("gui.betteranvil.citmenu.list.search"));
         textFieldF.setHost(favorite.getHost());
         textFieldF.setChangedListener(s -> {
             if (textFieldF.getText().isEmpty()) {
@@ -148,7 +141,7 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
                 return;
             }
 
-            if (textFieldF.getText().startsWith("*")) {
+            if(textFieldF.getText().startsWith("*")){
                 createFavoriteNameList(favorite, getSearchPackData(textFieldF, dataF));
                 return;
             }
@@ -167,14 +160,16 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
                 return;
             }
             if (active_pack.equals("all")) {
-                createAllNameList(panel, getSearchData(textFieldD, dataD));
+                createAllNameList(panel, getSearchData(textFieldD,dataD));
             } else {
                 createAllNameList(panel, getSearchData(textFieldD, packs.get(active_pack)));
             }
         });
 
         WButton closeButtonD = new WButton(Text.literal("х"));
-        closeButtonD.setOnClick(() -> mc.setScreen(parent));
+        closeButtonD.setOnClick(() -> {
+            mc.setScreen(parent);
+        });
 
         WFavoriteButton wFavoriteButton = new WFavoriteButton();
         wFavoriteButton.setOnToggle(on -> {
@@ -202,7 +197,7 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
 
         WButton copyButton = new WButton(Text.translatable("gui.betteranvil.citmenu.button.select"));
 
-        WDroppedItem droppedItem = new WDroppedItem(anvilItem);
+        WDroppedItem droppedItem = new WDroppedItem(Items.AIR.getDefaultStack());
 
         int itemPanelWidth = screenWidth - (w + panelWidth);
 
@@ -222,49 +217,50 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         favorite.add(textFieldF, getWPos(tff), favoriteButtonPos + 24, tff, 10);
         favorite.add(labelF, 0, favoriteButtonPos, panelWidth, 10);
 
-        configuratorF = (CITItem s, WMyListPanel destination) -> {
+        configuratorF = (CMDItem s, WMyListPanel destination) -> {
 
             destination.favoriteButton.setToggle(true);
 
-            destination.wItemButton.setToolTip(Text.of(s.getCustomName()));
+            Text text = getTextByID(s.getId());
+
+            destination.wItemButton.setToolTip(text);
+
+            destination.wItemButton.setText(text);
 
             destination.wItemButton.setResourcePackToolTip(Text.of("§9" + s.getResourcePack()));
 
             destination.wItemButton.setHost(this);
 
-            if (s.getLore() != null) {
-                destination.wItemButton.setLore(s.getLore());
-            }
-
             destination.wItemButton.setOnCtrlClick(() -> {
                 mc.setScreen(parent);
-                this.renameMethod(s.getCustomName());
+                method(s);
             });
 
-            ItemStack anvilItemNew = new ItemStack(anvilItem.getItem().asItem());
+            ItemStack anvilItemNew = new ItemStack(getItemByString(s.getItem()));
 
-            anvilItemNew.setCustomName(Text.of(s.getCustomName()));
-            List<ItemStack> itemStackList = new ArrayList<>();
-            itemStackList.add(anvilItemNew);
-            destination.wItemButton.setItemIcon(new WItem(itemStackList));
+            destination.wItemButton.setStack(anvilItemNew);
+
+            NbtCompound compound = new NbtCompound();
+            compound.putInt("CustomModelData", s.getId());
+            anvilItemNew.setNbt(compound);
+
+            destination.wItemButton.setItemIcon(new WItem(anvilItemNew));
 
             destination.wItemButton.setOnClick(() -> {
-                bigFieldName.setImage(bfnTextureFocus);
-                itemName.setText(Text.of(cutString(s.getCustomName(), maxLengthBigLabel)));
                 droppedItem.setStack(anvilItemNew);
+                bigFieldName.setImage(bfnTextureFocus);
+                itemName.setText(text);
                 itemName.setHorizontalAlignment(HorizontalAlignment.CENTER);
                 copyButton.setOnClick(() -> {
                     mc.setScreen(parent);
-                    this.renameMethod(s.getCustomName());
+                    method(s);
                 });
 
             });
 
-            destination.wItemButton.setText(Text.literal(cutString(s.getCustomName(), maxLength)));
-
             destination.favoriteButton.setOnToggle(on -> {
                 if (!on) {
-                    FavoriteWriter.removeItem(dataFAll, s);
+                    CMDFavoriteWriter.removeItem(dataF, s);
                     dataF.remove(s);
                     createFavoriteNameList(favorite, dataF);
                     createAllNameList(panel, packs.get(active_pack));
@@ -272,55 +268,58 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
             });
         };
 
-        configuratorD = (CITItem s, WMyListPanel destination) -> {
-            destination.wItemButton.setText(Text.literal(cutString(s.getCustomName(), maxLength)));
 
-            destination.wItemButton.setToolTip(Text.of(s.getCustomName()));
+        configuratorD = (CMDItem s, WMyListPanel destination) -> {
+
+            Text text = getTextByID(s.getId());
+
+            destination.wItemButton.setToolTip(text);
+
+            destination.wItemButton.setText(text);
 
             destination.wItemButton.setResourcePackToolTip(Text.of("§9" + s.getResourcePack()));
 
             destination.wItemButton.setHost(this);
 
-            if (s.getLore() != null) {
-                destination.wItemButton.setLore(s.getLore());
-            }
-
             destination.wItemButton.setOnCtrlClick(() -> {
                 mc.setScreen(parent);
-                this.renameMethod(s.getCustomName());
+                method(s);
             });
 
+            ItemStack anvilItemNew = new ItemStack(getItemByString(s.getItem()));
 
-            ItemStack anvilItemNew = new ItemStack(anvilItem.getItem().asItem());
-            anvilItemNew.setCustomName(Text.of(s.getCustomName()));
-            List<ItemStack> itemStackList = new ArrayList<>();
-            itemStackList.add(anvilItemNew);
-            destination.wItemButton.setItemIcon(new WItem(itemStackList));
+            destination.wItemButton.setStack(anvilItemNew);
 
-            for (CITItem citItem : dataF) {
+            NbtCompound compound = new NbtCompound();
+            compound.putInt("CustomModelData", s.getId());
+            anvilItemNew.setNbt(compound);
+
+            destination.wItemButton.setItemIcon(new WItem(anvilItemNew));
+
+            for (CMDItem citItem : dataF) {
                 if (citItem.equals(s)) {
                     destination.favoriteButton.setToggle(true);
                 }
             }
 
             destination.wItemButton.setOnClick(() -> {
+                droppedItem.setStack(anvilItemNew);
                 bigFieldName.setImage(bfnTextureFocus);
-                itemName.setText(Text.of(cutString(s.getCustomName(), maxLengthBigLabel)));
+                itemName.setText(text);
                 itemName.setHorizontalAlignment(HorizontalAlignment.CENTER);
                 copyButton.setOnClick(() -> {
                     mc.setScreen(parent);
-                    this.renameMethod(s.getCustomName());
+                    method(s);
                 });
-                droppedItem.setStack(anvilItemNew);
             });
 
             destination.favoriteButton.setOnToggle(on -> {
                 if (on) {
-                    FavoriteWriter.addItem(s);
+                    CMDFavoriteWriter.addItem(s);
                     dataF.add(s);
                     createFavoriteNameList(favorite, dataF);
                 } else {
-                    FavoriteWriter.removeItem(dataFAll, s);
+                    CMDFavoriteWriter.removeItem(dataF, s);
                     dataF.remove(s);
                     createFavoriteNameList(favorite, dataF);
                 }
@@ -346,29 +345,22 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
 
         setButtons();
 
+        //
+        if (buttons.size() > 7) {
+            root.add(switcherRight, w + panelWidth + 2, h - 26);
+        }
+
         root.add(panel, w, h, panelWidth, panelDHeight);
 
         setRootPanel(root);
         root.validate(this);
     }
 
-    public static String cutString(String text, int length) {
-        if (text.length() <= length) {
-            return text;
-        } else {
-            String cutText = text.substring(0, length);
-            if (cutText.endsWith(" ")) {
-                cutText = cutText.substring(0, cutText.length() - 1);
-            }
-            return cutText + "...";
-        }
-    }
+    private ArrayList<CMDItem> getSearchData(WTextField wTextField, ArrayList<CMDItem> data) {
+        ArrayList<CMDItem> dataSearch = new ArrayList<>();
 
-    private ArrayList<CITItem> getSearchData(WTextField wTextField, ArrayList<CITItem> data) {
-        ArrayList<CITItem> dataSearch = new ArrayList<>();
-
-        for (CITItem dt : data) {
-            if (dt.getCustomName().toLowerCase().replace("ё", "е").contains(wTextField.getText().toLowerCase().replace("ё", "е"))) {
+        for (CMDItem dt : data) {
+            if(String.valueOf(dt.getId()).contains(wTextField.getText())){
                 dataSearch.add(dt);
             }
         }
@@ -376,11 +368,11 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         return dataSearch;
     }
 
-    private ArrayList<CITItem> getSearchPackData(WTextField wTextField, ArrayList<CITItem> data) {
-        ArrayList<CITItem> dataSearch = new ArrayList<>();
+    private ArrayList<CMDItem> getSearchPackData(WTextField wTextField, ArrayList<CMDItem> data) {
+        ArrayList<CMDItem> dataSearch = new ArrayList<>();
 
-        for (CITItem dt : data) {
-            if (dt.getResourcePack().toLowerCase().replace("ё", "е").contains(wTextField.getText().toLowerCase().replace("*", "").replace("ё", "е"))) {
+        for (CMDItem dt : data) {
+            if (dt.getResourcePack().toLowerCase().replace("ё", "е").contains(wTextField.getText().toLowerCase().replace("*","").replace("ё", "е"))) {
                 dataSearch.add(dt);
             }
         }
@@ -388,7 +380,7 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         return dataSearch;
     }
 
-    public void createFavoriteNameList(WPlainPanel root, ArrayList<CITItem> data) {
+    public void createFavoriteNameList(WPlainPanel root, ArrayList<CMDItem> data) {
         root.remove(emptyF);
         root.remove(wListPanelF);
 
@@ -414,7 +406,7 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         }
     }
 
-    public void createAllNameList(WPlainPanel root, ArrayList<CITItem> data) {
+    public void createAllNameList(WPlainPanel root, ArrayList<CMDItem> data) {
         root.remove(emptyD);
         root.remove(wListPanelD);
 
@@ -466,16 +458,15 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         for (ResourcePackProfile profile : profiles) {
             String pack = getPack(profile);
 
+            ArrayList<CMDItem> citItems;
 
-            ArrayList<CITItem> citItems;
-
-            if (pack.equals("server")) {
+            if(pack.equals("server")){
                 citItems = getServerPackItems();
             } else {
                 citItems = getPackItems(pack);
             }
 
-            if (!citItems.isEmpty()) {
+            if(!citItems.isEmpty()){
                 WTabButton button = new WTabButton();
 
                 button.setResourcePack(pack);
@@ -578,7 +569,7 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         WTabButton button = buttonsSub.get(0);
         button.setToggle(true);
 
-        if (button.getOnToggle() != null) {
+        if(button.getOnToggle() != null){
             button.getOnToggle().accept(true);
         } else {
             MYLOGGER.warn("W-wait... WTabButton consumer on toggle is null?");
@@ -586,10 +577,10 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
 
     }
 
-    private ArrayList<CITItem> getPackItems(String pack) {
-        ArrayList<CITItem> citItems = new ArrayList<>();
+    private ArrayList<CMDItem> getPackItems(String pack) {
+        ArrayList<CMDItem> citItems = new ArrayList<>();
 
-        for (CITItem item : dataD) {
+        for (CMDItem item : dataD) {
             if (item.getResourcePack().equals(pack)) {
                 citItems.add(item);
             }
@@ -598,10 +589,10 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         return citItems;
     }
 
-    private ArrayList<CITItem> getServerPackItems() {
-        ArrayList<CITItem> citItems = new ArrayList<>();
+    private ArrayList<CMDItem> getServerPackItems() {
+        ArrayList<CMDItem> citItems = new ArrayList<>();
 
-        for (CITItem item : dataD) {
+        for (CMDItem item : dataD) {
             if (item.getResourcePack().equals("Server")) {
                 citItems.add(item);
             }
@@ -610,19 +601,22 @@ public abstract class AnvilGuiDescription extends LightweightGuiDescription {
         return citItems;
     }
 
-    //private void setFavoritePanelHeight(){
-    //    int d = favorite_height * 32;
-    //    int s = favorite_height * 4;
-//
-    //    System.out.println(panelFHeight);
-//
-    //    panelFHeight = s+d+favoriteButtonPos + 50;
-//
-    //    System.out.println(panelFHeight);
-//
-    //    favorite.setSize(panelWidth,panelFHeight + 2);
-    //    createFavoriteNameListA(favorite,dataF);
-    //}
+    private Item getItemByString(String item) {
+        for(Item i : ItemList.getItems()){
+            if(getItemName(i.getTranslationKey()).equals(item)){
+                return i;
+            }
+        }
+        return Items.AIR;
+    }
+
+    private String getItemName(String translationKey) {
+        return translationKey.replaceAll("item.minecraft.", "").replaceAll("block.minecraft.", "");
+    }
+
+    private Text getTextByID(int id) {
+        return Text.of("ID: " + id);
+    }
 
     private void clearButtons() {
         for (WTabButton button : buttons) {

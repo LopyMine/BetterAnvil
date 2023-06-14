@@ -1,13 +1,11 @@
-package net.lopymine.betteranvil.cit;
+package net.lopymine.betteranvil.resourcepacks.cit;
 
-import com.mifmif.common.regex.Generex;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-public class CitItems {
+public class CITItem {
     private final String items;
     private final String customname;
     private final String damage;
@@ -16,7 +14,7 @@ public class CitItems {
     private String resourcePack = null;
     private String serverResourcePack = null;
 
-    public CitItems(String item, String customname, String other) {
+    public CITItem(String item, String customname, String other) {
         this.items = item;
         this.customname = customname;
         this.damage = other;
@@ -101,9 +99,10 @@ public class CitItems {
     @Override
     public boolean equals(Object obj) {
         if(obj == this) return true;
-        if(!(obj instanceof CitItems citItem)) return false;
+        if(!(obj instanceof CITItem citItem)) return false;
         if(citItem.getResourcePack().equals(this.getResourcePack()) && citItem.getItem().equals(this.getItem()) && citItem.getCustomName().equals(this.getCustomName())) return true;
 
         return super.equals(obj);
     }
+
 }
