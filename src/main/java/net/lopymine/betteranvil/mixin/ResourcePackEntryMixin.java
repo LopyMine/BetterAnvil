@@ -10,7 +10,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.pack.PackListWidget;
 import net.minecraft.client.gui.screen.pack.ResourcePackOrganizer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
+import net.minecraft.resource.ResourcePackSource;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,13 +31,14 @@ public abstract class ResourcePackEntryMixin {
 
     @Shadow @Final private ResourcePackOrganizer.Pack pack;
     private static final Identifier search = new Identifier(BetterAnvil.MOD_ID, "gui/search.png");
-
+    private ResourcePackManager manager = MinecraftClient.getInstance().getResourcePackManager();
     private boolean look = false;
 
     @Inject(at = @At("RETURN"), method = "mouseClicked")
     private void init(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
 
-        if(!look){
+
+        if (!look) {
             return;
         }
 
@@ -44,9 +47,17 @@ public abstract class ResourcePackEntryMixin {
         int y = (int) mouseY - getRowTop(d / 35);
 
         ArrayList<ResourcePackProfile> profiles = new ArrayList<>();
-        profiles.add(MinecraftClient.getInstance().getResourcePackManager().getProfile(pack.getDisplayName().getString()));
+        if (manager.getProfile("file/" + pack.getDisplayName().getString()) != null) {
+            profiles.add(manager.getProfile("file/" + pack.getDisplayName().getString()));
+        } else if (manager.getProfile("server") != null) {
+            profiles.add(manager.getProfile("server"));
+        }
 
-        if(x >= 177 && y >= 0 & y <= 14){
+        if(profiles.isEmpty()){
+            return;
+        }
+
+        if (x >= 177 && y >= 0 & y <= 14) {
             MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new PacksGuiDescription(null, profiles, true)));
         }
 
@@ -61,11 +72,23 @@ public abstract class ResourcePackEntryMixin {
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void init(MinecraftClient client, PackListWidget widget, Screen screen, ResourcePackOrganizer.Pack pack, CallbackInfo ci) {
-        String name = pack.getDisplayName().getString();
-        if(name.startsWith("file/") && ConfigManager.hasCITFolder(ConfigManager.pathToResourcePacks + name.replaceAll("file/", ""))){
-            look = true;
-        } else if (name.equals("server")) {
-            look = true;
+
+
+        if(pack.getSource() == ResourcePackSource.NONE || pack.getSource() == ResourcePackSource.SERVER || pack.getSource() == ResourcePackSource.WORLD){
+            String name;
+            if (manager.getProfile("file/" + pack.getDisplayName().getString()) != null) {
+                name = manager.getProfile("file/" + pack.getDisplayName().getString()).getName();
+            } else if (manager.getProfile("server") != null) {
+                name = "server";
+            } else {
+                return;
+            }
+
+            if (name.equals("server")) {
+                look = true;
+            } else if (ConfigManager.hasCITFolder(ConfigManager.pathToResourcePacks + name.replaceAll("file/", ""))) {
+                look = true;
+            }
         }
     }
 
