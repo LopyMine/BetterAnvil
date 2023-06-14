@@ -88,7 +88,6 @@ public abstract class ResourcePackEntryMixin {
                 return;
             }
 
-            System.out.println(name);
             if (name.equals("server")) {
                 look = true;
             } else if (ConfigManager.hasCITFolder(ConfigManager.pathToResourcePacks + name.replaceAll("file/", ""))) {
