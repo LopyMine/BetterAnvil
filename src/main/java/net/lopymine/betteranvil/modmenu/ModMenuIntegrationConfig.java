@@ -97,14 +97,14 @@ public class ModMenuIntegrationConfig {
 
         ConfigCategory keyBindings = configBuilder.getOrCreateCategory(Text.translatable("gui.betteranvil.modmenu.keybinding.title"));
 
-        KeyBinding shift = new KeyBinding("gui.betteranvil.keybinding.shift", InputUtil.Type.KEYSYM, 340, "gui.betteranvil.keybinding.shift.tooltip");
+        KeyBinding shift = new KeyBinding("gui.betteranvil.keybinding.shift", InputUtil.Type.KEYSYM, config.SHIFT_KEY, "gui.betteranvil.keybinding.shift.tooltip");
         InputUtil.Key shift_key = KeyBindingHelper.getBoundKeyOf(shift);
         keyBindings.addEntry(entryBuilder.startKeyCodeField(Text.translatable("gui.betteranvil.setting.keybinding.shift"), shift_key)
                 .setDefaultValue(shift_key)
                 .setKeySaveConsumer(key -> config.SHIFT_KEY = key.getCode())
                 .build());
 
-        KeyBinding ctrl = new KeyBinding("gui.betteranvil.keybinding.ctrl", InputUtil.Type.KEYSYM, 341, "gui.betteranvil.keybinding.ctrl.tooltip");
+        KeyBinding ctrl = new KeyBinding("gui.betteranvil.keybinding.ctrl", InputUtil.Type.KEYSYM, config.CTRL_KEY, "gui.betteranvil.keybinding.ctrl.tooltip");
         InputUtil.Key ctrl_key = KeyBindingHelper.getBoundKeyOf(ctrl);
         keyBindings.addEntry(entryBuilder.startKeyCodeField(Text.translatable("gui.betteranvil.setting.keybinding.ctrl"), ctrl_key)
                 .setDefaultValue(ctrl_key)
