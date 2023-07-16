@@ -5,31 +5,30 @@ import net.lopymine.betteranvil.resourcepacks.PackManager;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
 import static net.lopymine.betteranvil.resourcepacks.ConfigManager.*;
 
 public class CMDParser {
 
-    public static ArrayList<CMDItem> parseCMDItems(){
+    public static LinkedHashSet<CMDItem> parseCMDItems(){
         return getCMDItems();
     }
 
-    private static ArrayList<CMDItem> getCMDItems(){
-        ArrayList<CMDItem> customModelDataItems = new ArrayList<>();
+    private static LinkedHashSet<CMDItem> getCMDItems(){
+        LinkedHashSet<CMDItem> customModelDataItems = new LinkedHashSet<>();
 
         for(String rp : PackManager.getPackNamesWithServer()){
             if(rp.equals("server")){
                 try (FileReader reader = new FileReader(pathToCMDServerConfigFolder + PackManager.getServerResourcePack().get() + jsonFormat)) {
-                    customModelDataItems.addAll(setCMDItemsServerRP(gson.fromJson(reader, CMDCollection.class)));
+                    customModelDataItems.addAll(setItemsServerPack(gson.fromJson(reader, CMDCollection.class)));
                 } catch (IOException ignored) {
-                    MYLOGGER.warn("Not found server json file: " + pathToCMDServerConfigFolder + rp + "(" + PackManager.getServerResourcePack().get() + ")" + jsonFormat);
                 }
             } else {
                 try (FileReader reader = new FileReader(pathToCMDConfigFolder + rp + jsonFormat)) {
-                    customModelDataItems.addAll(setCMDItemsRP( gson.fromJson(reader, CMDCollection.class), rp));
+                    customModelDataItems.addAll(setItemsPack( gson.fromJson(reader, CMDCollection.class), rp));
                 } catch (IOException ignored) {
-                    MYLOGGER.warn("Not found json file: " + pathToCMDConfigFolder + rp + jsonFormat);
                 }
             }
 
@@ -39,8 +38,8 @@ public class CMDParser {
 
     }
 
-    private static ArrayList<CMDItem> setCMDItemsRP(CMDCollection customModelDataCollection, String resourcePackName) {
-        ArrayList<CMDItem> customModelDataItems = new ArrayList<>();
+    private static LinkedHashSet<CMDItem> setItemsPack(CMDCollection customModelDataCollection, String resourcePackName) {
+        LinkedHashSet<CMDItem> customModelDataItems = new LinkedHashSet<>();
         for(CMDItem dataItem : customModelDataCollection.getItems()){
             dataItem.setResourcePack(resourcePackName);
             customModelDataItems.add(dataItem);
@@ -48,8 +47,8 @@ public class CMDParser {
         return customModelDataItems;
     }
 
-    private static ArrayList<CMDItem> setCMDItemsServerRP(CMDCollection customModelDataCollection) {
-        ArrayList<CMDItem> customModelDataItems = new ArrayList<>();
+    private static LinkedHashSet<CMDItem> setItemsServerPack(CMDCollection customModelDataCollection) {
+        LinkedHashSet<CMDItem> customModelDataItems = new LinkedHashSet<>();
         if(PackManager.getServerResourcePack().get() == null){
             MYLOGGER.warn("Failed to set server resource pack because server resource pack is null");
             return customModelDataItems;

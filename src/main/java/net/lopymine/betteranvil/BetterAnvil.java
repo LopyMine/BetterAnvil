@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 
 
 public class BetterAnvil implements ModInitializer {
-    public static final String MOD_ID = "betteranvil";
+    public static final String ID = "betteranvil";
     public static final Logger MYLOGGER = LogUtils.getLogger();
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     private static final ResourcePackManager rpManager = mc.getResourcePackManager();

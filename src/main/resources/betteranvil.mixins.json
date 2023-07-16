@@ -9,9 +9,11 @@
   "client": [
     "AnvilScreenMixin",
     "ChatScreenMixin",
-    "ResourcePackEntryMixin",
+    "LivingEntityRendererMixin",
+    "MinecraftClientMixin",
     "PackScreenMixin",
-    "ReloadableResourceManagerImplMixin"
+    "ReloadableResourceManagerImplMixin",
+    "ResourcePackEntryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

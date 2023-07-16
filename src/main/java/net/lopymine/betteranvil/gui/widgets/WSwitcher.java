@@ -15,12 +15,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class WSwitcher extends WWidget {
 
-    private static final Identifier SWITCH_RIGHT = new Identifier(BetterAnvil.MOD_ID, "gui/switchers/sright.png");
-    private static final Identifier SWITCH_LEFT = new Identifier(BetterAnvil.MOD_ID, "gui/switchers/sleft.png");
-    private static final Identifier SWITCH_RIGHT_DARK = new Identifier(BetterAnvil.MOD_ID, "gui/switchers/sdright.png");
-    private static final Identifier SWITCH_LEFT_DARK = new Identifier(BetterAnvil.MOD_ID, "gui/switchers/sdleft.png");
-    private static final Identifier SWITCH_FOCUS_RIGHT  = new Identifier(BetterAnvil.MOD_ID, "gui/switchers/sfright.png");
-    private static final Identifier SWITCH_FOCUS_LEFT  = new Identifier(BetterAnvil.MOD_ID, "gui/switchers/sfleft.png");
+    private static final Identifier SWITCH_RIGHT = new Identifier(BetterAnvil.ID, "gui/switchers/sright.png");
+    private static final Identifier SWITCH_LEFT = new Identifier(BetterAnvil.ID, "gui/switchers/sleft.png");
+    private static final Identifier SWITCH_RIGHT_DARK = new Identifier(BetterAnvil.ID, "gui/switchers/sdright.png");
+    private static final Identifier SWITCH_LEFT_DARK = new Identifier(BetterAnvil.ID, "gui/switchers/sdleft.png");
+    private static final Identifier SWITCH_FOCUS_RIGHT  = new Identifier(BetterAnvil.ID, "gui/switchers/sfright.png");
+    private static final Identifier SWITCH_FOCUS_LEFT  = new Identifier(BetterAnvil.ID, "gui/switchers/sfleft.png");
     private static final int X = 13;
     private static final int Y = 22;
     private Runnable onClick;

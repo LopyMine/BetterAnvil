@@ -3,7 +3,7 @@ package net.lopymine.betteranvil.gui.screen;
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
-import net.lopymine.betteranvil.gui.widgets.buttons.WItemButton;
+import net.lopymine.betteranvil.gui.widgets.buttons.WRenameButton;
 
 public class BetterAnvilScreen extends CottonClientScreen {
     public BetterAnvilScreen(GuiDescription description) {
@@ -16,7 +16,7 @@ public class BetterAnvilScreen extends CottonClientScreen {
         int containerY = (int)mouseY-top;
 
         WWidget hit = description.getRootPanel().hit(containerX, containerY);
-        if(hit.getClass() == WItemButton.class){
+        if(hit.getClass() == WRenameButton.class){
             description.requestFocus(hit);
         }
 

@@ -18,15 +18,15 @@ public class WFavoriteButton extends WWidget {
 
     private boolean isOn = false;
 
-    private static final Identifier FAVORITE_OFF = new Identifier(BetterAnvil.MOD_ID, "gui/favoriteoff.png");
+    private static final Identifier FAVORITE_OFF = new Identifier(BetterAnvil.ID, "gui/favorite/favoriteoff.png");
 
-    private static final Identifier FAVORITE_OFF_DARK = new Identifier(BetterAnvil.MOD_ID, "gui/favoriteoffdark.png");
-    private static final Identifier FAVORITE_ON  = new Identifier(BetterAnvil.MOD_ID, "gui/favoriteon.png");
+    private static final Identifier FAVORITE_OFF_DARK = new Identifier(BetterAnvil.ID, "gui/favorite/favoriteoffdark.png");
+    private static final Identifier FAVORITE_ON  = new Identifier(BetterAnvil.ID, "gui/favorite/favoriteon.png");
 
-    private static final Identifier FAVORITE_FOCUS  = new Identifier(BetterAnvil.MOD_ID, "gui/focuson.png");
+    private static final Identifier FAVORITE_FOCUS  = new Identifier(BetterAnvil.ID, "gui/favorite/focuson.png");
 
-    private static final Identifier FAVORITE_FOCUS_DARK  = new Identifier(BetterAnvil.MOD_ID, "gui/focusondark.png");
-    private static final Identifier FAVORITE_FOCUS_OFF  = new Identifier(BetterAnvil.MOD_ID, "gui/focusoff.png");
+    private static final Identifier FAVORITE_FOCUS_DARK  = new Identifier(BetterAnvil.ID, "gui/favorite/focusondark.png");
+    private static final Identifier FAVORITE_FOCUS_OFF  = new Identifier(BetterAnvil.ID, "gui/favorite/focusoff.png");
 
     @Nullable protected Consumer<Boolean> onToggle = null;
     public WFavoriteButton(){

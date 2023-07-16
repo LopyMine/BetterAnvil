@@ -2,7 +2,7 @@ package net.lopymine.betteranvil.mixin;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.lopymine.betteranvil.BetterAnvil;
-import net.lopymine.betteranvil.gui.PacksGuiDescription;
+import net.lopymine.betteranvil.gui.PacksGui;
 import net.lopymine.betteranvil.gui.screen.BetterAnvilScreen;
 import net.lopymine.betteranvil.resourcepacks.ConfigManager;
 import net.minecraft.client.MinecraftClient;
@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 @Mixin(PackListWidget.ResourcePackEntry.class)
 public abstract class ResourcePackEntryMixin {
@@ -27,7 +28,7 @@ public abstract class ResourcePackEntryMixin {
     @Shadow @Final private PackListWidget widget;
 
     @Shadow @Final private ResourcePackOrganizer.Pack pack;
-    private static final Identifier search = new Identifier(BetterAnvil.MOD_ID, "gui/search.png");
+    private static final Identifier search = new Identifier(BetterAnvil.ID, "gui/sprites/search.png");
 
     private boolean look = false;
 
@@ -42,11 +43,11 @@ public abstract class ResourcePackEntryMixin {
         int d = (int) mouseY - getRowTop(0);
         int y = (int) mouseY - getRowTop(d / 35);
 
-        ArrayList<ResourcePackProfile> profiles = new ArrayList<>();
+        LinkedHashSet<ResourcePackProfile> profiles = new LinkedHashSet<>();
         profiles.add(MinecraftClient.getInstance().getResourcePackManager().getProfile(pack.getName()));
 
         if(x >= 177 && y >= 0 & y <= 14){
-            MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new PacksGuiDescription(null, profiles, true)));
+            MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new PacksGui(null, profiles, true)));
         }
 
     }

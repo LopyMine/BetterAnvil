@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class PropHandler {
+public class CITHandler {
 
     private static ArrayList<String> enchantments = new ArrayList<>();//
 
@@ -37,7 +37,7 @@ public class PropHandler {
     }
 
     public static String getCustomName(String line){
-        ResourcePackParserVersion v = BetterAnvilConfigManager.read().PARSER_VERSION;
+        ResourcePackParserVersion v = BetterAnvilConfigManager.INSTANCE.PARSER_VERSION;
         if(v == ResourcePackParserVersion.V1){
             String l2 = line.replaceAll("iregex", "").replaceAll("ipattern", "").replaceAll("regex", "").replaceAll("pattern", "").replace("(", "").replace(")", "").replaceAll("nbt.display.Name=", "").replaceAll(":", "").replaceAll("\\.", "").replaceAll("\\^", "").replaceAll("\\[", "").replaceAll("]", "").replaceAll("\\$", "").replace("*", "");
             String l3 = StringEscapeUtils.unescapeJava(l2.replace("\\\\", "\\"));

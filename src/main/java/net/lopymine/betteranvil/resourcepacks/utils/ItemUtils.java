@@ -4,11 +4,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 
-public class ItemList {
-    public static ArrayList<Item> getItems(){
-        ArrayList<Item> items = new ArrayList<>();
+public class ItemUtils {
+    private static final HashMap<String,Item> items = new HashMap<>();
+    public static LinkedHashSet<Item> getItems(){
+        LinkedHashSet<Item> items = new LinkedHashSet<>();
         Class<Items> itemsClass = Items.class;
         Field[] fields = itemsClass.getFields();
 
@@ -21,20 +23,19 @@ public class ItemList {
                 }
             }
         }
-        items.remove(0);
         return items;
     }
 
     public static Item getItemById(String s){
-        for(Item item : getItems()){
-            if(getItemId(item).equals(s)){
-                return item;
-            }
-        }
-        return Items.AIR;
+        return items.get(s);
     }
 
     public static String getItemId(Item i){
         return i.getTranslationKey().replaceAll("item.minecraft.", "").replaceAll("block.minecraft.", "");
     }
+
+    static {
+        getItems().forEach(item -> items.put(getItemId(item),item));
+    }
+
 }

@@ -2,17 +2,18 @@ package net.lopymine.betteranvil.mixin;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import net.lopymine.betteranvil.BetterAnvil;
-import net.lopymine.betteranvil.gui.AnvilGuiDescription;
-import net.lopymine.betteranvil.gui.PacksGuiDescription;
+import net.lopymine.betteranvil.gui.CEMGui;
+import net.lopymine.betteranvil.gui.PacksGui;
 import net.lopymine.betteranvil.gui.screen.BetterAnvilScreen;
+import net.lopymine.betteranvil.gui.AnvilGui;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.lopymine.betteranvil.modmenu.enums.PositionButton;
 import net.lopymine.betteranvil.resourcepacks.PackManager;
+import net.lopymine.betteranvil.resourcepacks.cem.CEMItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -20,14 +21,18 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.ArrayList;
 
 @Mixin(AnvilScreen.class)
 public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> {
@@ -41,80 +46,120 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
 
     @Shadow
     private TextFieldWidget nameField;
-    private static ButtonWidget citButtonWidgetLeft;
-    private static ButtonWidget citButtonWidgetRight;
-    private static ButtonWidget rpButtonWidgetLeft;
-    private static ButtonWidget rpButtonWidgetRight;
-    private final PositionButton position = BetterAnvilConfigManager.read().POSITION;
+    private static ButtonWidget citLeft;
+    private static ButtonWidget citRight;
+    private static ButtonWidget packLeft;
+    private static ButtonWidget packRight;
+    private static ButtonWidget cemLeft;
+    private static ButtonWidget cemRight;
+    private SpawnEggItem item;
+    private final PositionButton position = BetterAnvilConfigManager.INSTANCE.POSITION;
     private final ItemRenderer renderer = MinecraftClient.getInstance().getItemRenderer();
-    private static final Identifier search = new Identifier(BetterAnvil.MOD_ID, "gui/search.png");
-
+    private static final Identifier search = new Identifier(BetterAnvil.ID, "gui/sprites/search.png");
+    private final boolean noPacks = PackManager.getPackNamesWithServer().isEmpty();
     @Inject(at = @At("RETURN"), method = "setup")
     private void init(CallbackInfo ci) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        citButtonWidgetRight = ButtonWidget.builder(Text.of(" "), (button -> {
+        citRight = ButtonWidget.builder(Text.of(" "), (button -> {
             if (this.handler.getSlot(0).getStack().getItem().equals(Items.AIR)) {
                 return;
             }
-            mc.setScreen(new BetterAnvilScreen(new AnvilGuiDescription(this, this.handler.getSlot(0).getStack()) {
+            mc.setScreen(new BetterAnvilScreen(new AnvilGui(this, this.handler.getSlot(0).getStack()) {
                 @Override
                 protected void renameMethod(String name) {
                     nameField.setText(name);
                     nameField.setEditable(true);
                 }
             }));
-        })).dimensions(this.width / 2 + 95, this.height / 2 - 80, 24, 20).build();
+        })).dimensions(this.width / 2 + 91, this.height / 2 - 80, 20, 20).build();
 
 
-        citButtonWidgetLeft = ButtonWidget.builder(Text.of(" "), (button -> {
+        citLeft = ButtonWidget.builder(Text.of(" "), (button -> {
             if (this.handler.getSlot(0).getStack().getItem().equals(Items.AIR)) {
                 return;
             }
-            mc.setScreen(new BetterAnvilScreen(new AnvilGuiDescription(this, this.handler.getSlot(0).getStack()) {
+            mc.setScreen(new BetterAnvilScreen(new AnvilGui(this, this.handler.getSlot(0).getStack()) {
                 @Override
                 protected void renameMethod(String name) {
                     nameField.setText(name);
                     nameField.setEditable(true);
                 }
             }));
-        })).dimensions(this.width / 2 - 117, this.height / 2 - 80, 24, 20).build();
+        })).dimensions(this.width / 2 - 113, this.height / 2 - 80, 20, 20).build();
+
+        packRight = ButtonWidget.builder(Text.of(" "), (button -> {
+            mc.setScreen(new BetterAnvilScreen(new PacksGui(this, PackManager.getPacksProfiles(), false)));
+        })).dimensions(this.width / 2 + 91, this.height / 2 - 55, 20, 20).build();
 
 
-        rpButtonWidgetRight = ButtonWidget.builder(Text.of(" "), (button -> {
-            mc.setScreen(new BetterAnvilScreen(new PacksGuiDescription(this, PackManager.getPacksProfiles(), false)));
-        })).dimensions(this.width / 2 + 95, this.height / 2 - 55, 24, 20).build();
+        packLeft = ButtonWidget.builder(Text.of(" "), (button -> {
+            mc.setScreen(new BetterAnvilScreen(new PacksGui(this, PackManager.getPacksProfiles(), false)));
+        })).dimensions(this.width / 2 - 113, this.height / 2 - 55, 20, 20).build();
 
 
-        rpButtonWidgetLeft = ButtonWidget.builder(Text.of(" "), (button -> {
-            mc.setScreen(new BetterAnvilScreen(new PacksGuiDescription(this, PackManager.getPacksProfiles(), false)));
-        })).dimensions(this.width / 2 - 117, this.height / 2 - 55, 24, 20).build();
+        cemRight = ButtonWidget.builder(Text.of(" "), (button -> {
+            if (this.handler.getSlot(0).getStack().getItem().equals(Items.AIR)) {
+                return;
+            }
+            mc.setScreen(new BetterAnvilScreen(new CEMGui(this) {
+                @Override
+                protected void renameMethod(CEMItem item) {
+                    nameField.setText(item.getName());
+                    nameField.setEditable(true);
+                }
+            }));
+        })).dimensions(this.width / 2 + 91, this.height / 2 - 30, 20, 20).build();
+
+
+        cemLeft = ButtonWidget.builder(Text.of(" "), (button -> {
+            if (this.handler.getSlot(0).getStack().getItem().equals(Items.AIR)) {
+                return;
+            }
+            mc.setScreen(new BetterAnvilScreen(new CEMGui(this) {
+                @Override
+                protected void renameMethod(CEMItem item) {
+                    nameField.setText(item.getName());
+                    nameField.setEditable(true);
+                }
+            }));
+        })).dimensions(this.width / 2 - 113, this.height / 2 - 30, 20, 20).build();
 
         switch (position) {
             case RIGHT -> {
-                citButtonWidgetRight.active = false;
-                citButtonWidgetRight.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.cit.button.disable")));
-                this.addDrawableChild(citButtonWidgetRight);
-                this.addDrawableChild(rpButtonWidgetRight);
+                citRight.active = false;
+                cemRight.active = false;
+                citRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.cit_button.disable")));
+                this.addDrawableChild(citRight);
+                this.addDrawableChild(packRight);
+                this.addDrawableChild(cemRight);
             }
             case LEFT -> {
-                citButtonWidgetLeft.active = false;
-                citButtonWidgetLeft.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.cit.button.disable")));
-                this.addDrawableChild(citButtonWidgetLeft);
-                this.addDrawableChild(rpButtonWidgetLeft);
+                citLeft.active = false;
+                cemLeft.active = false;
+                citLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.cit_button.disable")));
+                this.addDrawableChild(citLeft);
+                this.addDrawableChild(packLeft);
+                this.addDrawableChild(cemLeft);
             }
         }
 
-        if (PackManager.getPackNamesWithServer().isEmpty()) {
-            rpButtonWidgetLeft.active = false;
-            rpButtonWidgetRight.active = false;
+        if (noPacks) {
+            packLeft.active = false;
+            packRight.active = false;
 
-            rpButtonWidgetLeft.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.rp.button.disable")));
-            rpButtonWidgetRight.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.rp.button.disable")));
-            citButtonWidgetRight.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.rp.button.disable")));
-            citButtonWidgetLeft.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.rp.button.disable")));
+            packLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
+            packRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
+            citRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
+            citLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
+            cemRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
+            cemLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
         }
 
+        ArrayList<SpawnEggItem> items = new ArrayList<>();
+        SpawnEggItem.getAll().iterator().forEachRemaining(items::add);
+        Random random = Random.create();
+        item = items.get(random.nextInt(items.size()-1));
 
     }
 
@@ -122,27 +167,40 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     private void drawForeground(MatrixStack matrices, int mouseX, int mouseY, CallbackInfo ci) {
         switch (position) {
             case RIGHT -> {
-                renderer.renderInGui(matrices, new ItemStack(Items.NAME_TAG), 187, 5);//187, 5
-                ScreenDrawing.texturedRect(matrices, 188, 32, 12, 12, search, 0xFFFFFFFF);
+                renderer.renderInGui(matrices, new ItemStack(Items.NAME_TAG), 181, 5);//187, 5
+                renderer.renderInGui(matrices, item.getDefaultStack(), 181, 54);
+                ScreenDrawing.texturedRect(matrices, 183, 32, 12, 12, search, 0xFFFFFFFF);
             }
             case LEFT -> {
-                renderer.renderInGui(matrices, new ItemStack(Items.NAME_TAG), -25, 5);
-                ScreenDrawing.texturedRect(matrices, -23, 32, 12, 12, search, 0xFFFFFFFF);
+                renderer.renderInGui(matrices, new ItemStack(Items.NAME_TAG), -22, 5);
+                renderer.renderInGui(matrices, item.getDefaultStack(), -23, 54);
+                ScreenDrawing.texturedRect(matrices, -22, 32, 12, 12, search, 0xFFFFFFFF);
             }
         }
 
-        if (!this.handler.getSlot(0).getStack().getItem().equals(Items.AIR)) {
-            citButtonWidgetLeft.active = true;
-            citButtonWidgetLeft.setTooltip(null);
+        if (!this.handler.getSlot(0).getStack().getItem().equals(Items.AIR) && !noPacks) {
+            citLeft.active = true;
+            citLeft.setTooltip(null);
 
-            citButtonWidgetRight.active = true;
-            citButtonWidgetRight.setTooltip(null);
-        } else {
-            citButtonWidgetLeft.active = false;
-            citButtonWidgetLeft.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.cit.button.disable")));
+            citRight.active = true;
+            citRight.setTooltip(null);
+        } else if(!noPacks) {
+            citLeft.active = false;
+            citLeft.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.cit.button.disable")));
 
-            citButtonWidgetRight.active = false;
-            citButtonWidgetRight.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.cit.button.disable")));
+            citRight.active = false;
+            citRight.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.cit.button.disable")));
+        }
+        if(this.handler.getSlot(0).getStack().getItem().equals(Items.NAME_TAG) && !noPacks){
+            cemLeft.active = true;
+            cemLeft.setTooltip(null);
+            cemRight.active = true;
+            cemRight.setTooltip(null);
+        } else if(!noPacks){
+            cemLeft.active = false;
+            cemLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.cem_button.disable")));
+            cemRight.active = false;
+            cemRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.cem_button.disable")));
         }
 
     }
