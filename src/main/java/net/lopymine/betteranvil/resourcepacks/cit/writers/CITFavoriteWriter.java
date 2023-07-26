@@ -6,21 +6,25 @@ import net.lopymine.betteranvil.resourcepacks.cit.CITCollection;
 import net.lopymine.betteranvil.resourcepacks.cit.CITItem;
 import net.minecraft.item.ItemStack;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
 import static net.lopymine.betteranvil.resourcepacks.PackManager.*;
 import static net.lopymine.betteranvil.resourcepacks.ConfigManager.*;
 
-public class FavoriteWriter {
+public class CITFavoriteWriter {
 
     public static CITCollection readConfig() {
 
-        CITCollection citCollection = new CITCollection(new ArrayList<>());
+        CITCollection citCollection;
 
         try (FileReader reader = new FileReader(getPath())) {
             citCollection = gson.fromJson(reader, CITCollection.class);
@@ -32,58 +36,43 @@ public class FavoriteWriter {
     }
 
     private static CITCollection createConfig() {
-        CITCollection citCollection = new CITCollection(new ArrayList<>());
-        MYLOGGER.info("Create favorite config! (Favorite)");
+        CITCollection citCollection = new CITCollection(new LinkedHashSet<>());
         String json = gson.toJson(citCollection);
 
         try (FileWriter writer = new FileWriter(getPath())) {
             writer.write(json);
+            MYLOGGER.info("Created favorite config! (Favorite)");
         } catch (IOException e) {
-            MYLOGGER.info("Failed to create favorite config! (Favorite)");
             e.printStackTrace();
+            MYLOGGER.info("Failed to create favorite config! (CIT Favorite)");
             return citCollection;
         }
         return citCollection;
     }
 
-    public static Collection<CITItem> getWithItem(Collection<CITItem> citItems, ItemStack itemStack) {
+    public static LinkedHashSet<CITItem> getWithItem(LinkedHashSet<CITItem> citItems, ItemStack itemStack) {
 
         String itemName = itemStack.getItem().getTranslationKey().replaceAll("item.minecraft.", "").replaceAll("block.minecraft.", "");
 
-        Collection<CITItem> citItemsArrayList = new ArrayList<>();
+        LinkedHashSet<CITItem> citItemsArrayList = new LinkedHashSet<>();
         for (CITItem citItem : citItems) {
-            for (String rp : getPackNamesWithServer()) {
-                if(rp.equals("server") && citItem.getServerResourcePack() != null){
-                    if(citItem.getResourcePack().equals("Server") && citItem.getServerResourcePack().equals(PackManager.getServerResourcePack().get()) && citItem.getItem().equals(itemName)){
-                        citItemsArrayList.add(citItem);
-                    }
-                }
-                if (citItem.getItem().equals(itemName) && citItem.getResourcePack().equals(rp)) {
-                    citItemsArrayList.add(citItem);
-                }
+            if (citItem.getItems().contains(itemName)) {
+                citItemsArrayList.add(citItem);
             }
         }
 
-        return citItemsArrayList;
+        return getPackItems(citItemsArrayList,getPackNamesWithServer());
     }
 
-    public static ArrayList<CITItem> getWithEnabledPacks(ArrayList<CITItem> citItems){
-        ArrayList<CITItem> citItemsArrayList = new ArrayList<>();
-        ArrayList<String> packs = PackManager.getPackNamesWithServer();
+    public static LinkedHashSet<CITItem> getPackItems(LinkedHashSet<CITItem> citItems, LinkedHashSet<String> packs){
+        LinkedHashSet<CITItem> items = new LinkedHashSet<>();
+
         for(CITItem item : citItems){
             if(packs.contains(item.getResourcePack())){
-                citItemsArrayList.add(item);
+                items.add(item);
             }
-        }
-        return citItemsArrayList;
-    }
-
-    public static ArrayList<CITItem> getPackItems(ArrayList<CITItem> citItems, ArrayList<String> packs){
-        ArrayList<CITItem> items = new ArrayList<>();
-
-        for(CITItem item : citItems){
-            for(String s : packs){
-                if(item.getResourcePack().equals(s)){
+            if(packs.contains("server") && getServerResourcePack() != null){
+                if(item.getResourcePack().equals("Server") && item.getServerResourcePack().equals(PackManager.getServerResourcePack().get())){
                     items.add(item);
                 }
             }
@@ -92,10 +81,8 @@ public class FavoriteWriter {
         return items;
     }
 
-    public static void removeItem(ArrayList<CITItem> citItems, CITItem s) {
-        if(citItems.contains(s)){
-            System.out.println(citItems.stream().toList().indexOf(s));
-        }
+    public static void removeItem(CITItem s) {
+        LinkedHashSet<CITItem> citItems = readConfig().getItems();
         citItems.remove(s);
 
         CITCollection citCollection = new CITCollection(citItems);
@@ -110,7 +97,7 @@ public class FavoriteWriter {
 
     public static void addItem(CITItem s) {
 
-        ArrayList<CITItem> citItems = new ArrayList<>(readConfig().getItems());
+        LinkedHashSet<CITItem> citItems = new LinkedHashSet<>(readConfig().getItems());
         if(s.getResourcePack().equals("Server")){
             s.setServerResourcePack(PackManager.getServerResourcePack().get());
         }

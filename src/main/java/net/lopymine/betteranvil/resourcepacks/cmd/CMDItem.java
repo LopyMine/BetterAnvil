@@ -1,4 +1,6 @@
-package net.lopymine.betteranvil.resourcepacks.custommodeldata;
+package net.lopymine.betteranvil.resourcepacks.cmd;
+
+import java.util.Objects;
 
 public class CMDItem {
 
@@ -37,19 +39,17 @@ public class CMDItem {
     public String getServerResourcePack() {
         return serverResourcePack;
     }
-    
+
     @Override
-    public boolean equals(Object obj) {
-        if(obj == this) return true;
-        if(!(obj instanceof CMDItem item)) return false;
-        if(item.getResourcePack() != null){
-            if(item.getResourcePack().equals(this.getResourcePack()) && item.getItem().equals(this.getItem()) && item.getId() == this.getId()) return true;
-        } else {
-            if(item.getItem().equals(this.getItem()) && item.getId() == this.getId()) return true;
-        }
-
-        return super.equals(obj);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CMDItem cmdItem = (CMDItem) o;
+        return id == cmdItem.id && item.equals(cmdItem.item) && Objects.equals(resourcePack, cmdItem.resourcePack) && Objects.equals(serverResourcePack, cmdItem.serverResourcePack);
     }
-    
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(item, resourcePack, serverResourcePack, id);
+    }
 }

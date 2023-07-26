@@ -7,6 +7,7 @@ import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import net.lopymine.betteranvil.BetterAnvil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -22,13 +23,13 @@ import java.util.function.Consumer;
 public class WTabButton extends WWidget {
     private boolean isOn = false;
     private static final BackgroundPainter SELECTED_TAB = BackgroundPainter.createLightDarkVariants(
-            BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/selected_light.png")).setTopPadding(2),
-            BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/selected_dark.png")).setTopPadding(2)
+            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.ID, "gui/tab/selected_light.png")).setTopPadding(2),
+            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.ID,"gui/tab/selected_dark.png")).setTopPadding(2)
     );
 
     private static final BackgroundPainter UNSELECTED_TAB = BackgroundPainter.createLightDarkVariants(
-            BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/unselected_light.png")),
-            BackgroundPainter.createNinePatch(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/tab/unselected_dark.png"))
+            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.ID,"gui/tab/unselected_light.png")),
+            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.ID,"gui/tab/unselected_dark.png"))
     );
 
     private final WPlainPanel panel = new WPlainPanel();

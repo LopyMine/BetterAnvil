@@ -6,21 +6,21 @@ import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 public class ModMenuIntegration implements ModMenuApi {
-    private final ArrayList<String> mods = getMods();
+    private final HashSet<String> mods = getMods();
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         if(mods.contains("cloth-config")){
-            return ModMenuIntegrationConfig::createScreen;
+            return ModMenuIntegrationScreen::createScreen;
         } else {
             return screen -> new CottonClientScreen(new NoClothConfigScreen(screen));
         }
     }
 
-    private ArrayList<String> getMods(){
-        ArrayList<String> mods = new ArrayList<>();
+    private HashSet<String> getMods(){
+        HashSet<String> mods = new HashSet<>();
 
         for(ModContainer mod : FabricLoader.getInstance().getAllMods()){
             mods.add(mod.getMetadata().getId());

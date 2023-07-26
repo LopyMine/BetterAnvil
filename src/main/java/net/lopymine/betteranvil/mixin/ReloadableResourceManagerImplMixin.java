@@ -3,7 +3,6 @@ package net.lopymine.betteranvil.mixin;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.lopymine.betteranvil.modmenu.enums.ResourcePackJsonWriting;
 import net.lopymine.betteranvil.resourcepacks.ConfigManager;
-import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceReload;
@@ -25,10 +24,11 @@ public class ReloadableResourceManagerImplMixin {
 
     @Inject(at = @At("HEAD"), method = "reload")
     private void scan(Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage, List<ResourcePack> packs, CallbackInfoReturnable<ResourceReload> cir){
-        if (Objects.requireNonNull(BetterAnvilConfigManager.read().START) == ResourcePackJsonWriting.LAUNCH) {
+        if (Objects.requireNonNull(BetterAnvilConfigManager.INSTANCE.WHEN_OVERWRITE) == ResourcePackJsonWriting.LAUNCH) {
             MYLOGGER.info("Writing resource packs to json config...");
             ConfigManager.writeCITItems();
-            if(BetterAnvilConfigManager.read().CUSTOM_MODEL_DATA_SUPPORT){
+            //ConfigManager.writeCEMItems();
+            if(BetterAnvilConfigManager.INSTANCE.CUSTOM_MODEL_DATA_SUPPORT){
                 ConfigManager.writeCMDItems();
             }
         }

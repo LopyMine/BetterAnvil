@@ -24,7 +24,7 @@ public class NoClothConfigScreen extends LightweightGuiDescription {
 
         root.setSize(w, h);
 
-        WLabel label = new WLabel(Text.translatable("gui.betteranvil.modmenu.noclothconfig"));
+        WLabel label = new WLabel(Text.translatable("better_anvil.no_cloth_config.title"));
         label.setDarkmodeColor(0xFFFFFFFF);
         label.setColor(0xFFFFFFFF);
 

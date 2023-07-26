@@ -1,15 +1,17 @@
 package net.lopymine.betteranvil.resourcepacks.cit;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 public class CITCollection {
-    private final ArrayList<CITItem> citItemsCollection;
+    private final LinkedHashSet<CITItem> citItemsCollection;
 
-    public CITCollection(ArrayList<CITItem> citItemsCollection) {
+    public CITCollection(LinkedHashSet<CITItem> citItemsCollection) {
         this.citItemsCollection = citItemsCollection;
     }
 
-    public ArrayList<CITItem> getItems() {
+    public LinkedHashSet<CITItem> getItems() {
         return citItemsCollection;
     }
 

@@ -9,6 +9,8 @@
   "client": [
     "AnvilScreenMixin",
     "ChatScreenMixin",
+    "LivingEntityRendererMixin",
+    "MinecraftClientMixin",
     "PackScreenMixin",
     "ReloadableResourceManagerImplMixin",
     "ResourcePackEntryMixin"

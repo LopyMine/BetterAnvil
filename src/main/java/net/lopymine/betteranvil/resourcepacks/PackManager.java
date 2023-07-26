@@ -5,7 +5,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
-import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
@@ -14,8 +13,9 @@ import net.minecraft.util.Util;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
+
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static net.lopymine.betteranvil.BetterAnvil.*;
@@ -27,9 +27,9 @@ public class PackManager {
     private static final Identifier UNKNOWN_PACK = new Identifier("minecraft", "textures/misc/unknown_pack.png");
     private static final ResourcePackManager manager = MinecraftClient.getInstance().getResourcePackManager();
 
-    public static ArrayList<String> getPackNamesWithServer() {
+    public static LinkedHashSet<String> getPackNamesWithServer() {
         Collection<String> resourcePackCollection = manager.getEnabledNames();
-        ArrayList<String> newNames = new ArrayList<>();
+        LinkedHashSet<String> newNames = new LinkedHashSet<>();
 
         for (String name : resourcePackCollection) {
             if (name.equals("server")) {
@@ -43,8 +43,8 @@ public class PackManager {
         return newNames;
     }
 
-    public static ArrayList<ResourcePackProfile> getPacksProfiles() {
-        ArrayList<ResourcePackProfile> resourcePackProfiles = new ArrayList<>();
+    public static LinkedHashSet<ResourcePackProfile> getPacksProfiles() {
+        LinkedHashSet<ResourcePackProfile> resourcePackProfiles = new LinkedHashSet<>();
 
         for (ResourcePackProfile rp : manager.getEnabledProfiles()) {
             if (rp.getName().startsWith("file/")) {
@@ -57,9 +57,9 @@ public class PackManager {
         return resourcePackProfiles;
     }
 
-    public static ArrayList<String> getPacks() {
+    public static LinkedHashSet<String> getPacks() {
         Collection<String> resourcePackCollection = manager.getEnabledNames();
-        ArrayList<String> newNames = new ArrayList<>();
+        LinkedHashSet<String> newNames = new LinkedHashSet<>();
 
         for (String name : resourcePackCollection) {
             if (name.startsWith("file/")) {
@@ -156,8 +156,22 @@ public class PackManager {
         return UNKNOWN_PACK;
     }
 
-    public static ArrayList<String> getPackNamesWithCITConfig() {
-        ArrayList<String> newNames = new ArrayList<>();
+    public static LinkedHashSet<String> getPackNamesWithCEMConfig() {
+        LinkedHashSet<String> newNames = new LinkedHashSet<>();
+
+        for (String name : getPackNamesWithServer()) {
+            if (name.equals("server")) {
+                newNames.add(name);
+            }
+            if (hasConfig(pathToCEMConfigFolder + name + jsonFormat)) {
+                newNames.add(name);
+            }
+        }
+        return newNames;
+    }
+
+    public static LinkedHashSet<String> getPackNamesWithCITConfig() {
+        LinkedHashSet<String> newNames = new LinkedHashSet<>();
 
         for (String name : getPackNamesWithServer()) {
             if (name.equals("server")) {
@@ -170,8 +184,8 @@ public class PackManager {
         return newNames;
     }
 
-    public static ArrayList<String> getPackNamesWithCMDConfig() {
-        ArrayList<String> newNames = new ArrayList<>();
+    public static LinkedHashSet<String> getPackNamesWithCMDConfig() {
+        LinkedHashSet<String> newNames = new LinkedHashSet<>();
 
         for (String name : getPackNamesWithServer()) {
             if (name.equals("server")) {

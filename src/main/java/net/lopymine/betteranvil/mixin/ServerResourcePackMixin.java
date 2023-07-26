@@ -1,9 +1,10 @@
 package net.lopymine.betteranvil.mixin;
 
-import net.lopymine.betteranvil.resourcepacks.cit.writers.CITWriter;
 import net.lopymine.betteranvil.resourcepacks.ConfigManager;
 import net.lopymine.betteranvil.resourcepacks.PackManager;
-import net.lopymine.betteranvil.resourcepacks.custommodeldata.writers.CMDWriter;
+import net.lopymine.betteranvil.resourcepacks.cem.writers.CEMWriter;
+import net.lopymine.betteranvil.resourcepacks.cit.writers.CITWriter;
+import net.lopymine.betteranvil.resourcepacks.cmd.writers.CMDWriter;
 import net.minecraft.client.resource.ClientBuiltinResourcePackProvider;
 import net.minecraft.resource.ResourcePackSource;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,11 +23,9 @@ public class ServerResourcePackMixin {
     @Inject(at = @At("RETURN"), method = "loadServerPack(Ljava/io/File;Lnet/minecraft/resource/ResourcePackSource;)Ljava/util/concurrent/CompletableFuture;")
     private void init(File packZip, ResourcePackSource packSource, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
         PackManager.setServerResourcePack(packZip.getName());
-        System.out.println(PackManager.getServerResourcePack().get());
 
         if (ConfigManager.hasZipCITFolder(packZip.toPath())) {
             CITWriter.writeConfig(packZip, true, true);
-            System.out.println(PackManager.getServerResourcePack().get());
             return;
         } else {
             PackManager.setServerResourcePack(null);
@@ -40,6 +39,14 @@ public class ServerResourcePackMixin {
             PackManager.setServerResourcePack(null);
             MYLOGGER.info("This server resource pack does not have a CMD folder");
         }
+
+        //if(ConfigManager.hasZipCEMFolder(packZip.toPath())){
+        //    PackManager.setServerResourcePack(packZip.getName());
+        //    CEMWriter.writeConfig(packZip, true, true);
+        //}  else {
+        //    PackManager.setServerResourcePack(null);
+        //    MYLOGGER.info("This server resource pack does not have a CEM folder");
+        //}
 
     }
 }
