@@ -27,7 +27,7 @@ public class ReloadableResourceManagerImplMixin {
         if (Objects.requireNonNull(BetterAnvilConfigManager.INSTANCE.WHEN_OVERWRITE) == ResourcePackJsonWriting.LAUNCH) {
             MYLOGGER.info("Writing resource packs to json config...");
             ConfigManager.writeCITItems();
-            ConfigManager.writeCEMItems();
+            //ConfigManager.writeCEMItems();
             if(BetterAnvilConfigManager.INSTANCE.CUSTOM_MODEL_DATA_SUPPORT){
                 ConfigManager.writeCMDItems();
             }

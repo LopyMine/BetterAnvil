@@ -37,10 +37,10 @@ public class ServerResourcePackMixin {
             MYLOGGER.info("This server resource pack does not have a CMD folder");
         }
 
-        if(ConfigManager.hasZipCEMFolder(packZip.toPath())){
-            CEMWriter.writeConfig(packZip, true, true);
-        }  else {
-            MYLOGGER.info("This server resource pack does not have a CEM folder");
-        }
+        //if(ConfigManager.hasZipCEMFolder(packZip.toPath())){
+            //    CEMWriter.writeConfig(packZip, true, true);
+            //}  else {
+            //    MYLOGGER.info("This server resource pack does not have a CEM folder");
+            //}
     }
 }

@@ -20,6 +20,7 @@ public class CITWriter {
         CITCollection citCollection = new CITCollection(getCITItems(file, isZip, isServer).getItems());
 
         if(citCollection.getItems().isEmpty()){
+            MYLOGGER.error("Failed to create CIT config for " + file.getName());
             return;
         }
         String path = pathToCITConfigFolder;

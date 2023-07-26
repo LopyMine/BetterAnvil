@@ -25,6 +25,7 @@ public class CMDWriter {
         CMDCollection dataCollection = new CMDCollection(getItems(file,isZip,isServer));
 
         if(dataCollection.getItems().isEmpty()){
+            MYLOGGER.error("Failed to create CMD config for " + file.getName());
             return;
         }
 

@@ -98,32 +98,32 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
         })).dimensions(this.width / 2 - 113, this.height / 2 - 55, 20, 20).build();
 
 
-        cemRight = ButtonWidget.builder(Text.of(" "), (button -> {
-            if (this.handler.getSlot(0).getStack().getItem().equals(Items.AIR)) {
-                return;
-            }
-            mc.setScreen(new BetterAnvilScreen(new CEMGui(this) {
-                @Override
-                protected void renameMethod(CEMItem item) {
-                    nameField.setText(item.getName());
-                    nameField.setEditable(true);
-                }
-            }));
-        })).dimensions(this.width / 2 + 91, this.height / 2 - 30, 20, 20).build();
-
-
-        cemLeft = ButtonWidget.builder(Text.of(" "), (button -> {
-            if (this.handler.getSlot(0).getStack().getItem().equals(Items.AIR)) {
-                return;
-            }
-            mc.setScreen(new BetterAnvilScreen(new CEMGui(this) {
-                @Override
-                protected void renameMethod(CEMItem item) {
-                    nameField.setText(item.getName());
-                    nameField.setEditable(true);
-                }
-            }));
-        })).dimensions(this.width / 2 - 113, this.height / 2 - 30, 20, 20).build();
+        //cemRight = ButtonWidget.builder(Text.of(" "), (button -> {
+        //    if (this.handler.getSlot(0).getStack().getItem().equals(Items.AIR)) {
+        //        return;
+        //    }
+        //    mc.setScreen(new BetterAnvilScreen(new CEMGui(this) {
+        //        @Override
+        //        protected void renameMethod(CEMItem item) {
+        //            nameField.setText(item.getName());
+        //            nameField.setEditable(true);
+        //        }
+        //    }));
+        //})).dimensions(this.width / 2 + 91, this.height / 2 - 30, 20, 20).build();
+//
+//
+        //cemLeft = ButtonWidget.builder(Text.of(" "), (button -> {
+        //    if (this.handler.getSlot(0).getStack().getItem().equals(Items.AIR)) {
+        //        return;
+        //    }
+        //    mc.setScreen(new BetterAnvilScreen(new CEMGui(this) {
+        //        @Override
+        //        protected void renameMethod(CEMItem item) {
+        //            nameField.setText(item.getName());
+        //            nameField.setEditable(true);
+        //        }
+        //    }));
+        //})).dimensions(this.width / 2 - 113, this.height / 2 - 30, 20, 20).build();
 
         switch (position) {
             case RIGHT -> {
@@ -156,10 +156,10 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
             cemLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
         }
 
-        ArrayList<SpawnEggItem> items = new ArrayList<>();
-        SpawnEggItem.getAll().iterator().forEachRemaining(items::add);
-        Random random = Random.create();
-        item = items.get(random.nextInt(items.size()-1));
+        //ArrayList<SpawnEggItem> items = new ArrayList<>();
+        //SpawnEggItem.getAll().iterator().forEachRemaining(items::add);
+        //Random random = Random.create();
+        //item = items.get(random.nextInt(items.size()-1));
 
     }
 
@@ -168,12 +168,12 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
         switch (position) {
             case RIGHT -> {
                 renderer.renderInGui(matrices, new ItemStack(Items.NAME_TAG), 181, 5);//187, 5
-                renderer.renderInGui(matrices, item.getDefaultStack(), 181, 54);
+                //renderer.renderInGui(matrices, item.getDefaultStack(), 181, 54);
                 ScreenDrawing.texturedRect(matrices, 183, 32, 12, 12, search, 0xFFFFFFFF);
             }
             case LEFT -> {
                 renderer.renderInGui(matrices, new ItemStack(Items.NAME_TAG), -22, 5);
-                renderer.renderInGui(matrices, item.getDefaultStack(), -23, 54);
+                //renderer.renderInGui(matrices, item.getDefaultStack(), -23, 54);
                 ScreenDrawing.texturedRect(matrices, -22, 32, 12, 12, search, 0xFFFFFFFF);
             }
         }
@@ -191,17 +191,17 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
             citRight.active = false;
             citRight.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.cit.button.disable")));
         }
-        if(this.handler.getSlot(0).getStack().getItem().equals(Items.NAME_TAG) && !noPacks){
-            cemLeft.active = true;
-            cemLeft.setTooltip(null);
-            cemRight.active = true;
-            cemRight.setTooltip(null);
-        } else if(!noPacks){
-            cemLeft.active = false;
-            cemLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.cem_button.disable")));
-            cemRight.active = false;
-            cemRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.cem_button.disable")));
-        }
+        //if(this.handler.getSlot(0).getStack().getItem().equals(Items.NAME_TAG) && !noPacks){
+        //    cemLeft.active = true;
+        //    cemLeft.setTooltip(null);
+        //    cemRight.active = true;
+        //    cemRight.setTooltip(null);
+        //} else if(!noPacks){
+        //    cemLeft.active = false;
+        //    cemLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.cem_button.disable")));
+        //    cemRight.active = false;
+        //    cemRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.cem_button.disable")));
+        //}
 
     }
 

@@ -39,7 +39,7 @@ public abstract class PackScreenMixin extends Screen{
             if(config.WHEN_OVERWRITE == ResourcePackJsonWriting.CHECKBOX && checkBox.isChecked()) {
                 if (!PackManager.getPackNamesWithServer().isEmpty()) {
                     ConfigManager.writeCITItems();
-                    ConfigManager.writeCEMItems();
+                    //ConfigManager.writeCEMItems();
                     if (config.CUSTOM_MODEL_DATA_SUPPORT) {
                         ConfigManager.writeCMDItems();
                     }

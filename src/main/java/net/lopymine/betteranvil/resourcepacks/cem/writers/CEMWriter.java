@@ -23,6 +23,7 @@ public class CEMWriter {
         CEMCollection dataCollection = new CEMCollection(getItems(file,isZip, isServer));
 
         if(dataCollection.getItems().isEmpty()){
+            MYLOGGER.error("Failed to create CEM config for " + file.getName());
             return;
         }
 
