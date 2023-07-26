@@ -2,15 +2,14 @@ package net.lopymine.betteranvil.resourcepacks.cit;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class CITItem {
     private final String items;
     private final String customname;
     private final String damage;
     private final String enchantments;
-    private ArrayList<String> lore;
+    private List<String> lore;
     private String resourcePack = null;
     private String serverResourcePack = null;
 
@@ -22,19 +21,17 @@ public class CITItem {
         lore = null;
     }
 
-    public ArrayList<String> getCustomNames() {
-        String[] words = StringEscapeUtils.unescapeJava(customname).split("\\|"); // split the string by "|" delimiter
+    public LinkedHashSet<String> getCustomNames() {
+        String[] words = customname.split("\\|"); // split the string by "|" delimiter
 
-        ArrayList<String> names = new ArrayList<>();
+        LinkedHashSet<String> names = new LinkedHashSet<>();
         for(String n : Arrays.stream(words).toList()){
             if(!n.equals(" ")){
                 String nn = n.strip();
-                names.add(nn);
+                names.add(StringEscapeUtils.unescapeJava(nn));
             }
         }
-        //Generex generator = new Generex(StringEscapeUtils.unescapeJava(customname));
-        //List<String> names = generator.getAllMatchedStrings();
-        return new ArrayList<>(names);
+        return names;
     }
 
     public String getCustomName() {
@@ -46,30 +43,9 @@ public class CITItem {
         return items;
     }
 
-    public Boolean isMoreNames() {
-        return getCustomNames().size() > 0;
-    }
-    public Boolean isMoreItems() {
-        return getCustomNames().size() > 0;
-    }
-
-    public ArrayList<String> getItems() {
+    public List<String> getItems() {
         String[] names = items.split(" "); // split the string by "|" delimiter
-        return new ArrayList<String>(Arrays.asList(names));
-    }
-
-    public ArrayList<Integer> getDamage() {
-        ArrayList<Integer> damageList = new ArrayList<>();
-        if(damage == null){
-            return null;
-        }
-        if(damage.endsWith("%")){
-            String[] damages = damage.split("-");
-            for(String dmg : damages){
-                damageList.add(Integer.parseInt(dmg.replace("%","")));
-            }
-        }
-        return damageList;
+        return Arrays.stream(names).toList();
     }
 
     public void setResourcePack(String resourcePack){
@@ -88,21 +64,24 @@ public class CITItem {
         return serverResourcePack;
     }
 
-    public void setLore(ArrayList<String> lore) {
+    public void setLore(List<String> lore) {
         this.lore = lore;
     }
 
-    public ArrayList<String> getLore() {
+    public List<String> getLore() {
         return lore;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if(obj == this) return true;
-        if(!(obj instanceof CITItem citItem)) return false;
-        if(citItem.getResourcePack().equals(this.getResourcePack()) && citItem.getItem().equals(this.getItem()) && citItem.getCustomName().equals(this.getCustomName())) return true;
-
-        return super.equals(obj);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CITItem item = (CITItem) o;
+        return items.equals(item.items) && customname.equals(item.customname) && Objects.equals(damage, item.damage) && Objects.equals(enchantments, item.enchantments) && Objects.equals(lore, item.lore) && Objects.equals(resourcePack, item.resourcePack) && Objects.equals(serverResourcePack, item.serverResourcePack);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(items, customname, damage, enchantments, lore, resourcePack, serverResourcePack);
+    }
 }

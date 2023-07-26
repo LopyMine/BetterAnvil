@@ -5,13 +5,14 @@ import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 public class WMyTextField extends WTextField {
 
     private int i = 0;
-    private final ArrayList<String> resourcePacks;
+    private final LinkedHashSet<String> resourcePacks;
 
-    public WMyTextField(ArrayList<String> resourcePacks, Text suggestion){
+    public WMyTextField(LinkedHashSet<String> resourcePacks, Text suggestion){
         this.resourcePacks = resourcePacks;
         setSuggestion(suggestion);
     }
@@ -29,7 +30,7 @@ public class WMyTextField extends WTextField {
         int a = (int) amount;
         if(getText().startsWith("*")){
             if(a == d){
-                setText("*" + resourcePacks.get(i));
+                setText("*" + resourcePacks.stream().toList().get(i));
                 i--;
                 if(i < 0){
                     i = resourcePacks.size()-1;
@@ -37,7 +38,7 @@ public class WMyTextField extends WTextField {
                 return InputResult.PROCESSED;
             }
             if(a == 1){
-                setText("*" + resourcePacks.get(i));
+                setText("*" + resourcePacks.stream().toList().get(i));
                 i++;
                 if(i > resourcePacks.size()-1){
                     i = 0;

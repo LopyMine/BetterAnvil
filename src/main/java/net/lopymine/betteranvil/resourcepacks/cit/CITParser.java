@@ -6,40 +6,40 @@ import net.minecraft.item.ItemStack;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
-import static net.lopymine.betteranvil.resourcepacks.ConfigManager.gson;
-import static net.lopymine.betteranvil.resourcepacks.PackManager.*;
 import static net.lopymine.betteranvil.resourcepacks.ConfigManager.*;
+import static net.lopymine.betteranvil.resourcepacks.PackManager.getPackNamesWithServer;
+import static net.lopymine.betteranvil.resourcepacks.PackManager.getServerResourcePack;
 
 public class CITParser {
 
-    public static ArrayList<CITItem> parseItemsFromConfig(String configFileName, String path) {
+    public static LinkedHashSet<CITItem> parseItemsFromConfig(String configFileName, String path) {
         return transformCitItems(getItemsFromConfig(configFileName,path));
     }
-    public static ArrayList<CITItem> parseItemsFromConfig(String configFileName, String path, ItemStack item) {
+    public static LinkedHashSet<CITItem> parseItemsFromConfig(String configFileName, String path, ItemStack item) {
         String itemName = item.getItem().getTranslationKey().replaceAll("item.minecraft.", "").replaceAll("block.minecraft.", "");
         return transformCitItems(getItemsFromConfig(configFileName,path), itemName);
     }
 
-    public static ArrayList<CITItem> parseAllItems() {
+    public static LinkedHashSet<CITItem> parseAllItems() {
         return transformCitItems(getAllItems());
     }
 
-    public static ArrayList<CITItem> parseAllItems(ItemStack item) {
+    public static LinkedHashSet<CITItem> parseAllItems(ItemStack item) {
         String itemName = item.getItem().getTranslationKey().replaceAll("item.minecraft.", "").replaceAll("block.minecraft.", "");
         return transformCitItems(getAllItems(), itemName);
     }
 
-    private static ArrayList<CITItem> getAllItems() {
+    private static LinkedHashSet<CITItem> getAllItems() {
 
-        ArrayList<CITItem> citItems = new ArrayList<>();
+        LinkedHashSet<CITItem> citItems = new LinkedHashSet<>();
 
         for (String rp : getPackNamesWithServer()) {
             if (rp.equals("server")) {
                 if (PackManager.getServerResourcePack().get() != null) {
-                    ArrayList<CITItem> items = parseItemsFromConfig(PackManager.getServerResourcePack().get(), pathToCITServerConfigFolder);
+                    LinkedHashSet<CITItem> items = parseItemsFromConfig(PackManager.getServerResourcePack().get(), pathToCITServerConfigFolder);
                     if (!items.isEmpty()) {
                         citItems.addAll(setCitItemsServerRP(items));
                     } else {
@@ -54,20 +54,19 @@ public class CITParser {
                     citItems.addAll(setCitItemsRP(gson.fromJson(reader, CITCollection.class).getItems(), rp));
                     reader.close();
                 } catch (IOException ignored) {
-                    MYLOGGER.warn("Not found json file: " + pathToCITConfigFolder + rp + jsonFormat);
                 }
             }
         }
         return citItems;
     }
 
-    private static ArrayList<CITItem> getItemsFromConfig(String configFileName, String path) {
-        ArrayList<CITItem> citItems = new ArrayList<>();
+    private static LinkedHashSet<CITItem> getItemsFromConfig(String configFileName, String path) {
+        LinkedHashSet<CITItem> citItems = new LinkedHashSet<>();
 
         Gson gson = new Gson();
 
         if (!hasConfig(path + configFileName + jsonFormat)) {
-            return new ArrayList<>();
+            return new LinkedHashSet<>();
         }
 
         try (FileReader reader = new FileReader(path + configFileName + jsonFormat)) {
@@ -84,86 +83,72 @@ public class CITParser {
         return citItems;
     }
 
-    public static ArrayList<CITItem> setCitItemsRP(ArrayList<CITItem> citItems, String resourcePackName) {
-        ArrayList<CITItem> citItemsCollection = new ArrayList<>();
+    public static LinkedHashSet<CITItem> setCitItemsRP(LinkedHashSet<CITItem> items, String pack) {
+        LinkedHashSet<CITItem> citItems = new LinkedHashSet<>();
 
-        for (CITItem citItem : citItems) {
-            citItem.setResourcePack(resourcePackName);
-            citItemsCollection.add(citItem);
-        }
+        items.forEach(item ->{
+            item.setResourcePack(pack);
+            citItems.add(item);
+        });
 
-        return citItemsCollection;
+
+        return citItems;
     }
 
-    private static ArrayList<CITItem> setCitItemsServerRP(ArrayList<CITItem> citItems) {
-        ArrayList<CITItem> citItemsCollection = new ArrayList<>();
+    private static LinkedHashSet<CITItem> setCitItemsServerRP(LinkedHashSet<CITItem> items) {
+        LinkedHashSet<CITItem> citItems = new LinkedHashSet<>();
 
-        if (PackManager.getServerResourcePack().get() == null) {
+        if (getServerResourcePack().get() == null) {
             MYLOGGER.warn("Failed to set server resource pack because server resource pack is null");
-            return citItemsCollection;
+            return citItems;
         }
 
-        for (CITItem citItem : citItems) {
-            citItem.setServerResourcePack(PackManager.getServerResourcePack().get());
-            citItem.setResourcePack("Server");
-            citItemsCollection.add(citItem);
-        }
+        items.forEach(item ->{
+            item.setServerResourcePack(getServerResourcePack().get());
+            item.setResourcePack("Server");
+            citItems.add(item);
+        });
 
-        return citItemsCollection;
+        return citItems;
     }
 
-    private static ArrayList<CITItem> transformCitItems(ArrayList<CITItem> citItemsCollection, String item) {
-        ArrayList<CITItem> citItemsCollectionnew = new ArrayList<>();
+    private static LinkedHashSet<CITItem> transformCitItems(LinkedHashSet<CITItem> items, String item) {
+        LinkedHashSet<CITItem> citItems = new LinkedHashSet<>();
 
-        for (CITItem citItem : citItemsCollection) {
+        for (CITItem citItem : items) {
 
-            for (String itemm : citItem.getItems()) {
+            for (String name : citItem.getCustomNames()) {
 
-                for (String name : citItem.getCustomNames()) {
+                CITItem newItem = new CITItem(citItem.getItem(), name, null);
+                newItem.setResourcePack(citItem.getResourcePack());
 
-                    CITItem citItemnew = new CITItem(itemm, name, null);
+                if (citItem.getLore() != null) newItem.setLore(citItem.getLore());
 
-                    citItemnew.setResourcePack(citItem.getResourcePack());
-                    if (citItem.getLore() != null) {
-                        citItemnew.setLore(citItem.getLore());
-                    }
+                if (newItem.getItems().contains(item)) citItems.add(newItem);
 
-                    if (citItemnew.getItem().equals(item) && !citItemsCollectionnew.contains(citItemnew)) {
-                        citItemsCollectionnew.add(citItemnew);
-                    }
-
-                }
             }
         }
 
-        return citItemsCollectionnew;
+        return citItems;
     }
 
-    public static ArrayList<CITItem> transformCitItems(ArrayList<CITItem> citItemsCollection) {
-        ArrayList<CITItem> citItemsCollectionnew = new ArrayList<>();
+    public static LinkedHashSet<CITItem> transformCitItems(LinkedHashSet<CITItem> items) {
+        LinkedHashSet<CITItem> citItems = new LinkedHashSet<>();
 
-        for (CITItem citItem : citItemsCollection) {
+        for (CITItem citItem : items) {
 
-            for (String itemm : citItem.getItems()) {
+            for (String name : citItem.getCustomNames()) {
 
-                for (String name : citItem.getCustomNames()) {
+                CITItem newItem = new CITItem(citItem.getItem(), name, null);
+                newItem.setResourcePack(citItem.getResourcePack());
 
-                    CITItem citItemnew = new CITItem(itemm, name, null);
+                if (citItem.getLore() != null) newItem.setLore(citItem.getLore());
 
-                    citItemnew.setResourcePack(citItem.getResourcePack());
-                    if (citItem.getLore() != null) {
-                        citItemnew.setLore(citItem.getLore());
-                    }
-
-                    if (!citItemsCollectionnew.contains(citItemnew)) {
-                        citItemsCollectionnew.add(citItemnew);
-                    }
-
-                }
+                citItems.add(newItem);
             }
         }
 
-        return citItemsCollectionnew;
+        return citItems;
     }
 
 }

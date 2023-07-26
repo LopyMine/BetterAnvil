@@ -1,6 +1,5 @@
 package net.lopymine.betteranvil.gui.widgets;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
@@ -10,12 +9,12 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.random.Random;
+import org.joml.Matrix4f;
 
 public class WDroppedItem extends WWidget {
     private int size = 100;
@@ -64,31 +63,28 @@ public class WDroppedItem extends WWidget {
 
     @Override
     public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-
-        MinecraftClient.getInstance().getTextureManager().getTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).setFilter(false, false);
-        RenderSystem.setShaderTexture(0, SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.push();
-        matrixStack.translate((double)x, (double)y, (double)500);
-        matrixStack.translate(8.0, 8.0, 0.0);
-        matrixStack.scale(1.0F, -1.0F, 1.0F);
-        matrixStack.scale(size, size, size);
-        RenderSystem.applyModelViewMatrix();
+        matrices.push();
+        matrices.translate((float)x, (float)y, 500.0F);
+        matrices.multiplyPositionMatrix((new Matrix4f()).scaling(1.0F, -1.0F, 1.0F));
+        matrices.scale(size,size,size);
         boolean bl = !model.isSideLit();
         if (bl) {
             DiffuseLighting.disableGuiDepthLighting();
         }
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.push();
+        matrixStack.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
+        RenderSystem.applyModelViewMatrix();
 
-        this.renderItem(new MatrixStack(), (float) tick);
+        renderItem(new MatrixStack(), (float) tick);
+
         immediate.draw();
         RenderSystem.enableDepthTest();
         if (bl) {
             DiffuseLighting.enableGuiDepthLighting();
         }
 
+        matrices.pop();
         matrixStack.pop();
         RenderSystem.applyModelViewMatrix();
     }

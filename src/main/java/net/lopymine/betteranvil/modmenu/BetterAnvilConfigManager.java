@@ -17,10 +17,11 @@ public class BetterAnvilConfigManager {
 
     public PositionButton POSITION = PositionButton.RIGHT;
     public ResourcePackParserVersion PARSER_VERSION = ResourcePackParserVersion.V2;
-    public Integer BUTTON_HEIGHT = 30;
+    public Integer SPACING = 30;
     public CITButtonTexture BUTTON_TEXTURE = CITButtonTexture.THEME;
-    public ResourcePackJsonWriting START = ResourcePackJsonWriting.LAUNCH;
+    public ResourcePackJsonWriting WHEN_OVERWRITE = ResourcePackJsonWriting.LAUNCH;
     public boolean CUSTOM_MODEL_DATA_SUPPORT = true;
+    public boolean OVERWRITE = false;
     public int SHIFT_KEY = 340;
     public int CTRL_KEY = 341;
     private static final File FILE_PATH = new File(FabricLoader.getInstance().getConfigDir().toFile(), "betteranvil.json");
@@ -46,7 +47,7 @@ public class BetterAnvilConfigManager {
             e.printStackTrace();
         }
     }
-    public static BetterAnvilConfigManager read(){
+    private static BetterAnvilConfigManager read(){
         if(!FILE_PATH.exists()) return create();
 
         try (FileReader reader = new FileReader(FILE_PATH)) {
