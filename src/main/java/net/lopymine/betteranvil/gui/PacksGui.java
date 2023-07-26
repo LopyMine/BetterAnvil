@@ -147,9 +147,7 @@ public class PacksGui extends CITDescription {
                     createFavoriteNameList(favorite, dataF);
                 } else {
                     CITFavoriteWriter.removeItem(s);
-                    if(dataF.remove(s)){
-                        System.out.println("remove");
-                    }
+                    dataF.remove(s);
                     createFavoriteNameList(favorite, dataF);
                 }
             });

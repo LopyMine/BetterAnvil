@@ -14,6 +14,7 @@ import net.lopymine.betteranvil.gui.widgets.WMyTextField;
 import net.lopymine.betteranvil.gui.widgets.WSwitcher;
 import net.lopymine.betteranvil.gui.widgets.buttons.WFavoriteButton;
 import net.lopymine.betteranvil.gui.widgets.buttons.WTabButton;
+import net.lopymine.betteranvil.gui.widgets.custom_list.WListPanelExt;
 import net.lopymine.betteranvil.gui.widgets.enums.Switcher;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.lopymine.betteranvil.resourcepacks.PackManager;
@@ -41,9 +42,9 @@ public class CEMDescription extends LightweightGuiDescription implements net.lop
     public static final int maxLength = 18;
     public static final int maxLengthBigLabel = 20;
     public static WLabel emptyF;
-    public static WListPanel<CEMItem, WMyListPanel> wListPanelF;
+    public static WListPanelExt<CEMItem, WMyListPanel> wListPanelF;
     public static WLabel emptyD;
-    public static WListPanel<CEMItem, WMyListPanel> wListPanelD;
+    public static WListPanelExt<CEMItem, WMyListPanel> wListPanelD;
     public static boolean favoriteWindowOn;
     public BiConsumer<CEMItem, WMyListPanel> configuratorF;
     public BiConsumer<CEMItem, WMyListPanel> configuratorD;
@@ -332,7 +333,7 @@ public class CEMDescription extends LightweightGuiDescription implements net.lop
             data = new LinkedHashSet<>();
         }
 
-        wListPanelF = new WListPanel<>(data.stream().toList(), WMyListPanel::new, configuratorF);
+        wListPanelF = new WListPanelExt<>(data.stream().toList(), WMyListPanel::new, configuratorF);
         wListPanelF.getScrollBar().setHost(this);
         wListPanelF.setListItemHeight(buttonHeight);
         wListPanelF.setBackgroundPainter(Painters.listPainter);
@@ -363,7 +364,7 @@ public class CEMDescription extends LightweightGuiDescription implements net.lop
             data = new LinkedHashSet<>();
         }
 
-        wListPanelD = new WListPanel<>(data.stream().toList(), WMyListPanel::new, configuratorD);
+        wListPanelD = new WListPanelExt<>(data.stream().toList(), WMyListPanel::new, configuratorD);
         wListPanelD.getScrollBar().setHost(this);
         wListPanelD.setListItemHeight(buttonHeight);
         wListPanelD.setBackgroundPainter(Painters.listPainter);
