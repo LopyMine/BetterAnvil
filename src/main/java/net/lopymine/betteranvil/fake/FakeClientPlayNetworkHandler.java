@@ -21,7 +21,7 @@ public class FakeClientPlayNetworkHandler extends ClientPlayNetworkHandler {
     private static FakeClientPlayNetworkHandler INSTANCE;
 
     private FakeClientPlayNetworkHandler() {
-        super(MinecraftClient.getInstance(), null, new ClientConnection(NetworkSide.CLIENTBOUND), MinecraftClient.getInstance().getCurrentServerEntry(),MinecraftClient.getInstance().getSession().getProfile(),MinecraftClient.getInstance().getTelemetryManager().createWorldSession(false, Duration.ofSeconds(0)));
+        super(MinecraftClient.getInstance(), null, new ClientConnection(NetworkSide.CLIENTBOUND), MinecraftClient.getInstance().getCurrentServerEntry(),MinecraftClient.getInstance().getSession().getProfile(),MinecraftClient.getInstance().getTelemetryManager().createWorldSession(false, Duration.ofSeconds(0),""));
     }
 
     private final Registry<Biome> cursedBiomeRegistry = new SimpleDefaultedRegistry<>("dummy", RegistryKeys.BIOME, Lifecycle.stable(), true) {

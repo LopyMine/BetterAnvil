@@ -6,7 +6,9 @@ import net.lopymine.betteranvil.gui.widgets.MyButtonWidget;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.lopymine.betteranvil.resourcepacks.PackManager;
 import net.lopymine.betteranvil.resourcepacks.cmd.CMDItem;
+import net.lopymine.betteranvil.resourcepacks.utils.ItemUtils;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -60,9 +62,9 @@ public class ChatScreenMixin extends Screen {
     }
 
     @Inject(at = @At("RETURN"), method = "render")
-    private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (b) {
-            MinecraftClient.getInstance().getItemRenderer().renderInGui(matrices, Items.COMMAND_BLOCK.getDefaultStack(),this.width - 23, 7);
+            context.drawItem(Items.COMMAND_BLOCK.getDefaultStack(),this.width - 23, 7);
         }
     }
 

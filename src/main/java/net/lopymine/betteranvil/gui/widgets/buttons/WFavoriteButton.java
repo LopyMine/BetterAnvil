@@ -6,6 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import net.lopymine.betteranvil.BetterAnvil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
@@ -53,11 +54,11 @@ public class WFavoriteButton extends WWidget {
         return false;
     }
     @Override
-    public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        ScreenDrawing.texturedRect(matrices, x, y, 16,16, getActualTexture(),0xFFFFFFFF);
+    public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
+        ScreenDrawing.texturedRect(context, x, y, 16,16, getActualTexture(),0xFFFFFFFF);
 
         if (isHovered() || isFocused()) {
-            ScreenDrawing.texturedRect(matrices, x, y, 16, 16, getActualFocusTexture() , 0xFFFFFFFF);
+            ScreenDrawing.texturedRect(context, x, y, 16, 16, getActualFocusTexture() , 0xFFFFFFFF);
         }
     }
 

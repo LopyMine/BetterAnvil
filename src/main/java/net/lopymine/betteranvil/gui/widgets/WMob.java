@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.lopymine.betteranvil.fake.FakeClientPlayerEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.PlayerSkinDrawer;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.world.WorldCreator;
@@ -82,9 +83,9 @@ public class WMob extends WWidget {
     }
 
     @Override
-    public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void paint(DrawContext matrices, int x, int y, int mouseX, int mouseY) {
         if(entity == null) return;
-        renderPlayer(matrices, x, y, size,(float) tick, entity);
+        renderPlayer(matrices.getMatrices(), x, y, size,(float) tick, entity);
     }
 
     public void renderPlayer(MatrixStack matrices, int x, int y, int size, float tick, Entity entity) {

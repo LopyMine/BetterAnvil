@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -65,18 +66,18 @@ public class WDroppedItem extends WWidget {
     }
 
     @Override
-    public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
-        matrices.push();
-        matrices.translate((float)x, (float)y, 500.0F);
-        matrices.multiplyPositionMatrix((new Matrix4f()).scaling(1.0F, -1.0F, 1.0F));
-        matrices.scale(size,size,size);
+    public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
+        context.getMatrices().push();
+        context.getMatrices().translate((float)x, (float)y, 500.0F);
+        context.getMatrices().multiplyPositionMatrix((new Matrix4f()).scaling(1.0F, -1.0F, 1.0F));
+        context.getMatrices().scale(size,size,size);
         boolean bl = !model.isSideLit();
         if (bl) {
             DiffuseLighting.disableGuiDepthLighting();
         }
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
         matrixStack.push();
-        matrixStack.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
+        matrixStack.multiplyPositionMatrix(context.getMatrices().peek().getPositionMatrix());
         RenderSystem.applyModelViewMatrix();
 
         renderItem(new MatrixStack(), (float) tick);
@@ -87,7 +88,7 @@ public class WDroppedItem extends WWidget {
             DiffuseLighting.enableGuiDepthLighting();
         }
 
-        matrices.pop();
+        context.getMatrices().pop();
         matrixStack.pop();
         RenderSystem.applyModelViewMatrix();
     }

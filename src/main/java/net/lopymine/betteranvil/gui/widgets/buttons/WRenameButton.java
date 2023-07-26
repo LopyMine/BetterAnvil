@@ -13,6 +13,7 @@ import net.lopymine.betteranvil.gui.tooltip.TooltipBuilder;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.lopymine.betteranvil.modmenu.enums.CITButtonTexture;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -134,13 +135,13 @@ public class WRenameButton extends WWidget {
     }
 
     @Override
-    public void renderTooltip(MatrixStack matrices, int x, int y, int tX, int tY) {
+    public void renderTooltip(DrawContext context, int x, int y, int tX, int tY) {
         Painters painters = new Painters();
 
         MyTooltipBuilder builder = new MyTooltipBuilder();
         addTooltip(builder);
 
-        painters.renderTextTooltip(matrices,builder.lines,stacks,x+tX-4,y+tY-4,mc.currentScreen,mc.textRenderer,mc.getItemRenderer(),shift);
+        painters.renderTextTooltip(context,builder.lines,stacks,x+tX-4,y+tY-4,mc.currentScreen,mc.textRenderer,mc.getItemRenderer(),shift);
     }
 
     public void addTooltip(TooltipBuilder builder) {
@@ -170,17 +171,17 @@ public class WRenameButton extends WWidget {
     }
 
     @Override
-    public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 
-        ScreenDrawing.texturedRect(matrices, x, y, 155, 32, actualTexture, 0xFFFFFFFF);
+        ScreenDrawing.texturedRect(context, x, y, 155, 32, actualTexture, 0xFFFFFFFF);
 
         if (isHovered() || isFocused()) {
-            ScreenDrawing.texturedRect(matrices, x, y, 155, 32, MY_BUTTON_FOCUS, 0xFFFFFFFF);
+            ScreenDrawing.texturedRect(context, x, y, 155, 32, MY_BUTTON_FOCUS, 0xFFFFFFFF);
         }
 
 
         if (itemIcon != null) {
-            itemIcon.paint(matrices, x + 7, y + 7, mouseX, mouseY);
+            itemIcon.paint(context, x + 7, y + 7, mouseX, mouseY);
         }
 
         if (text != null) {
@@ -188,7 +189,7 @@ public class WRenameButton extends WWidget {
             if (!LibGui.isDarkMode() && actualTexture != MY_BUTTON_RENAME) {
                 color = 0x262626;
             }
-            ScreenDrawing.drawString(matrices, text.asOrderedText(), HorizontalAlignment.LEFT, x + 31, y + 12, width, color);
+            ScreenDrawing.drawString(context, text.asOrderedText(), HorizontalAlignment.LEFT, x + 31, y + 12, width, color);
 
         }
     }

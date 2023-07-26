@@ -9,7 +9,12 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import net.lopymine.betteranvil.BetterAnvil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.entity.DisplayEntityRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -18,6 +23,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.function.Consumer;
 
 public class WTabButton extends WWidget {
@@ -102,19 +108,19 @@ public class WTabButton extends WWidget {
     }
 
     @Override
-    public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
         int d = y;
         if(isOn){
             d = d + 2;
         }
-        (isOn ? SELECTED_TAB : UNSELECTED_TAB).paintBackground(matrices, x, d, panel);
+        (isOn ? SELECTED_TAB : UNSELECTED_TAB).paintBackground(context, x, d, panel);
 
         if (icon != null) {
-            ScreenDrawing.texturedRect(matrices, x + 4, d + (isOn ? 4 : 6), w, h, icon, 0xFFFFFFFF);
+            ScreenDrawing.texturedRect(context, x + 4, d + (isOn ? 4 : 6), w, h, icon, 0xFFFFFFFF);
         }
 
         if(item != null){
-            itemRenderer.renderInGui(matrices,item,x + 6,d + (isOn ? 5 : 7));
+            context.drawItem(item,x + 6,d + (isOn ? 5 : 7));
         }
 
     }

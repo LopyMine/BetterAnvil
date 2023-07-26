@@ -6,6 +6,7 @@ import net.lopymine.betteranvil.gui.PacksGui;
 import net.lopymine.betteranvil.gui.screen.BetterAnvilScreen;
 import net.lopymine.betteranvil.resourcepacks.ConfigManager;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.pack.PackListWidget;
 import net.minecraft.client.gui.screen.pack.ResourcePackOrganizer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -25,9 +26,13 @@ import java.util.LinkedHashSet;
 @Mixin(PackListWidget.ResourcePackEntry.class)
 public abstract class ResourcePackEntryMixin {
 
-    @Shadow @Final private PackListWidget widget;
+    @Shadow
+    @Final
+    private PackListWidget widget;
 
-    @Shadow @Final private ResourcePackOrganizer.Pack pack;
+    @Shadow
+    @Final
+    private ResourcePackOrganizer.Pack pack;
     private static final Identifier search = new Identifier(BetterAnvil.ID, "gui/sprites/search.png");
 
     private boolean look = false;
@@ -35,7 +40,7 @@ public abstract class ResourcePackEntryMixin {
     @Inject(at = @At("RETURN"), method = "mouseClicked")
     private void init(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
 
-        if(!look){
+        if (!look) {
             return;
         }
 
@@ -46,30 +51,30 @@ public abstract class ResourcePackEntryMixin {
         LinkedHashSet<ResourcePackProfile> profiles = new LinkedHashSet<>();
         profiles.add(MinecraftClient.getInstance().getResourcePackManager().getProfile(pack.getName()));
 
-        if(x >= 177 && y >= 0 & y <= 14){
+        if (x >= 177 && y >= 0 & y <= 14) {
             MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new PacksGui(null, profiles, true)));
         }
 
     }
 
     @Inject(at = @At("RETURN"), method = "render")
-    private void init(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta, CallbackInfo ci) {
-        if(hovered && look){
-            ScreenDrawing.texturedRect(matrices,x+176,y+2,12,12,search,0xFFFFFFFF);
+    private void init(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta, CallbackInfo ci) {
+        if (hovered && look) {
+            ScreenDrawing.texturedRect(context, x + 176, y + 2, 12, 12, search, 0xFFFFFFFF);
         }
     }
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void init(MinecraftClient client, PackListWidget widget, ResourcePackOrganizer.Pack pack, CallbackInfo ci) {
-        if(pack.getName().startsWith("file/") && ConfigManager.hasCITFolder(ConfigManager.pathToResourcePacks + pack.getName().replaceAll("file/", ""))){
+        if (pack.getName().startsWith("file/") && ConfigManager.hasCITFolder(ConfigManager.pathToResourcePacks + pack.getName().replaceAll("file/", ""))) {
             look = true;
         } else if (pack.getName().equals("server")) {
             look = true;
         }
     }
 
-    private int getRowTop(int index){
-        return 32 + 4 - (int)this.widget.getScrollAmount() + index * 36 + (int)(9.0F * 1.5F);
+    private int getRowTop(int index) {
+        return 32 + 4 - (int) this.widget.getScrollAmount() + index * 36 + (int) (9.0F * 1.5F);
     }
 
 

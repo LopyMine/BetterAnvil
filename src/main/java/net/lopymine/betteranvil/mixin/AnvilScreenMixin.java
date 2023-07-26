@@ -10,9 +10,12 @@ import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
 import net.lopymine.betteranvil.modmenu.enums.PositionButton;
 import net.lopymine.betteranvil.resourcepacks.PackManager;
 import net.lopymine.betteranvil.resourcepacks.cem.CEMItem;
+import net.lopymine.betteranvil.resourcepacks.utils.ItemUtils;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -128,19 +131,19 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
         switch (position) {
             case RIGHT -> {
                 citRight.active = false;
-                cemRight.active = false;
+                //cemRight.active = false;
                 citRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.cit_button.disable")));
                 this.addDrawableChild(citRight);
                 this.addDrawableChild(packRight);
-                this.addDrawableChild(cemRight);
+                //this.addDrawableChild(cemRight);
             }
             case LEFT -> {
                 citLeft.active = false;
-                cemLeft.active = false;
+                //cemLeft.active = false;
                 citLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.cit_button.disable")));
                 this.addDrawableChild(citLeft);
                 this.addDrawableChild(packLeft);
-                this.addDrawableChild(cemLeft);
+                //this.addDrawableChild(cemLeft);
             }
         }
 
@@ -152,8 +155,8 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
             packRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
             citRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
             citLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
-            cemRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
-            cemLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
+            //cemRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
+            //cemLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
         }
 
         //ArrayList<SpawnEggItem> items = new ArrayList<>();
@@ -164,17 +167,17 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     }
 
     @Inject(at = @At("RETURN"), method = "drawForeground")
-    private void drawForeground(MatrixStack matrices, int mouseX, int mouseY, CallbackInfo ci) {
+    private void drawForeground(DrawContext context, int mouseX, int mouseY, CallbackInfo ci) {
         switch (position) {
             case RIGHT -> {
-                renderer.renderInGui(matrices, new ItemStack(Items.NAME_TAG), 181, 5);//187, 5
+                context.drawItem(new ItemStack(Items.NAME_TAG), 181, 5);
                 //renderer.renderInGui(matrices, item.getDefaultStack(), 181, 54);
-                ScreenDrawing.texturedRect(matrices, 183, 32, 12, 12, search, 0xFFFFFFFF);
+                ScreenDrawing.texturedRect(context, 183, 32, 12, 12, search, 0xFFFFFFFF);
             }
             case LEFT -> {
-                renderer.renderInGui(matrices, new ItemStack(Items.NAME_TAG), -22, 5);
+                context.drawItem(new ItemStack(Items.NAME_TAG), -22, 5);
                 //renderer.renderInGui(matrices, item.getDefaultStack(), -23, 54);
-                ScreenDrawing.texturedRect(matrices, -22, 32, 12, 12, search, 0xFFFFFFFF);
+                ScreenDrawing.texturedRect(context, -22, 32, 12, 12, search, 0xFFFFFFFF);
             }
         }
 
@@ -186,11 +189,12 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
             citRight.setTooltip(null);
         } else if(!noPacks) {
             citLeft.active = false;
-            citLeft.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.cit.button.disable")));
+            citLeft.setTooltip(Tooltip.of(Text.translatable("better_anvil.cit_button.disable")));
 
             citRight.active = false;
-            citRight.setTooltip(Tooltip.of(Text.translatable("gui.betteranvil.cit.button.disable")));
+            citRight.setTooltip(Tooltip.of(Text.translatable("better_anvil.cit_button.disable")));
         }
+
         //if(this.handler.getSlot(0).getStack().getItem().equals(Items.NAME_TAG) && !noPacks){
         //    cemLeft.active = true;
         //    cemLeft.setTooltip(null);
