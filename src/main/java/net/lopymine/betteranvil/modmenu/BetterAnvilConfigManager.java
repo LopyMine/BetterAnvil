@@ -3,7 +3,7 @@ package net.lopymine.betteranvil.modmenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.lopymine.betteranvil.modmenu.enums.CITButtonTexture;
+import net.lopymine.betteranvil.modmenu.enums.ButtonTexture;
 import net.lopymine.betteranvil.modmenu.enums.PositionButton;
 import net.lopymine.betteranvil.modmenu.enums.ResourcePackJsonWriting;
 import net.lopymine.betteranvil.modmenu.enums.ResourcePackParserVersion;
@@ -18,7 +18,7 @@ public class BetterAnvilConfigManager {
     public PositionButton POSITION = PositionButton.RIGHT;
     public ResourcePackParserVersion PARSER_VERSION = ResourcePackParserVersion.V2;
     public Integer SPACING = 30;
-    public CITButtonTexture BUTTON_TEXTURE = CITButtonTexture.THEME;
+    public ButtonTexture BUTTON_TEXTURE = ButtonTexture.THEME;
     public ResourcePackJsonWriting WHEN_OVERWRITE = ResourcePackJsonWriting.LAUNCH;
     public boolean CUSTOM_MODEL_DATA_SUPPORT = true;
     public boolean OVERWRITE = false;

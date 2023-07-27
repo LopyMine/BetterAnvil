@@ -4,18 +4,13 @@ import io.github.cottonmc.cotton.gui.impl.client.LibGuiClient;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.lopymine.betteranvil.modmenu.enums.CITButtonTexture;
+import net.lopymine.betteranvil.modmenu.enums.ButtonTexture;
 import net.lopymine.betteranvil.modmenu.enums.PositionButton;
 import net.lopymine.betteranvil.modmenu.enums.ResourcePackJsonWriting;
 import net.lopymine.betteranvil.modmenu.enums.ResourcePackParserVersion;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public class ModMenuIntegrationScreen {
@@ -82,14 +77,14 @@ public class ModMenuIntegrationScreen {
 
         ConfigCategory gui = configBuilder.getOrCreateCategory(Text.translatable( "better_anvil.mod_menu.gui.title"));
 
-        CITButtonTexture[] textures = new CITButtonTexture[2];
-        textures[0] = CITButtonTexture.THEME;
-        textures[1] = CITButtonTexture.RENAME;
+        ButtonTexture[] textures = new ButtonTexture[2];
+        textures[0] = ButtonTexture.THEME;
+        textures[1] = ButtonTexture.RENAME;
 
         gui.addEntry(entryBuilder.startSelector(Text.translatable("better_anvil.mod_menu.gui.rename_button_texture"), textures, config.BUTTON_TEXTURE)
-           .setDefaultValue(CITButtonTexture.RENAME)
-           .setNameProvider(CITButtonTexture::getText)
-           .setSaveConsumer(citButtonTexture -> config.BUTTON_TEXTURE = citButtonTexture)
+           .setDefaultValue(ButtonTexture.RENAME)
+           .setNameProvider(ButtonTexture::getText)
+           .setSaveConsumer(buttonTexture -> config.BUTTON_TEXTURE = buttonTexture)
            .build());
 
         gui.addEntry(entryBuilder.startIntSlider(Text.translatable("better_anvil.mod_menu.gui.rename_button_spacing"), config.SPACING, 20, 40)
