@@ -11,7 +11,7 @@ import net.lopymine.betteranvil.gui.panels.Painters;
 import net.lopymine.betteranvil.gui.tooltip.MyTooltipBuilder;
 import net.lopymine.betteranvil.gui.tooltip.TooltipBuilder;
 import net.lopymine.betteranvil.modmenu.BetterAnvilConfigManager;
-import net.lopymine.betteranvil.modmenu.enums.CITButtonTexture;
+import net.lopymine.betteranvil.modmenu.enums.ButtonTexture;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
@@ -208,11 +208,11 @@ public class WRenameButton extends WWidget {
     }
 
     private Identifier getActualTexture() {
-        CITButtonTexture citButtonTexture = config.BUTTON_TEXTURE;
-        if (citButtonTexture == CITButtonTexture.THEME) {
+        ButtonTexture buttonTexture = config.BUTTON_TEXTURE;
+        if (buttonTexture == ButtonTexture.THEME) {
             return LibGui.isDarkMode() ? MY_BUTTON_DARK : MY_BUTTON;
         }
-        if (citButtonTexture == CITButtonTexture.RENAME) {
+        if (buttonTexture == ButtonTexture.RENAME) {
             return MY_BUTTON_RENAME;
         }
         return MY_BUTTON;
