@@ -35,21 +35,21 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.WorldPreset;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.lwjgl.BufferUtils;
 
 import java.util.Map;
 
 public class WMob extends WWidget {
     private int size = 100;
-    private final EntityRenderDispatcher dispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
-    private final VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
     private double tick = 0;
     private final Random random = Random.create();
     private final int d = -32768;
     private final float s = this.random.nextFloat() * 3.1415927F * 2.0F;
-    private Entity entity;
-    public WMob(Entity entity) {
+    private LivingEntity entity;
+    public WMob(LivingEntity entity) {
         this.entity = entity;
         if(entity == null) return;
         if(entity instanceof FakeClientPlayerEntity player){
@@ -58,7 +58,7 @@ public class WMob extends WWidget {
         }
     }
 
-    public void setEntity(Entity entity){
+    public void setEntity(LivingEntity entity){
         this.entity = entity;
         if(entity == null) return;
         if(entity instanceof FakeClientPlayerEntity player){
@@ -83,52 +83,31 @@ public class WMob extends WWidget {
     }
 
     @Override
-    public void paint(DrawContext matrices, int x, int y, int mouseX, int mouseY) {
+    public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
         if(entity == null) return;
-        renderPlayer(matrices.getMatrices(), x, y, size,(float) tick, entity);
+        renderPlayer(context, x, y, size,(float) tick, entity);
     }
 
-    public void renderPlayer(MatrixStack matrices, int x, int y, int size, float tick, Entity entity) {
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.push();
-        matrixStack.translate(0.0, 0.0, 1500.0);
-        RenderSystem.applyModelViewMatrix();
-        matrices.push();
-        matrices.translate((double) x, (double) y, -950.0);
-        matrices.multiplyPositionMatrix((new Matrix4f()).scaling((float) size, (float) size, (float) (-size)));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotation(getRotation(tick)));
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotation(3.1415927F));
-        DiffuseLighting.method_34742();
-
-        //float h = entity.bodyYaw;
+    public void renderPlayer(DrawContext context, int x, int y, int size, float tick, LivingEntity entity) {
+        Quaternionf quaternionf = (new Quaternionf()).rotateZ(3.1415927F);
+        Quaternionf quaternionf2 = (new Quaternionf()).rotateY(getRotation(tick));
+        quaternionf.mul(quaternionf2);
+        float h = entity.bodyYaw;
         float i = entity.getYaw();
         float j = entity.getPitch();
-        //float k = entity.prevHeadYaw;
-        //float l = entity.headYaw;
-
-        //entity.bodyYaw = 180.0F + 0 * 20.0F;
+        float k = entity.prevHeadYaw;
+        float l = entity.headYaw;
+        entity.bodyYaw = 180.0F + 0 * 20.0F;
         entity.setYaw(180.0F + 0 * 40.0F);
         entity.setPitch(-0 * 20.0F);
-        //entity.headYaw = entity.getYaw();
-        //entity.prevHeadYaw = entity.getYaw();
-
-        dispatcher.setRenderShadows(false);
-        RenderSystem.runAsFancy(() -> {
-            dispatcher.render(entity, 0.0, 0.0, 0.0, 0.0F, 1.0F, matrices, immediate, 15728880);
-        });
-        immediate.draw();
-
-        //entity.bodyYaw = h;
+        entity.headYaw = entity.getYaw();
+        entity.prevHeadYaw = entity.getYaw();
+        InventoryScreen.drawEntity(context, x, y, size, quaternionf, quaternionf2, entity);
+        entity.bodyYaw = h;
         entity.setYaw(i);
         entity.setPitch(j);
-        //entity.prevHeadYaw = k;
-        //entity.headYaw = l;
-
-        dispatcher.setRenderShadows(true);
-        matrices.pop();
-        DiffuseLighting.enableGuiDepthLighting();
-        matrixStack.pop();
-        RenderSystem.applyModelViewMatrix();
+        entity.prevHeadYaw = k;
+        entity.headYaw = l;
     }
 
     public void setArmor(ItemStack stack) {

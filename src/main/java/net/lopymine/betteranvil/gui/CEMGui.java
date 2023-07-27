@@ -64,7 +64,7 @@ public abstract class CEMGui extends CEMDescription {
 
             destination.wRenameButton.setOnClick(() -> {
                 bigFieldName.setImage(bfnTextureFocus);
-                mob.setEntity(entity);
+                //mob.setEntity(entity);
                 itemName.setText(Text.of(cutString(s.getName(), maxLengthBigLabel)));
                 itemName.setHorizontalAlignment(HorizontalAlignment.CENTER);
 
@@ -131,7 +131,7 @@ public abstract class CEMGui extends CEMDescription {
 
             destination.wRenameButton.setOnClick(() -> {
                 bigFieldName.setImage(bfnTextureFocus);
-                mob.setEntity(entity);
+                //mob.setEntity(entity);
                 itemName.setText(Text.of(cutString(s.getName(), maxLengthBigLabel)));
                 itemName.setHorizontalAlignment(HorizontalAlignment.CENTER);
 

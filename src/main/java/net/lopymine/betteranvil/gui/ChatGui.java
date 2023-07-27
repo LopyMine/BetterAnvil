@@ -1,12 +1,17 @@
 package net.lopymine.betteranvil.gui;
 
+import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
+import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 import net.lopymine.betteranvil.gui.descriptions.CMDescription;
 import net.lopymine.betteranvil.gui.panels.WMyListPanel;
+import net.lopymine.betteranvil.modmenu.ModMenuIntegration;
 import net.lopymine.betteranvil.resourcepacks.cmd.CMDItem;
 import net.lopymine.betteranvil.resourcepacks.cmd.CMDParser;
 import net.lopymine.betteranvil.resourcepacks.cmd.writers.CMDFavoriteWriter;
 import net.lopymine.betteranvil.resourcepacks.utils.ItemUtils;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;

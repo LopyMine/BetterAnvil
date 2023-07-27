@@ -19,7 +19,7 @@ public class ModMenuIntegration implements ModMenuApi {
         }
     }
 
-    private HashSet<String> getMods(){
+    public static HashSet<String> getMods(){
         HashSet<String> mods = new HashSet<>();
 
         for(ModContainer mod : FabricLoader.getInstance().getAllMods()){
