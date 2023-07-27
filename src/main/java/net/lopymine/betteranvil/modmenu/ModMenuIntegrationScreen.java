@@ -109,23 +109,6 @@ public class ModMenuIntegrationScreen {
            .setTooltip(Text.translatable("better_anvil.mod_menu.dark_mode.tooltip"))
            .build());
 
-        ConfigCategory keyBindings = configBuilder.getOrCreateCategory(Text.translatable("better_anvil.mod_menu.keybinding.title"));
-
-        KeyBinding shift = new KeyBinding("better_anvil.mod_menu.keybinding.shift", InputUtil.Type.KEYSYM, config.SHIFT_KEY, "better_anvil.mod_menu.keybinding.shift");
-        InputUtil.Key shift_key = KeyBindingHelper.getBoundKeyOf(shift);
-        keyBindings.addEntry(entryBuilder.startKeyCodeField(Text.translatable("better_anvil.mod_menu.keybinding.shift"), shift_key)
-            .setDefaultValue(new KeyBinding("better_anvil.mod_menu.keybinding.shift", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_SHIFT, "better_anvil.mod_menu.keybinding.shift").getDefaultKey())
-            .setKeySaveConsumer(key -> config.SHIFT_KEY = key.getCode())
-            .build());
-
-        KeyBinding ctrl = new KeyBinding("better_anvil.mod_menu.keybinding.ctrl", InputUtil.Type.KEYSYM, config.CTRL_KEY, "better_anvil.mod_menu.keybinding.ctrl");
-        InputUtil.Key ctrl_key = KeyBindingHelper.getBoundKeyOf(ctrl);
-        keyBindings.addEntry(entryBuilder.startKeyCodeField(Text.translatable("better_anvil.mod_menu.keybinding.ctrl"), ctrl_key)
-            .setDefaultValue(new KeyBinding("better_anvil.mod_menu.keybinding.ctrl", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_CONTROL, "better_anvil.mod_menu.keybinding.ctrl").getDefaultKey())
-            .setKeySaveConsumer(key -> config.CTRL_KEY = key.getCode())
-            .build());
-
-
 
         return configBuilder.build();
     }
