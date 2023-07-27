@@ -1,5 +1,6 @@
 package net.lopymine.betteranvil.gui;
 
+import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon;
 import net.lopymine.betteranvil.gui.descriptions.CITDescription;
@@ -153,6 +154,8 @@ public class PacksGui extends CITDescription {
                 }
             });
         };
+
+        copyButton = new WButton(Text.translatable("better_anvil.button.copy"));
 
         itemView.setIcon(new ItemIcon(Items.NAME_TAG));
 
