@@ -3,7 +3,7 @@
   "id": "betteranvil",
   "version": "${version}",
   "name": "BetterAnvil",
-  "description": "Quick renaming of items of the CIT system in anvils!",
+  "description": "Quick renaming of CIT, CEM and CMD items from resource packs in anvil and chat!",
   "authors": [
     "LopyMine"
   ],
