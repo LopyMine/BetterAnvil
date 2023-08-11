@@ -20,7 +20,7 @@ public class CMDFavoriteWriter {
 
     private static CMDCollection readConfig() {
 
-        CMDCollection cmdCollection = new CMDCollection(new LinkedHashSet<>());
+        CMDCollection cmdCollection;
 
         try (FileReader reader = new FileReader(getPath())) {
             cmdCollection = gson.fromJson(reader, CMDCollection.class);
