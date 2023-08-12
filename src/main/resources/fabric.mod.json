@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "betteranvil",
   "version": "${version}",
-  "name": "BetterAnvil",
+  "name": "Better Anvil",
   "description": "Quick renaming of CIT, CEM and CMD items from resource packs in anvil and chat!",
   "authors": [
     "LopyMine"
