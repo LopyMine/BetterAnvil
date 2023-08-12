@@ -155,7 +155,7 @@ public class PacksGui extends CITDescription {
             });
         };
 
-        copyButton = new WButton(Text.translatable("better_anvil.button.copy"));
+        copyButton.setLabel(Text.translatable("better_anvil.button.copy"));
 
         itemView.setIcon(new ItemIcon(Items.NAME_TAG));
 

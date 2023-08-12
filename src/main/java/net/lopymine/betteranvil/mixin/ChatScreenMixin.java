@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin extends Screen {
@@ -65,6 +66,16 @@ public class ChatScreenMixin extends Screen {
         if (b) {
             MinecraftClient.getInstance().getItemRenderer().renderInGui(Items.COMMAND_BLOCK.getDefaultStack(),this.width - 23, 7);
         }
+    }
+
+    @Inject(at = @At("RETURN"), method = "keyPressed")
+    private void render(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        this.setFocused(chatField);
+    }
+
+    @Inject(at = @At("HEAD"), method = "keyPressed")
+    private void render1(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        this.setFocused(chatField);
     }
 
 }
