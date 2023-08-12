@@ -19,7 +19,7 @@ public class WMob extends WWidget {
     private final int d = -32768;
     private final float s = this.random.nextFloat() * 3.1415927F * 2.0F;
     private LivingEntity entity;
-    private String exception_reason;
+    private boolean hasException = false;
     public WMob(LivingEntity entity) {
         this.entity = entity;
         if(entity == null) return;
@@ -59,9 +59,9 @@ public class WMob extends WWidget {
         try {
             renderPlayer(context, x, y, size,(float) tick, entity);
         } catch (Exception o){
-            if(this.exception_reason != null) return;
-            this.exception_reason = o.toString();
-            System.out.println(exception_reason);
+            if(this.hasException) return;
+            o.printStackTrace();
+            this.hasException = true;
         }
     }
 
