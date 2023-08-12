@@ -45,10 +45,10 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
 
     @Shadow
     private TextFieldWidget nameField;
-    private static ButtonWidget citLeft;
-    private static ButtonWidget citRight;
-    private static ButtonWidget packLeft;
-    private static ButtonWidget packRight;
+    private static ButtonWidget citLeft = new ButtonWidget(0,0,20,20,Text.of(""),(button -> {}));
+    private static ButtonWidget citRight = new ButtonWidget(0,0,20,20,Text.of(""),(button -> {}));
+    private static ButtonWidget packLeft = new ButtonWidget(0,0,20,20,Text.of(""),(button -> {}));
+    private static ButtonWidget packRight = new ButtonWidget(0,0,20,20,Text.of(""),(button -> {}));
     private SpawnEggItem item;
     private final PositionButton position = BetterAnvilConfigManager.INSTANCE.POSITION;
     private final ItemRenderer renderer = MinecraftClient.getInstance().getItemRenderer();
