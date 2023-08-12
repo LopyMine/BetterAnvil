@@ -48,6 +48,7 @@ public class WMob extends WWidget {
     private final int d = -32768;
     private final float s = this.random.nextFloat() * 3.1415927F * 2.0F;
     private Entity entity;
+    private String exception_reason;
     public WMob(Entity entity) {
         this.entity = entity;
         if(entity == null) return;
@@ -84,7 +85,13 @@ public class WMob extends WWidget {
     @Override
     public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         if(entity == null) return;
-        renderPlayer(matrices, x, y, size,(float) tick, entity);
+        try {
+            renderPlayer(matrices, x, y, size,(float) tick, entity);
+        } catch (Exception o){
+            if(this.exception_reason != null) return;
+            this.exception_reason = o.toString();
+            System.out.println(exception_reason);
+        }
     }
 
     public void renderPlayer(MatrixStack matrices, int x, int y, int size, float tick, Entity entity) {
