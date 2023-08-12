@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "betteranvil",
   "version": "${version}",
-  "name": "BetterAnvil",
+  "name": "Better Anvil",
   "description": "Quick renaming of CIT, CEM and CMD items from resource packs in anvil and chat!",
   "authors": [
     "LopyMine "
@@ -29,8 +29,8 @@
     "betteranvil.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.21",
-    "fabric": ">=0.83.0",
+    "fabricloader": ">=0.14.22",
+    "fabric": ">=0.86.1",
     "minecraft": ["1.20","1.20.1"]
   }
 }
