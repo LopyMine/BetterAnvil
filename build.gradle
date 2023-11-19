@@ -30,12 +30,10 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-        // Fabric API. This is technically optional, but you probably want it anyway.
+    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    implementation include("com.github.mifmif:generex:1.0.2")
-
-    implementation include("dk.brics.automaton:automaton:1.11-8")
+    implementation include("com.github.curious-odd-man:rgxgen:1.4")
 
     modImplementation include("io.github.cottonmc:LibGui:${project.libgui}")
 
@@ -45,8 +43,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    }
-
+}
 processResources {
     inputs.property "version", project.version
     inputs.property "minecraft_version", project.minecraft_version
@@ -86,7 +83,7 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
+        rename { "${it}_${project.archivesBaseName}" }
     }
 }
 

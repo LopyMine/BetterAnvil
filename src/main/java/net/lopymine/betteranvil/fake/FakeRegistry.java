@@ -1,23 +1,20 @@
 package net.lopymine.betteranvil.fake;
 
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Lifecycle;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryList;
-import net.minecraft.registry.entry.RegistryEntryOwner;
+import net.minecraft.registry.*;
+import net.minecraft.registry.entry.*;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Lifecycle;
 
 import java.util.*;
 import java.util.stream.Stream;
+import org.jetbrains.annotations.*;
 
-public record FakeRegistry<T>(RegistryKey<? extends Registry<T>> registryKey, Identifier defaultId, T defaultValue) implements Registry<T>, RegistryEntryOwner<T> {
+public record FakeRegistry<T>(RegistryKey<? extends Registry<T>> registryKey, Identifier defaultId,
+                              T defaultValue) implements Registry<T>, RegistryEntryOwner<T> {
 
     @Override
     public RegistryKey<? extends Registry<T>> getKey() {

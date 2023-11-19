@@ -1,34 +1,22 @@
 package net.lopymine.betteranvil.fake;
 
-import net.lopymine.betteranvil.BetterAnvil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.*;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.DimensionTypes;
 
-import java.util.OptionalLong;
+import net.lopymine.betteranvil.BetterAnvil;
 
 public class FakeWorld extends ClientWorld {
 
-    private static FakeWorld instance;
-
-    public static FakeWorld getInstance() {
-        if (instance == null) instance = new FakeWorld();
-        return instance;
-    }
-
+    private static FakeWorld INSTANCE;
 
     public FakeWorld() {
         super(
                 FakeClientPlayNetworkHandler.getInstance(),
                 new Properties(Difficulty.EASY, false, true),
-                RegistryKey.of(RegistryKeys.WORLD, new Identifier(BetterAnvil.ID,"fake")),
+                RegistryKey.of(RegistryKeys.WORLD, new Identifier(BetterAnvil.MOD_ID, "fake")),
                 FakeDimension.getEntry(),
                 0,
                 0,
@@ -37,5 +25,16 @@ public class FakeWorld extends ClientWorld {
                 false,
                 0L
         );
+    }
+
+    public static FakeWorld getInstance() {
+        if (INSTANCE == null){
+            INSTANCE = new FakeWorld();
+        }
+        return INSTANCE;
+    }
+
+    public static void onInitialize() {
+        INSTANCE = new FakeWorld();
     }
 }

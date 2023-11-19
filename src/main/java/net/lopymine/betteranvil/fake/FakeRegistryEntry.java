@@ -1,13 +1,13 @@
 package net.lopymine.betteranvil.fake;
 
-import com.mojang.datafixers.util.Either;
-import net.lopymine.betteranvil.BetterAnvil;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryOwner;
+import net.minecraft.registry.*;
+import net.minecraft.registry.entry.*;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
+
+import com.mojang.datafixers.util.Either;
+
+import net.lopymine.betteranvil.BetterAnvil;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -51,7 +51,7 @@ public record FakeRegistryEntry<T>(T value, RegistryKey<? extends Registry<T>> k
 
     @Override
     public Optional<RegistryKey<T>> getKey() {
-        return Optional.of(RegistryKey.of(key,new Identifier(BetterAnvil.ID, "")));
+        return Optional.of(RegistryKey.of(key, new Identifier(BetterAnvil.MOD_ID, "")));
     }
 
     @Override

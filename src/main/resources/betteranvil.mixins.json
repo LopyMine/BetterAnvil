@@ -3,17 +3,19 @@
   "minVersion": "0.8",
   "package": "net.lopymine.betteranvil.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "ServerResourcePackMixin"
-  ],
+  "mixins": [],
   "client": [
     "AnvilScreenMixin",
     "ChatScreenMixin",
+    "EntryListWidgetMixin",
     "LivingEntityRendererMixin",
+    "LoadServerResourcePackMixin",
     "MinecraftClientMixin",
     "PackScreenMixin",
     "ReloadableResourceManagerImplMixin",
-    "ResourcePackEntryMixin"
+    "ResourcePackEntryMixin",
+    "ResourcePackMixin",
+    "ZipResourcePackMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,13 +1,9 @@
 package net.lopymine.betteranvil.client;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.gui.screen.option.KeybindsScreen;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import org.lwjgl.glfw.GLFW;
+import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 
-import static net.lopymine.betteranvil.BetterAnvil.MYLOGGER;
+import net.lopymine.betteranvil.gui.tooltip.utils.*;
 
 public class BetterAnvilClient implements ClientModInitializer {
 
@@ -17,10 +13,11 @@ public class BetterAnvilClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
-        MYLOGGER.info("Better Anvil Client Initialize");
-
-
+        TooltipComponentCallback.EVENT.register(data -> {
+            if (data instanceof TooltipComponentsData tooltipData) {
+                return new TooltipComponents(tooltipData.list());
+            }
+            return null;
+        });
     }
-
 }

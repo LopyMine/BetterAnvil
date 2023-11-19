@@ -1,81 +1,119 @@
 package net.lopymine.betteranvil.mixin;
 
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import net.lopymine.betteranvil.BetterAnvil;
-import net.lopymine.betteranvil.gui.PacksGui;
-import net.lopymine.betteranvil.gui.screen.BetterAnvilScreen;
-import net.lopymine.betteranvil.resourcepacks.ConfigManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.pack.PackListWidget;
-import net.minecraft.client.gui.screen.pack.ResourcePackOrganizer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.resource.ResourcePackProfile;
-import net.minecraft.util.Identifier;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.pack.*;
+import net.minecraft.client.gui.screen.pack.PackListWidget.ResourcePackEntry;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.sound.SoundEvents;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.*;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
+
+import net.lopymine.betteranvil.config.BetterAnvilConfig;
+import net.lopymine.betteranvil.config.resourcepacks.ResourcePackConfigsManager;
+import net.lopymine.betteranvil.gui.SelectionGui;
+import net.lopymine.betteranvil.gui.screen.SimpleGuiScreen;
+import net.lopymine.betteranvil.resourcepacks.*;
+import net.lopymine.betteranvil.utils.*;
+import net.lopymine.betteranvil.utils.mixins.EntryListWidgetAccessor;
+
+import java.util.HashSet;
+
+import static net.lopymine.betteranvil.config.resourcepacks.ResourcePackConfigsManager.JSON_FORMAT;
 
 @Mixin(PackListWidget.ResourcePackEntry.class)
 public abstract class ResourcePackEntryMixin {
-
     @Shadow
     @Final
     private PackListWidget widget;
 
     @Shadow
-    @Final
-    private ResourcePackOrganizer.Pack pack;
-    private static final Identifier search = new Identifier(BetterAnvil.ID, "gui/sprites/search.png");
+    public abstract String getName();
 
-    private boolean look = false;
+    @Unique
+    private HashSet<ResourcePackType> types = new HashSet<>();
+    @Unique
+    private final BetterAnvilConfig config = BetterAnvilConfig.getInstance();
 
-    @Inject(at = @At("RETURN"), method = "mouseClicked")
-    private void init(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-
-        if (!look) {
+    @Inject(at = @At("TAIL"), method = "mouseClicked")
+    private void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        if (!config.enabledViewResourcePacks) {
             return;
         }
+        if (isMagnifierHovered(mouseX, mouseY)) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
-        int x = (int) mouseX - this.widget.getRowLeft();
-        int d = (int) mouseY - getRowTop(0);
-        int y = (int) mouseY - getRowTop(d / 35);
+            Screen currentScreen = client.currentScreen;
+            if (types.size() == 1) {
+                SelectionGui.tryOpenScreenByType(types.stream().toList().get(0), currentScreen, this.getName());
+            } else {
+                SelectionGui selectionGui = new SelectionGui(currentScreen, types, this.getName());
+                SimpleGuiScreen screen = new SimpleGuiScreen(selectionGui);
+                selectionGui.setCurrentScreen(screen);
 
-        LinkedHashSet<ResourcePackProfile> profiles = new LinkedHashSet<>();
-        profiles.add(MinecraftClient.getInstance().getResourcePackManager().getProfile(pack.getName()));
-
-        if (x >= 177 && y >= 0 & y <= 14) {
-            MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new PacksGui(null, profiles, true)));
-        }
-
-    }
-
-    @Inject(at = @At("RETURN"), method = "render")
-    private void init(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta, CallbackInfo ci) {
-        if (hovered && look) {
-            ScreenDrawing.texturedRect(context, x + 176, y + 2, 12, 12, search, 0xFFFFFFFF);
+                client.setScreen(screen);
+            }
         }
     }
 
-    @Inject(at = @At("RETURN"), method = "<init>")
+    @Unique
+    private boolean isMagnifierHovered(double mouseX, double mouseY) {
+        if (types.isEmpty()) {
+            return false;
+        }
+
+        if (!(widget instanceof EntryListWidgetAccessor accessor)) {
+            return false;
+        }
+
+        int x = (int) mouseX - widget.getRowLeft();
+        int index = widget.children().indexOf(((ResourcePackEntry) (Object) this));
+        int y = (int) mouseY - accessor.betterAnvil$getRowTop(index);
+
+        return x >= 176 && x <= 188 && y >= 0 & y <= 13;
+    }
+
+    @Inject(at = @At("TAIL"), method = "render")
+    private void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta, CallbackInfo ci) {
+        if (!config.enabledViewResourcePacks) {
+            return;
+        }
+        if (hovered && !types.isEmpty()) {
+            if (!isMagnifierHovered(mouseX, mouseY)) {
+                ScreenDrawing.texturedRect(context, x + 176, y + 1, 12, 12, Painters.SEARCH, 0xFFFFFFFF);
+            } else {
+                ScreenDrawing.texturedRect(context, x + 176, y + 1, 12, 12, Painters.SEARCH_HOVERED, 0xFFFFFFFF);
+            }
+        }
+    }
+
+    @Inject(at = @At("TAIL"), method = "<init>")
     private void init(MinecraftClient client, PackListWidget widget, ResourcePackOrganizer.Pack pack, CallbackInfo ci) {
-        if (pack.getName().startsWith("file/") && ConfigManager.hasCITFolder(ConfigManager.pathToResourcePacks + pack.getName().replaceAll("file/", ""))) {
-            look = true;
-        } else if (pack.getName().equals("server")) {
-            look = true;
+        if (!config.enabledViewResourcePacks) {
+            return;
+        }
+        if (types == null) {
+            types = new HashSet<>();
+        }
+
+        for (ResourcePackType type : ResourcePackType.values()) {
+            if (type == ResourcePackType.CEM) {
+                continue;
+            }
+            String name = pack.getName();
+            boolean isServer = name.equals("server");
+
+            String configPath = isServer ? ResourcePackConfigsManager.getServerConfigPath(type) : ResourcePackConfigsManager.getConfigPath(type);
+            String path = configPath + ResourcePackUtils.getResourcePackName(isServer ? ServerResourcePackManager.getServer() : name) + JSON_FORMAT;
+
+            if (ResourcePackConfigsManager.hasConfig(path)) {
+                types.add(type);
+            }
         }
     }
-
-    private int getRowTop(int index) {
-        return 32 + 4 - (int) this.widget.getScrollAmount() + index * 36 + (int) (9.0F * 1.5F);
-    }
-
-
 }

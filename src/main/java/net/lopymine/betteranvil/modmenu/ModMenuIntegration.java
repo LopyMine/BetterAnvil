@@ -1,31 +1,21 @@
 package net.lopymine.betteranvil.modmenu;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
+import com.terraformersmc.modmenu.api.*;
 
-import java.util.HashSet;
+import net.fabricmc.loader.api.FabricLoader;
+
+import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
+
+import net.lopymine.betteranvil.gui.NoClothConfigGui;
 
 public class ModMenuIntegration implements ModMenuApi {
-    private final HashSet<String> mods = getMods();
+
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        if(mods.contains("cloth-config")){
+        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
             return ModMenuIntegrationScreen::createScreen;
         } else {
-            return screen -> new CottonClientScreen(new NoClothConfigScreen(screen));
+            return screen -> new CottonClientScreen(new NoClothConfigGui(screen));
         }
-    }
-
-    public static HashSet<String> getMods(){
-        HashSet<String> mods = new HashSet<>();
-
-        for(ModContainer mod : FabricLoader.getInstance().getAllMods()){
-            mods.add(mod.getMetadata().getId());
-        }
-
-        return mods;
     }
 }
