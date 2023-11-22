@@ -1,9 +1,11 @@
 package net.lopymine.betteranvil.config.resourcepacks.cmd;
 
+import net.lopymine.betteranvil.resourcepacks.ResourcePackItem;
+
 import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 
-public class CMDItem {
+public class CMDItem implements ResourcePackItem<CMDItem> {
 
     private final int id;
     private final String item;
@@ -31,8 +33,9 @@ public class CMDItem {
         return resourcePack;
     }
 
-    public void setResourcePack(@Nullable String resourcePack) {
+    public CMDItem setResourcePack(@Nullable String resourcePack) {
         this.resourcePack = resourcePack;
+        return this;
     }
 
     @Nullable
@@ -40,8 +43,9 @@ public class CMDItem {
         return serverResourcePack;
     }
 
-    public void setServerResourcePack(@Nullable String serverResourcePack) {
+    public CMDItem setServerResourcePack(@Nullable String serverResourcePack) {
         this.serverResourcePack = serverResourcePack;
+        return this;
     }
 
     @Override

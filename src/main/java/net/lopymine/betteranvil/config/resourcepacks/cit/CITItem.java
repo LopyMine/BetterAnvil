@@ -2,6 +2,7 @@ package net.lopymine.betteranvil.config.resourcepacks.cit;
 
 import net.minecraft.util.Hand;
 
+import net.lopymine.betteranvil.resourcepacks.ResourcePackItem;
 import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.CountMetaDataParser.CountMetaData;
 import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.DamageMetaDataParser.DamageMetaData;
 import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.EnchantmentLevelsMetaDataParser.EnchantmentLevelsMetaData;
@@ -9,7 +10,7 @@ import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.EnchantmentLev
 import java.util.*;
 import org.jetbrains.annotations.*;
 
-public class CITItem {
+public class CITItem implements ResourcePackItem<CITItem> {
     private final String items;
     private final String customName;
 

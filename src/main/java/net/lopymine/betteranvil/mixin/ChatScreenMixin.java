@@ -33,7 +33,7 @@ public abstract class ChatScreenMixin extends Screen {
         if (!bl) return;
 
         BetterButtonWidget cmdButton = BetterButtonWidget.builder(Text.of(" "), button -> {
-            MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new CustomModelDataItemsGui(this, false) {
+            MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new CustomModelDataItemsGui(this, false, null) {
                 @Override
                 protected void giveItem(CMDItem item) {
                     chatField.setText("/give @s minecraft:" + item.getItem() + "{CustomModelData:" + item.getId() + "}");

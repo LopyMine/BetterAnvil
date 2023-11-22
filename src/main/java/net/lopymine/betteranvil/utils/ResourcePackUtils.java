@@ -102,7 +102,7 @@ public class ResourcePackUtils {
                     }
                     return pack.startsWith("file/");
                 })
-                .flatMap(s -> Stream.of(s.replaceAll("file/", "").replaceAll(".zip", "")))
+                .flatMap(s -> Stream.of(s.replaceAll("file/", "")))
                 .toList());
     }
 

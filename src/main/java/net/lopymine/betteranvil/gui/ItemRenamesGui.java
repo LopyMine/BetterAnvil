@@ -11,14 +11,14 @@ import io.github.cottonmc.cotton.gui.widget.WItem;
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon;
 
 import net.lopymine.betteranvil.config.resourcepacks.cit.*;
+import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.CountMetaDataParser.CountMetaData;
+import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.DamageMetaDataParser.DamageMetaData;
+import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.EnchantmentLevelsMetaDataParser.EnchantmentLevelsMetaData;
 import net.lopymine.betteranvil.gui.description.CITGuiDescription;
 import net.lopymine.betteranvil.gui.description.handler.CITGuiHandler;
 import net.lopymine.betteranvil.gui.panels.WConfigPanel;
 import net.lopymine.betteranvil.gui.widgets.buttons.WRenameButton;
 import net.lopymine.betteranvil.gui.widgets.buttons.WRenameButton.Builder;
-import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.CountMetaDataParser.CountMetaData;
-import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.DamageMetaDataParser.DamageMetaData;
-import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.EnchantmentLevelsMetaDataParser.EnchantmentLevelsMetaData;
 import net.lopymine.betteranvil.utils.ItemUtils;
 
 import java.util.List;
@@ -223,7 +223,7 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
             root.add(mob, droppedItemPosX, droppedItemPosY + (entitiesSize / 2) + 30, 1, 1);
         });
 
-        mainList = CITParser.parseAllItems(itemStack, getConfig());
+        mainList = CITConfigParser.getInstance().getResourcePacksItems(itemStack, null, getConfig());
         favoriteList = favoriteManager.getWithItem(itemStack);
 
         this.init();

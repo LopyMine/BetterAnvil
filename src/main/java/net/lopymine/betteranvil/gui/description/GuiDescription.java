@@ -112,8 +112,8 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
     protected WAutoCompleterTextField mainTextField = new WAutoCompleterTextField(ResourcePackUtils.getStringResourcePacksWithServer(), Text.translatable("better_anvil.search"))
             .setMaxLength(100)
             .setChangedListener(text -> {
-                LinkedHashSet<I> list = (hasFavoriteTab ? favoriteList : mainList.get(active_pack));
-                BiConsumer<I, WConfigPanel> consumer = hasFavoriteTab ? favoriteConsumer : mainConsumer;
+                LinkedHashSet<I> list = (isOpenFavoriteTab() ? favoriteList : mainList.get(active_pack));
+                BiConsumer<I, WConfigPanel> consumer = (isOpenFavoriteTab() ? favoriteConsumer : mainConsumer);
 
                 if (list == null) {
                     list = new LinkedHashSet<>();
@@ -126,6 +126,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
 
                 LinkedHashSet<I> search;
                 SearchTags tag = SearchTags.getTag(text);
+
                 if (tag != null) {
                     final String textWithoutTags = tag.getTextContent(text);
 
@@ -136,6 +137,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
                         case LORE -> GuiDescription.this.handler.getSearchByLore(textWithoutTags, list);
                         case COUNT -> GuiDescription.this.handler.getSearchByCount(textWithoutTags, list);
                         case DAMAGE -> GuiDescription.this.handler.getSearchByDamage(textWithoutTags, list);
+
                     };
                 } else {
                     if (text.startsWith("#")) {
@@ -145,8 +147,9 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
                     }
                 }
 
-                createMainListPanel(mainPanel, search, consumer);
+                createMainListPanel(mainPanel, (search == null ? list : search), consumer);
             });
+
     protected final WAutoCompleterTextField favoriteTextField = new WAutoCompleterTextField(ResourcePackUtils.getStringResourcePacksWithServer(), Text.translatable("better_anvil.search"))
             .setMaxLength(100)
             .setChangedListener(text -> {
@@ -159,13 +162,10 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
                 SearchTags tag = SearchTags.getTag(text);
                 if (tag != null) {
                     final String textWithoutTags = tag.getTextContent(text);
-
                     search = switch (tag) {
                         case ITEM -> GuiDescription.this.handler.getSearchByItem(textWithoutTags, favoriteList);
-                        case RESOURCE_PACK ->
-                                GuiDescription.this.handler.getSearchByPack(textWithoutTags, favoriteList);
-                        case ENCHANTMENTS ->
-                                GuiDescription.this.handler.getSearchByEnchantments(textWithoutTags, favoriteList);
+                        case RESOURCE_PACK -> GuiDescription.this.handler.getSearchByPack(textWithoutTags, favoriteList);
+                        case ENCHANTMENTS -> GuiDescription.this.handler.getSearchByEnchantments(textWithoutTags, favoriteList);
                         case LORE -> GuiDescription.this.handler.getSearchByLore(textWithoutTags, favoriteList);
                         case COUNT -> GuiDescription.this.handler.getSearchByCount(textWithoutTags, favoriteList);
                         case DAMAGE -> GuiDescription.this.handler.getSearchByDamage(textWithoutTags, favoriteList);
@@ -286,7 +286,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
     @Override
     public void createFavoriteListPanel(WPlainPanel root, LinkedHashSet<I> list, BiConsumer<I, WConfigPanel> consumer) {
         if (hasFavoriteTab && favoriteTab != null) {
-            if (favoriteTab.getToggle()) {
+            if (isOpenFavoriteTab()) {
                 createMainListPanel(mainPanel, list, consumer);
             }
             return;
@@ -530,6 +530,10 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         if (s >= page || s == page - 1) {
             root.remove(switcherRight);
         }
+    }
+
+    private boolean isOpenFavoriteTab() {
+        return hasFavoriteTab && favoriteTab != null && favoriteTab.getToggle();
     }
 
     protected int calcPos(int width) {

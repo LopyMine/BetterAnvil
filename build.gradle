@@ -21,7 +21,6 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
-
 }
 
 dependencies {

@@ -1,6 +1,7 @@
 package net.lopymine.betteranvil.gui.description.handler;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.ItemStack;
 
 import net.lopymine.betteranvil.gui.description.interfaces.GuiHandler;
 import net.lopymine.betteranvil.resourcepacks.ResourcePackType;
@@ -16,32 +17,41 @@ public class CITGuiHandler implements GuiHandler<CITItem> {
     @Override
     public LinkedHashSet<CITItem> getSearch(String search, LinkedHashSet<CITItem> list) {
         return new LinkedHashSet<>(list.stream().filter(item -> {
-            return StringUtils.e(item.getCustomName(), search);
+            return StringUtils.c(item.getCustomName(), search);
         }).toList());
     }
 
     @Override
     public LinkedHashSet<CITItem> getSearchByItem(String search, LinkedHashSet<CITItem> list) {
+        if (search.isEmpty()) {
+            return list;
+        }
         return new LinkedHashSet<>(list.stream().filter(item -> {
             String string = ItemUtils.getItemByName(item.getItem()).asItem().getName().getString();
-            return StringUtils.e(string, search);
+            return StringUtils.c(string, search);
         }).toList());
     }
 
     @Override
     public LinkedHashSet<CITItem> getSearchByPack(String search, LinkedHashSet<CITItem> list) {
+        if (search.isEmpty()) {
+            return new LinkedHashSet<>(list.stream().filter(item -> item.getResourcePack() != null).toList());
+        }
         return new LinkedHashSet<>(list.stream().filter(item -> {
             String resourcePack = item.getResourcePack();
             if (resourcePack == null) {
                 return false;
             }
 
-            return StringUtils.e(resourcePack, search);
+            return StringUtils.c(resourcePack, search);
         }).toList());
     }
 
     @Override
     public LinkedHashSet<CITItem> getSearchByEnchantments(String search, LinkedHashSet<CITItem> list) {
+        if (search.isEmpty()) {
+            return new LinkedHashSet<>(list.stream().filter(item -> item.getEnchantments() != null).toList());
+        }
         return new LinkedHashSet<>(list.stream().filter(item -> {
             List<String> enchantments = item.getEnchantments();
             if (enchantments == null) {
@@ -56,7 +66,7 @@ public class CITGuiHandler implements GuiHandler<CITItem> {
                 int level = (levels == null ? enchantment.getMaxLevel() : (levels.maxLevel() + levels.minLevel()) / 2);
 
                 String string = enchantment.getName(level).getString();
-                if (StringUtils.e(string, search)) {
+                if (StringUtils.c(string, search)) {
                     return true;
                 }
             }
@@ -67,6 +77,9 @@ public class CITGuiHandler implements GuiHandler<CITItem> {
 
     @Override
     public LinkedHashSet<CITItem> getSearchByLore(String search, LinkedHashSet<CITItem> list) {
+        if (search.isEmpty()) {
+            return new LinkedHashSet<>(list.stream().filter(item -> item.getLore() != null).toList());
+        }
         return new LinkedHashSet<>(list.stream().filter(item -> {
             List<String> lore = item.getLore();
             if (lore == null) {
@@ -74,7 +87,7 @@ public class CITGuiHandler implements GuiHandler<CITItem> {
             }
 
             for (String line : lore) {
-                if (StringUtils.e(line, search)) {
+                if (StringUtils.c(line, search)) {
                     return true;
                 }
             }
@@ -85,25 +98,31 @@ public class CITGuiHandler implements GuiHandler<CITItem> {
 
     @Override
     public LinkedHashSet<CITItem> getSearchByCount(String search, LinkedHashSet<CITItem> list) {
+        if (search.isEmpty()) {
+            return new LinkedHashSet<>(list.stream().filter(item -> item.getCountMetaData() != null).toList());
+        }
         return new LinkedHashSet<>(list.stream().filter(item -> {
             CountMetaData countMetaData = item.getCountMetaData();
             if (countMetaData == null) {
                 return false;
             }
 
-            return StringUtils.e(countMetaData.line(), search);
+            return StringUtils.c(countMetaData.line(), search);
         }).toList());
     }
 
     @Override
     public LinkedHashSet<CITItem> getSearchByDamage(String search, LinkedHashSet<CITItem> list) {
+        if (search.isEmpty()) {
+            return new LinkedHashSet<>(list.stream().filter(item -> item.getDamageMetaData() != null).toList());
+        }
         return new LinkedHashSet<>(list.stream().filter(item -> {
             DamageMetaData damageMetaData = item.getDamageMetaData();
             if (damageMetaData == null) {
                 return false;
             }
 
-            return StringUtils.e(damageMetaData.line(), search);
+            return StringUtils.c(damageMetaData.line(), search);
         }).toList());
     }
 

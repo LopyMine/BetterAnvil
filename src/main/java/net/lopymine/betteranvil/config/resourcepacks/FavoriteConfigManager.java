@@ -15,9 +15,9 @@ import static net.lopymine.betteranvil.config.resourcepacks.ResourcePackConfigsM
 
 public abstract class FavoriteConfigManager<I, K extends ConfigSet<I>> {
     protected static final Gson GSON = new GsonBuilder().setLenient().setPrettyPrinting().create();
-    private final ResourcePackType type;
-    private final Class<K> cl;
-    private final K valueIfNew;
+    protected final ResourcePackType type;
+    protected final Class<K> cl;
+    protected final K valueIfNew;
 
     protected FavoriteConfigManager(ResourcePackType type, Class<K> cl, K valueIfNew) {
         this.type = type;

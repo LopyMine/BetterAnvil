@@ -2,6 +2,7 @@ package net.lopymine.betteranvil.gui;
 
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.enchantment.*;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
@@ -9,21 +10,29 @@ import net.minecraft.text.Text;
 import io.github.cottonmc.cotton.gui.widget.WItem;
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon;
 
+import net.lopymine.betteranvil.config.resourcepacks.cit.CITItem;
 import net.lopymine.betteranvil.config.resourcepacks.cmd.*;
 import net.lopymine.betteranvil.gui.description.CMDGuiDescription;
 import net.lopymine.betteranvil.gui.description.handler.CMDGuiHandler;
 import net.lopymine.betteranvil.gui.panels.WConfigPanel;
 import net.lopymine.betteranvil.gui.widgets.buttons.WRenameButton;
 import net.lopymine.betteranvil.gui.widgets.buttons.WRenameButton.Builder;
-import net.lopymine.betteranvil.utils.ItemUtils;
+import net.lopymine.betteranvil.utils.*;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class CustomModelDataItemsGui extends CMDGuiDescription {
-    protected CustomModelDataItemsGui(Screen parent, boolean shouldCopyCommand) {
+    protected CustomModelDataItemsGui(Screen parent, boolean shouldCopyCommand, @Nullable List<String> resourcePacks) {
         super(new CMDGuiHandler(), parent);
 
         CMDFavoriteConfigManager favoriteManager = CMDFavoriteConfigManager.getInstance();
+        mainList = CMDConfigParser.getInstance().getResourcePacksItems(resourcePacks, getConfig());
+
+        LinkedHashSet<CMDItem> items = favoriteManager.getItems();
+        LinkedHashSet<String> packs = new LinkedHashSet<>(mainList.keySet().stream().flatMap(key -> Stream.of(ResourcePackUtils.getResourcePackNameWithZip(key))).toList());
+        favoriteList = favoriteManager.getResourcePacksItems(items, packs);
 
         favoriteConsumer = (CMDItem cmdItem, WConfigPanel panel) -> {
             panel.starButton.setToggle(true);
@@ -155,9 +164,6 @@ public abstract class CustomModelDataItemsGui extends CMDGuiDescription {
             root.remove(droppedItem);
             root.add(mob, droppedItemPosX, droppedItemPosY + (entitiesSize / 2) + 30, 1, 1);
         });
-
-        mainList = CMDParser.getAllItems();
-        favoriteList = favoriteManager.getItems();
 
         this.init();
     }

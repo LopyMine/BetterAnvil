@@ -16,6 +16,6 @@ public class BetterAnvil implements ModInitializer {
      */
     @Override
     public void onInitialize() {
-        LOGGER.info("Better Anvil Initialize");
+        LOGGER.info("Better Anvil Initialized");
     }
 }

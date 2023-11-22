@@ -8,10 +8,13 @@ import java.util.LinkedHashSet;
 public class ResourcePackRenamesGuiHandler extends CITGuiHandler {
     @Override
     public LinkedHashSet<CITItem> getSearchByItem(String search, LinkedHashSet<CITItem> list) {
+        if (search.isEmpty()) {
+            return list;
+        }
         return new LinkedHashSet<>(list.stream().filter(item -> {
             for (String i : item.getItems()) {
                 String itemName = ItemUtils.getItemByName(i).asItem().getName().getString();
-                if (StringUtils.e(itemName, search)) {
+                if (StringUtils.c(itemName, search)) {
                     return true;
                 }
             }

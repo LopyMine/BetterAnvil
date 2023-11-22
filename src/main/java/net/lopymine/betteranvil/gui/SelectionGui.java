@@ -64,7 +64,7 @@ public class SelectionGui extends SimpleGuiDescription {
 
         Screen screen = switch (type) {
             case CIT -> new BetterAnvilScreen(new ResourcePackRenamesGui(parent, new ArrayList<>(List.of(resourcePack))));
-            case CMD -> new BetterAnvilScreen(new CustomModelDataItemsGui(parent, true) {
+            case CMD -> new BetterAnvilScreen(new CustomModelDataItemsGui(parent, true, new ArrayList<>(List.of(resourcePack))) {
                 @Override
                 protected void giveItem(CMDItem item) {
                 }
