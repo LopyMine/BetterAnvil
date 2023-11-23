@@ -2,7 +2,7 @@ package net.lopymine.betteranvil.config.resourcepacks.cit;
 
 import net.minecraft.item.ItemStack;
 
-import net.lopymine.betteranvil.config.resourcepacks.*;
+import net.lopymine.betteranvil.config.resourcepacks.FavoriteConfigManager;
 import net.lopymine.betteranvil.resourcepacks.*;
 import net.lopymine.betteranvil.utils.ItemUtils;
 

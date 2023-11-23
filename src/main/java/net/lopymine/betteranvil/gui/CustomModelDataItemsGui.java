@@ -2,7 +2,6 @@ package net.lopymine.betteranvil.gui;
 
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.enchantment.*;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
@@ -10,7 +9,6 @@ import net.minecraft.text.Text;
 import io.github.cottonmc.cotton.gui.widget.WItem;
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon;
 
-import net.lopymine.betteranvil.config.resourcepacks.cit.CITItem;
 import net.lopymine.betteranvil.config.resourcepacks.cmd.*;
 import net.lopymine.betteranvil.gui.description.CMDGuiDescription;
 import net.lopymine.betteranvil.gui.description.handler.CMDGuiHandler;
@@ -24,7 +22,7 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class CustomModelDataItemsGui extends CMDGuiDescription {
-    protected CustomModelDataItemsGui(Screen parent, boolean shouldCopyCommand, @Nullable List<String> resourcePacks) {
+    public CustomModelDataItemsGui(Screen parent, boolean shouldCopyCommand, @Nullable List<String> resourcePacks) {
         super(new CMDGuiHandler(), parent);
 
         CMDFavoriteConfigManager favoriteManager = CMDFavoriteConfigManager.getInstance();
@@ -63,7 +61,7 @@ public abstract class CustomModelDataItemsGui extends CMDGuiDescription {
             } else {
                 onClick = () -> {
                     client.setScreen(parent);
-                    giveItem(cmdItem);
+                    setCommand(cmdItem);
                 };
             }
 
@@ -124,7 +122,7 @@ public abstract class CustomModelDataItemsGui extends CMDGuiDescription {
             } else {
                 onClick = () -> {
                     client.setScreen(parent);
-                    giveItem(cmdItem);
+                    setCommand(cmdItem);
                 };
             }
 
@@ -168,5 +166,5 @@ public abstract class CustomModelDataItemsGui extends CMDGuiDescription {
         this.init();
     }
 
-    protected abstract void giveItem(CMDItem item);
+    protected abstract void setCommand(CMDItem item);
 }

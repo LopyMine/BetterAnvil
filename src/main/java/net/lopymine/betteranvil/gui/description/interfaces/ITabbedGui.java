@@ -1,12 +1,8 @@
 package net.lopymine.betteranvil.gui.description.interfaces;
 
-import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
-
-import net.lopymine.betteranvil.gui.panels.WConfigPanel;
 import net.lopymine.betteranvil.gui.widgets.buttons.WTabButton;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 
 public interface ITabbedGui<I> extends IGui<I> {
 

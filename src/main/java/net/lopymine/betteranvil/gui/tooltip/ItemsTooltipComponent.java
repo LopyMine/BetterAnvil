@@ -4,7 +4,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.util.Identifier;
 
 import net.fabricmc.api.*;

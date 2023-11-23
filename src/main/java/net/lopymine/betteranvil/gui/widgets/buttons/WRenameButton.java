@@ -20,14 +20,14 @@ import io.github.cottonmc.cotton.gui.widget.data.*;
 import net.lopymine.betteranvil.BetterAnvil;
 import net.lopymine.betteranvil.config.BetterAnvilConfig;
 import net.lopymine.betteranvil.config.enums.ButtonTextures;
+import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.CountMetaDataParser.CountMetaData;
+import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.DamageMetaDataParser.DamageMetaData;
+import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.EnchantmentLevelsMetaDataParser.EnchantmentLevelsMetaData;
 import net.lopymine.betteranvil.gui.description.interfaces.IConfigAccessor;
 import net.lopymine.betteranvil.gui.tooltip.ItemsTooltipComponent;
 import net.lopymine.betteranvil.gui.tooltip.builder.TooltipBuilder;
 import net.lopymine.betteranvil.gui.tooltip.builder.*;
 import net.lopymine.betteranvil.gui.tooltip.utils.TooltipComponentsData;
-import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.CountMetaDataParser.CountMetaData;
-import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.DamageMetaDataParser.DamageMetaData;
-import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.EnchantmentLevelsMetaDataParser.EnchantmentLevelsMetaData;
 import net.lopymine.betteranvil.utils.*;
 
 import java.util.*;

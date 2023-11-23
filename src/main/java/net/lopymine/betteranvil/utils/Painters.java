@@ -3,7 +3,6 @@ package net.lopymine.betteranvil.utils;
 import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.widget.data.Texture;
 
 import net.lopymine.betteranvil.BetterAnvil;
 

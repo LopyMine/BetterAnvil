@@ -1,11 +1,11 @@
 package net.lopymine.betteranvil.gui.description.handler;
 
-import net.lopymine.betteranvil.gui.description.interfaces.GuiHandler;
-import net.lopymine.betteranvil.resourcepacks.*;
 import net.lopymine.betteranvil.config.resourcepacks.cmd.CMDItem;
+import net.lopymine.betteranvil.gui.description.interfaces.GuiHandler;
+import net.lopymine.betteranvil.resourcepacks.ResourcePackType;
 import net.lopymine.betteranvil.utils.*;
 
-import java.util.*;
+import java.util.LinkedHashSet;
 
 public class CMDGuiHandler implements GuiHandler<CMDItem> {
     @Override

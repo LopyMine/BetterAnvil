@@ -71,7 +71,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         @Override
         public InputResult onKeyPressed(int ch, int key, int modifiers) {
             if (ch == 256) {
-                MinecraftClient.getInstance().setScreen(GuiDescription.this.parent);
+                GuiDescription.this.client.setScreen(GuiDescription.this.parent);
                 return InputResult.PROCESSED;
             }
             if (ch == 70) {
@@ -110,7 +110,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
     protected WLabel mainTitle;
 
     protected WAutoCompleterTextField mainTextField = new WAutoCompleterTextField(ResourcePackUtils.getStringResourcePacksWithServer(), Text.translatable("better_anvil.search"))
-            .setMaxLength(100)
+            .setMaxLength(200)
             .setChangedListener(text -> {
                 LinkedHashSet<I> list = (isOpenFavoriteTab() ? favoriteList : mainList.get(active_pack));
                 BiConsumer<I, WConfigPanel> consumer = (isOpenFavoriteTab() ? favoriteConsumer : mainConsumer);
@@ -151,7 +151,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
             });
 
     protected final WAutoCompleterTextField favoriteTextField = new WAutoCompleterTextField(ResourcePackUtils.getStringResourcePacksWithServer(), Text.translatable("better_anvil.search"))
-            .setMaxLength(100)
+            .setMaxLength(200)
             .setChangedListener(text -> {
                 if (text.isEmpty()) {
                     createFavoriteListPanel(favoritePanel, favoriteList, favoriteConsumer);

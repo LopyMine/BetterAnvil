@@ -1,14 +1,13 @@
 package net.lopymine.betteranvil.gui.description.handler;
 
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.ItemStack;
 
-import net.lopymine.betteranvil.gui.description.interfaces.GuiHandler;
-import net.lopymine.betteranvil.resourcepacks.ResourcePackType;
 import net.lopymine.betteranvil.config.resourcepacks.cit.CITItem;
 import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.CountMetaDataParser.CountMetaData;
 import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.DamageMetaDataParser.DamageMetaData;
 import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.EnchantmentLevelsMetaDataParser.EnchantmentLevelsMetaData;
+import net.lopymine.betteranvil.gui.description.interfaces.GuiHandler;
+import net.lopymine.betteranvil.resourcepacks.ResourcePackType;
 import net.lopymine.betteranvil.utils.*;
 
 import java.util.*;

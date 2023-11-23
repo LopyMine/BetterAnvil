@@ -8,10 +8,10 @@ import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.*;
 
+import net.lopymine.betteranvil.config.resourcepacks.cmd.CMDItem;
 import net.lopymine.betteranvil.gui.description.SimpleGuiDescription;
 import net.lopymine.betteranvil.gui.screen.BetterAnvilScreen;
 import net.lopymine.betteranvil.resourcepacks.ResourcePackType;
-import net.lopymine.betteranvil.config.resourcepacks.cmd.CMDItem;
 
 import java.util.*;
 import org.jetbrains.annotations.Nullable;
@@ -66,7 +66,7 @@ public class SelectionGui extends SimpleGuiDescription {
             case CIT -> new BetterAnvilScreen(new ResourcePackRenamesGui(parent, new ArrayList<>(List.of(resourcePack))));
             case CMD -> new BetterAnvilScreen(new CustomModelDataItemsGui(parent, true, new ArrayList<>(List.of(resourcePack))) {
                 @Override
-                protected void giveItem(CMDItem item) {
+                protected void setCommand(CMDItem item) {
                 }
             });
             case CEM -> null;

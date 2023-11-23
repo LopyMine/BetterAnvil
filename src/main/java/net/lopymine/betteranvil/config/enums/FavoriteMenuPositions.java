@@ -1,6 +1,6 @@
 package net.lopymine.betteranvil.config.enums;
 
-import net.minecraft.text.*;
+import net.minecraft.text.Text;
 
 public enum FavoriteMenuPositions {
     TAB(Text.translatable("better_anvil.mod_menu.gui.favorite_menu.position.tab")),

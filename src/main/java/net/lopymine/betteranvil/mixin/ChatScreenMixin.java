@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.*;
 
 import net.lopymine.betteranvil.config.BetterAnvilConfig;
+import net.lopymine.betteranvil.config.resourcepacks.cmd.CMDItem;
 import net.lopymine.betteranvil.gui.CustomModelDataItemsGui;
 import net.lopymine.betteranvil.gui.screen.BetterAnvilScreen;
 import net.lopymine.betteranvil.gui.widgets.vanilla.BetterButtonWidget;
-import net.lopymine.betteranvil.config.resourcepacks.cmd.CMDItem;
 
 @Mixin(ChatScreen.class)
 public abstract class ChatScreenMixin extends Screen {
@@ -35,10 +35,9 @@ public abstract class ChatScreenMixin extends Screen {
         BetterButtonWidget cmdButton = BetterButtonWidget.builder(Text.of(" "), button -> {
             MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new CustomModelDataItemsGui(this, false, null) {
                 @Override
-                protected void giveItem(CMDItem item) {
+                protected void setCommand(CMDItem item) {
                     chatField.setText("/give @s minecraft:" + item.getItem() + "{CustomModelData:" + item.getId() + "}");
                 }
-
             }));
         }).dimensions(this.width - 25, 5, 20, 20).build();
 

@@ -1,8 +1,8 @@
 package net.lopymine.betteranvil.config.resourcepacks.cit;
 
 import net.lopymine.betteranvil.config.resourcepacks.ConfigWriter;
-import net.lopymine.betteranvil.resourcepacks.ResourcePackType;
 import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.CITMetaDataParser;
+import net.lopymine.betteranvil.resourcepacks.ResourcePackType;
 
 import java.io.*;
 import java.nio.file.*;

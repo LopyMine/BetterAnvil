@@ -7,7 +7,7 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.*;
-import net.minecraft.screen.AnvilScreenHandler;
+import net.minecraft.screen.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.*;
@@ -24,6 +24,10 @@ import net.lopymine.betteranvil.utils.Painters;
 
 @Mixin(AnvilScreen.class)
 public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> {
+    @Shadow
+    private TextFieldWidget nameField;
+
+    @Shadow public abstract void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack);
 
     @Unique
     private final ButtonWidget packLeft = ButtonWidget.builder(Text.of(" "), (button -> {
@@ -37,31 +41,31 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     private final ButtonPositions position = BetterAnvilConfig.getInstance().positionEnum;
     @Unique
     private final boolean noPacks = MinecraftClient.getInstance().getResourcePackManager().getNames().isEmpty();
-    @Shadow
-    private TextFieldWidget nameField;
     @Unique
     private final ButtonWidget citLeft = ButtonWidget.builder(Text.of(" "), (button -> {
-        if (this.handler.getSlot(0).getStack().getItem().equals(Items.AIR)) {
+        if (this.handler.getSlot(0).getStack().isEmpty()) {
             return;
         }
         MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new ItemRenamesGui(this, this.handler.getSlot(0).getStack()) {
             @Override
-            protected void renameMethod(String name) {
+            protected void renameItem(String name) {
                 nameField.setText(name);
                 nameField.setEditable(true);
+                nameField.setFocused(true);
             }
         }));
     })).dimensions(this.width / 2 - 113, this.height / 2 - 80, 20, 20).build();
     @Unique
     private final ButtonWidget citRight = ButtonWidget.builder(Text.of(" "), (button -> {
-        if (this.handler.getSlot(0).getStack().getItem().equals(Items.AIR)) {
+        if (this.handler.getSlot(0).getStack().isEmpty()) {
             return;
         }
         MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new ItemRenamesGui(this, this.handler.getSlot(0).getStack()) {
             @Override
-            protected void renameMethod(String name) {
+            protected void renameItem(String name) {
                 nameField.setText(name);
                 nameField.setEditable(true);
+                nameField.setFocused(true);
             }
         }));
     })).dimensions(this.width / 2 + 91, this.height / 2 - 80, 20, 20).build();
@@ -70,11 +74,16 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
         super(handler, playerInventory, title, texture);
     }
 
-    @Shadow
-    protected abstract void setup();
-
     @Inject(at = @At("TAIL"), method = "setup")
     private void setup(CallbackInfo ci) {
+
+        ItemStack itemStack = handler.getSlot(0).getStack();
+        if (!itemStack.isEmpty()) {
+            nameField.setText(itemStack.getName().getString());
+            nameField.setEditable(true);
+            setFocused(nameField);
+        }
+
         citRight.setPosition(this.width / 2 + 91, this.height / 2 - 80);
         citLeft.setPosition(this.width / 2 - 113, this.height / 2 - 80);
 

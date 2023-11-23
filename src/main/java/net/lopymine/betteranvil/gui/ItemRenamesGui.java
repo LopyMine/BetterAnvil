@@ -99,12 +99,12 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                         mob.setArmor(anvilItem);
                         selectButton.setOnClick(() -> {
                             client.setScreen(parent);
-                            this.renameMethod(item.getCustomName());
+                            renameItem(item.getCustomName());
                         });
                     })
                     .setOnCtrlClick(() -> {
                         client.setScreen(parent);
-                        this.renameMethod(item.getCustomName());
+                        renameItem(item.getCustomName());
                     })
                     .setOnCtrlDown(() -> {
                         droppedItem.setStack(anvilItem);
@@ -192,12 +192,12 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                         mob.setArmor(anvilItem);
                         selectButton.setOnClick(() -> {
                             client.setScreen(parent);
-                            this.renameMethod(item.getCustomName());
+                            renameItem(item.getCustomName());
                         });
                     })
                     .setOnCtrlClick(() -> {
                         client.setScreen(parent);
-                        this.renameMethod(item.getCustomName());
+                        renameItem(item.getCustomName());
                     })
                     .setOnCtrlDown(() -> {
                         droppedItem.setStack(anvilItem);
@@ -229,5 +229,5 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
         this.init();
     }
 
-    protected abstract void renameMethod(String name);
+    protected abstract void renameItem(String name);
 }

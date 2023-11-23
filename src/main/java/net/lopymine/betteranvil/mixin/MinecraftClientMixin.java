@@ -5,13 +5,9 @@ import net.minecraft.client.RunArgs.QuickPlay;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.realms.RealmsClient;
 import net.minecraft.resource.ResourceReload;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
 import net.lopymine.betteranvil.BetterAnvil;
 import net.lopymine.betteranvil.fake.*;
