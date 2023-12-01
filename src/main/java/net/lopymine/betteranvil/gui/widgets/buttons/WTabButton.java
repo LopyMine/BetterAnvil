@@ -41,7 +41,6 @@ public class WTabButton extends WToggleButton {
         this.resourcePack = resourcePack;
         this.icon = icon;
         panel.setSize(28, 32);
-        // TODO: 25.11.2023
     }
 
     @Override
