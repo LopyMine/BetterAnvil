@@ -3,7 +3,6 @@ package net.lopymine.betteranvil.fake;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.*;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.Difficulty;
 
 import net.lopymine.betteranvil.BetterAnvil;
@@ -17,7 +16,7 @@ public class FakeWorld extends ClientWorld {
     }
 
     public static FakeWorld getInstance() {
-        if (INSTANCE == null){
+        if (INSTANCE == null) {
             INSTANCE = new FakeWorld();
         }
         return INSTANCE;

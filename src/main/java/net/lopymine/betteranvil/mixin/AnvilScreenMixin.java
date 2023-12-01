@@ -14,8 +14,6 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-
 import net.lopymine.betteranvil.config.BetterAnvilConfig;
 import net.lopymine.betteranvil.config.enums.ButtonPositions;
 import net.lopymine.betteranvil.gui.*;
@@ -24,11 +22,6 @@ import net.lopymine.betteranvil.utils.Painters;
 
 @Mixin(AnvilScreen.class)
 public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> {
-    @Shadow
-    private TextFieldWidget nameField;
-
-    @Shadow public abstract void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack);
-
     @Unique
     private final ButtonWidget packLeft = ButtonWidget.builder(Text.of(" "), (button -> {
         MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new ResourcePackRenamesGui(this, null)));
@@ -41,6 +34,8 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     private final ButtonPositions position = BetterAnvilConfig.getInstance().positionEnum;
     @Unique
     private final boolean noPacks = MinecraftClient.getInstance().getResourcePackManager().getNames().isEmpty();
+    @Shadow
+    private TextFieldWidget nameField;
     @Unique
     private final ButtonWidget citLeft = ButtonWidget.builder(Text.of(" "), (button -> {
         if (this.handler.getSlot(0).getStack().isEmpty()) {
@@ -69,10 +64,12 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
             }
         }));
     })).dimensions(this.width / 2 + 91, this.height / 2 - 80, 20, 20).build();
-
     public AnvilScreenMixin(AnvilScreenHandler handler, PlayerInventory playerInventory, Text title, Identifier texture) {
         super(handler, playerInventory, title, texture);
     }
+
+    @Shadow
+    public abstract void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack);
 
     @Inject(at = @At("TAIL"), method = "setup")
     private void setup(CallbackInfo ci) {

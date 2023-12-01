@@ -89,7 +89,7 @@ public class ItemsTooltipComponent implements TooltipComponent {
         public final int width;
         public final int height;
 
-         Sprite(Identifier texture, int width, int height) {
+        Sprite(Identifier texture, int width, int height) {
             this.texture = texture;
             this.width = width;
             this.height = height;

@@ -11,7 +11,9 @@ import java.io.File;
 @Mixin(ZipResourcePack.class)
 public class ZipResourcePackMixin implements ResourcePackAccessor {
 
-    @Shadow @Final private ZipFileWrapper zipFile;
+    @Shadow
+    @Final
+    private ZipFileWrapper zipFile;
 
     @Override
     public File betterAnvil$getFile() {

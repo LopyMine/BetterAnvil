@@ -12,6 +12,8 @@ import io.github.cottonmc.cotton.gui.widget.data.*;
 import net.lopymine.betteranvil.config.BetterAnvilConfig;
 
 public class SimpleGuiDescription extends LightweightGuiDescription {
+    protected final BetterAnvilConfig config = BetterAnvilConfig.getInstance();
+    protected final Screen parent;
     protected final WPlainPanel root = new WPlainPanel() {
         @Override
         public InputResult onKeyPressed(int ch, int key, int modifiers) {
@@ -23,9 +25,6 @@ public class SimpleGuiDescription extends LightweightGuiDescription {
             return InputResult.IGNORED;
         }
     }.setInsets(Insets.ROOT_PANEL);
-
-    protected final BetterAnvilConfig config = BetterAnvilConfig.getInstance();
-    protected final Screen parent;
     protected int width = 0;
     protected int height = 0;
 

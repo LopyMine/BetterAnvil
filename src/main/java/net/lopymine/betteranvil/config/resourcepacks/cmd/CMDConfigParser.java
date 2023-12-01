@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CMDConfigParser extends ConfigParser<CMDItem, CMDConfigSet> {
     private static final CMDConfigParser INSTANCE = new CMDConfigParser();
+
     protected CMDConfigParser() {
         super(ResourcePackType.CMD, CMDConfigSet.class, new CMDConfigSet(new LinkedHashSet<>()));
     }

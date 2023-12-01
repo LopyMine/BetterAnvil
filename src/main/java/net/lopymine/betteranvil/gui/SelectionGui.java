@@ -55,24 +55,26 @@ public class SelectionGui extends SimpleGuiDescription {
         root.validate(this);
     }
 
-    private int calcPos(int i, int d) {
-        return (i - d) / 2;
-    }
-
     public static void tryOpenScreenByType(ResourcePackType type, @Nullable Screen parent, String resourcePack) {
         MinecraftClient client = MinecraftClient.getInstance();
 
         Screen screen = switch (type) {
-            case CIT -> new BetterAnvilScreen(new ResourcePackRenamesGui(parent, new ArrayList<>(List.of(resourcePack))));
-            case CMD -> new BetterAnvilScreen(new CustomModelDataItemsGui(parent, true, new ArrayList<>(List.of(resourcePack))) {
-                @Override
-                protected void setCommand(CMDItem item) {
-                }
-            });
+            case CIT ->
+                    new BetterAnvilScreen(new ResourcePackRenamesGui(parent, new ArrayList<>(List.of(resourcePack))));
+            case CMD ->
+                    new BetterAnvilScreen(new CustomModelDataItemsGui(parent, true, new ArrayList<>(List.of(resourcePack))) {
+                        @Override
+                        protected void setCommand(CMDItem item) {
+                        }
+                    });
             case CEM -> null;
         };
 
         client.setScreen(screen);
+    }
+
+    private int calcPos(int i, int d) {
+        return (i - d) / 2;
     }
 
     public void setCurrentScreen(@Nullable CottonClientScreen currentScreen) {

@@ -1,15 +1,8 @@
 package net.lopymine.betteranvil.gui.screen;
 
-import net.minecraft.client.gui.DrawContext;
-import org.lwjgl.opengl.GL11;
-
 import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.client.*;
-import io.github.cottonmc.cotton.gui.impl.VisualLogger;
-import io.github.cottonmc.cotton.gui.widget.*;
+import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
-
-import net.lopymine.betteranvil.gui.widgets.buttons.*;
 
 public class SimpleGuiScreen extends CottonClientScreen {
     public SimpleGuiScreen(GuiDescription description) {

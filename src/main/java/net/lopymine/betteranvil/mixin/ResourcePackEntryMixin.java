@@ -11,8 +11,6 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.*;
 
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-
 import net.lopymine.betteranvil.config.BetterAnvilConfig;
 import net.lopymine.betteranvil.config.resourcepacks.ResourcePackConfigsManager;
 import net.lopymine.betteranvil.gui.SelectionGui;
@@ -26,17 +24,16 @@ import static net.lopymine.betteranvil.config.resourcepacks.ResourcePackConfigsM
 
 @Mixin(PackListWidget.ResourcePackEntry.class)
 public abstract class ResourcePackEntryMixin {
+    @Unique
+    private final BetterAnvilConfig config = BetterAnvilConfig.getInstance();
     @Shadow
     @Final
     private PackListWidget widget;
+    @Unique
+    private HashSet<ResourcePackType> types = new HashSet<>();
 
     @Shadow
     public abstract String getName();
-
-    @Unique
-    private HashSet<ResourcePackType> types = new HashSet<>();
-    @Unique
-    private final BetterAnvilConfig config = BetterAnvilConfig.getInstance();
 
     @Inject(at = @At("TAIL"), method = "mouseClicked")
     private void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {

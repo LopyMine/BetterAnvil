@@ -22,58 +22,6 @@ public class CITConfigParser extends ConfigParser<CITItem, CITConfigSet> {
         return INSTANCE;
     }
 
-    public HashMap<String, LinkedHashSet<CITItem>> getResourcePacksItems(@Nullable List<String> resourcePacks, BetterAnvilConfig config) {
-        return transformList(parseResourcePacksItems(resourcePacks), null, config);
-    }
-
-    public HashMap<String, LinkedHashSet<CITItem>> getResourcePacksItems(ItemStack itemStack, @Nullable List<String> resourcePacks, BetterAnvilConfig config) {
-        return transformList(parseResourcePacksItems(resourcePacks), ItemUtils.getID(itemStack.getItem()), config);
-    }
-
-    public  LinkedHashSet<CITItem> parseItemsFromConfig(String configFileName, String path, BetterAnvilConfig config) {
-        return transformList(parseItemsFromConfig(configFileName, path), null, config);
-    }
-
-    public  LinkedHashSet<CITItem> parseItemsFromConfig(String configFileName, String path, ItemStack itemStack, BetterAnvilConfig config) {
-        return transformList(parseItemsFromConfig(configFileName, path), ItemUtils.getID(itemStack.getItem()), config);
-    }
-
-    private LinkedHashSet<CITItem> transformList(LinkedHashSet<CITItem> items, @Nullable String itemId, BetterAnvilConfig config) {
-        LinkedHashSet<CITItem> list = new LinkedHashSet<>();
-
-        for (CITItem citItem : items) {
-            if (itemId != null) {
-                if (!citItem.getItems().contains(itemId)) {
-                    continue;
-                }
-            }
-
-            LinkedHashSet<CITItem> item = transformItem(citItem, config);
-
-            if (!item.isEmpty()) {
-                list.addAll(item);
-            }
-        }
-
-        return list;
-    }
-
-    private HashMap<String, LinkedHashSet<CITItem>> transformList(HashMap<String, LinkedHashSet<CITItem>> map, @Nullable String itemId, BetterAnvilConfig config) {
-        HashMap<String, LinkedHashSet<CITItem>> transformedMap = new HashMap<>();
-
-        for (String resourcePack : map.keySet()) {
-            LinkedHashSet<CITItem> items = map.get(resourcePack);
-            if (items == null) {
-                continue;
-            }
-
-            LinkedHashSet<CITItem> transformedItems = transformList(items, itemId, config);
-            transformedMap.put(resourcePack, transformedItems);
-        }
-
-        return transformedMap;
-    }
-
     private static LinkedHashSet<CITItem> transformItem(CITItem citItem, BetterAnvilConfig config) {
         switch (config.renamesCountEnum) {
             case ALL -> {
@@ -147,5 +95,57 @@ public class CITConfigParser extends ConfigParser<CITItem, CITConfigSet> {
         }
 
         return list;
+    }
+
+    public HashMap<String, LinkedHashSet<CITItem>> getResourcePacksItems(@Nullable List<String> resourcePacks, BetterAnvilConfig config) {
+        return transformList(parseResourcePacksItems(resourcePacks), null, config);
+    }
+
+    public HashMap<String, LinkedHashSet<CITItem>> getResourcePacksItems(ItemStack itemStack, @Nullable List<String> resourcePacks, BetterAnvilConfig config) {
+        return transformList(parseResourcePacksItems(resourcePacks), ItemUtils.getID(itemStack.getItem()), config);
+    }
+
+    public LinkedHashSet<CITItem> parseItemsFromConfig(String configFileName, String path, BetterAnvilConfig config) {
+        return transformList(parseItemsFromConfig(configFileName, path), null, config);
+    }
+
+    public LinkedHashSet<CITItem> parseItemsFromConfig(String configFileName, String path, ItemStack itemStack, BetterAnvilConfig config) {
+        return transformList(parseItemsFromConfig(configFileName, path), ItemUtils.getID(itemStack.getItem()), config);
+    }
+
+    private LinkedHashSet<CITItem> transformList(LinkedHashSet<CITItem> items, @Nullable String itemId, BetterAnvilConfig config) {
+        LinkedHashSet<CITItem> list = new LinkedHashSet<>();
+
+        for (CITItem citItem : items) {
+            if (itemId != null) {
+                if (!citItem.getItems().contains(itemId)) {
+                    continue;
+                }
+            }
+
+            LinkedHashSet<CITItem> item = transformItem(citItem, config);
+
+            if (!item.isEmpty()) {
+                list.addAll(item);
+            }
+        }
+
+        return list;
+    }
+
+    private HashMap<String, LinkedHashSet<CITItem>> transformList(HashMap<String, LinkedHashSet<CITItem>> map, @Nullable String itemId, BetterAnvilConfig config) {
+        HashMap<String, LinkedHashSet<CITItem>> transformedMap = new HashMap<>();
+
+        for (String resourcePack : map.keySet()) {
+            LinkedHashSet<CITItem> items = map.get(resourcePack);
+            if (items == null) {
+                continue;
+            }
+
+            LinkedHashSet<CITItem> transformedItems = transformList(items, itemId, config);
+            transformedMap.put(resourcePack, transformedItems);
+        }
+
+        return transformedMap;
     }
 }

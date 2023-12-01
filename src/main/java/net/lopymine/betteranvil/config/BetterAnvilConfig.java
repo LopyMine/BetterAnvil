@@ -33,7 +33,7 @@ public class BetterAnvilConfig {
     public int ctrlKey = 341;
     public int spacing = 30;
 
-    public static BetterAnvilConfig getInstance(){
+    public static BetterAnvilConfig getInstance() {
         return read();
     }
 
@@ -62,15 +62,6 @@ public class BetterAnvilConfig {
         return create();
     }
 
-    public void write() {
-        String json = GSON.toJson(this, BetterAnvilConfig.class);
-        try (FileWriter writer = new FileWriter(FILE_PATH)) {
-            writer.write(json);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void checkConfigFolder() {
         File configFolder = new File(PATH_TO_CONFIG);
         if (!configFolder.exists()) {
@@ -79,6 +70,15 @@ public class BetterAnvilConfig {
             } else {
                 LOGGER.warn("Failed to create Better Anvil config folder!");
             }
+        }
+    }
+
+    public void write() {
+        String json = GSON.toJson(this, BetterAnvilConfig.class);
+        try (FileWriter writer = new FileWriter(FILE_PATH)) {
+            writer.write(json);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -24,7 +24,8 @@ public class CITMetaDataParser {
                 case LORE -> lore.add(LoreMetaDataParser.getLore(lineContent));
                 case COUNT -> builder.count(CountMetaDataParser.getCount(lineContent));
                 case ENCHANTMENTS -> builder.enchantments(EnchantmentsMetaDataParser.getEnchantments(lineContent));
-                case ENCHANTMENT_LEVELS -> builder.enchantmentLevels(EnchantmentLevelsMetaDataParser.getEnchantmentLevels(lineContent));
+                case ENCHANTMENT_LEVELS ->
+                        builder.enchantmentLevels(EnchantmentLevelsMetaDataParser.getEnchantmentLevels(lineContent));
                 case HAND -> builder.hand(HandMetaDataParser.getHand(lineContent));
             }
         }
@@ -36,7 +37,7 @@ public class CITMetaDataParser {
 
     private static String getLineContent(String line) {
         int index = line.indexOf('=');
-        if(index == -1) {
+        if (index == -1) {
             return "";
         }
         return line.substring(index + 1);

@@ -7,7 +7,6 @@ import net.minecraft.network.*;
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.resource.featuretoggle.FeatureSet;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
 
@@ -57,6 +56,10 @@ public class FakeClientPlayNetworkHandler extends ClientPlayNetworkHandler {
 
     private static FakeClientPlayNetworkHandler INSTANCE;
 
+    static {
+        Registry.register(FAKE_DIMENSION_TYPE_REGISTRY, BetterAnvil.i("fake_dimension"), FakeDimension.getInstance());
+    }
+
     private FakeClientPlayNetworkHandler() {
         super(MinecraftClient.getInstance(), new ClientConnection(NetworkSide.CLIENTBOUND), new ClientConnectionState(MinecraftClient.getInstance().getGameProfile(), MinecraftClient.getInstance().getTelemetryManager().createWorldSession(true, Duration.ZERO, null), FAKE_REGISTRY_MANAGER.toImmutable(), FeatureSet.empty(), "", new ServerInfo("", "", ServerInfo.ServerType.OTHER), null));
     }
@@ -71,9 +74,5 @@ public class FakeClientPlayNetworkHandler extends ClientPlayNetworkHandler {
     @Override
     public DynamicRegistryManager.Immutable getRegistryManager() {
         return FAKE_REGISTRY_MANAGER;
-    }
-
-    static {
-        Registry.register(FAKE_DIMENSION_TYPE_REGISTRY, BetterAnvil.i("fake_dimension"), FakeDimension.getInstance());
     }
 }

@@ -12,7 +12,7 @@ public class FakeDimension {
     private static DimensionType INSTANCE;
 
     public static DimensionType getInstance() {
-        if (INSTANCE == null){
+        if (INSTANCE == null) {
             INSTANCE = new DimensionType(
                     OptionalLong.of(6000L),
                     true,

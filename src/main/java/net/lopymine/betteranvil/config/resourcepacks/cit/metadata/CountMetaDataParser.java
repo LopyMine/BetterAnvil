@@ -8,7 +8,7 @@ public class CountMetaDataParser {
         try {
             String clearString = getClearString(lineContent);
             String[] split = clearString.split("-");
-            if(split.length == 0) {
+            if (split.length == 0) {
                 return null;
             }
 

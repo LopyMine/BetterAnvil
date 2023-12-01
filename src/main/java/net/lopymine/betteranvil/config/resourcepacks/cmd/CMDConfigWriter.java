@@ -35,7 +35,7 @@ public class CMDConfigWriter extends ConfigWriter<CMDItem> {
             }
 
             try {
-                List<Path> list = Files.walk(path,1).filter(p -> p.toString().endsWith(".json")).toList();
+                List<Path> list = Files.walk(path, 1).filter(p -> p.toString().endsWith(".json")).toList();
                 files.addAll(list);
             } catch (Exception e) {
                 e.printStackTrace();

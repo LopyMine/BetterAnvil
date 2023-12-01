@@ -76,7 +76,7 @@ public class WDroppedItem extends WRotatableWidget {
 
         float l = MathHelper.sin(((float) d + tickDeltaY) / 10.0F + s) * 0.1F + 0.1F;
         float m = model.getTransformation().getTransformation(ModelTransformationMode.GROUND).scale.y();
-        matrices.translate(0.0, (double) (l + 0.25F * m), 0.0);
+        matrices.translate(0.0, l + 0.25F * m, 0.0);
 
         float xRot = (float) Math.atan(angleX / 40.0F);
         matrices.multiply(new Quaternionf().rotateX(-xRot * 20.0F * 0.017453292F).rotateY(getRotation(tickDeltaX)));

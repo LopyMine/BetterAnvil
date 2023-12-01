@@ -288,12 +288,44 @@ public class WRenameButton extends WWidget {
     }
 
 
+    public enum State {
+        BUTTON(BetterAnvil.i("textures/gui/buttons/rename/button.png")),
+        RENAME_BUTTON(BetterAnvil.i("textures/gui/buttons/rename/button_rename.png")),
+        DARK_BUTTON(BetterAnvil.i("textures/gui/buttons/rename/button_dark.png")),
+        BUTTON_FOCUS(BetterAnvil.i("textures/gui/buttons/rename/button_focus.png"));
+
+        private final Identifier texture;
+
+        State(Identifier texture) {
+            this.texture = texture;
+        }
+
+        public static State getState(GuiDescription host, boolean bl) {
+            if (host instanceof IConfigAccessor description) {
+                ButtonTextures buttonTexture = description.getConfig().buttonTextureEnum;
+
+                if (buttonTexture == ButtonTextures.THEME) {
+                    return description.getConfig().isDarkMode ? DARK_BUTTON : BUTTON;
+                }
+
+                if (buttonTexture == ButtonTextures.RENAME) {
+                    return RENAME_BUTTON;
+                }
+            }
+
+            return bl ? DARK_BUTTON : BUTTON;
+        }
+
+        public Identifier getTexture() {
+            return texture;
+        }
+    }
+
     public static class Builder {
-        @Nullable
-        private WItem icon;
         @NotNull
         private final String string;
-
+        @Nullable
+        private WItem icon;
         @Nullable
         private DamageMetaData damageMetaData;
         @Nullable
@@ -385,39 +417,6 @@ public class WRenameButton extends WWidget {
 
         public WRenameButton build() {
             return new WRenameButton(icon, string, onClick, onCtrlClick, onCtrlDown, resourcePack, lore, items, showItemsInTooltip, enchantments, damageMetaData, countMetaData, enchantmentLevels);
-        }
-    }
-
-    public enum State {
-        BUTTON(BetterAnvil.i("textures/gui/buttons/rename/button.png")),
-        RENAME_BUTTON(BetterAnvil.i("textures/gui/buttons/rename/button_rename.png")),
-        DARK_BUTTON(BetterAnvil.i("textures/gui/buttons/rename/button_dark.png")),
-        BUTTON_FOCUS(BetterAnvil.i("textures/gui/buttons/rename/button_focus.png"));
-
-        private final Identifier texture;
-
-        State(Identifier texture) {
-            this.texture = texture;
-        }
-
-        public static State getState(GuiDescription host, boolean bl) {
-            if (host instanceof IConfigAccessor description) {
-                ButtonTextures buttonTexture = description.getConfig().buttonTextureEnum;
-
-                if (buttonTexture == ButtonTextures.THEME) {
-                    return description.getConfig().isDarkMode ? DARK_BUTTON : BUTTON;
-                }
-
-                if (buttonTexture == ButtonTextures.RENAME) {
-                    return RENAME_BUTTON;
-                }
-            }
-
-            return bl ? DARK_BUTTON : BUTTON;
-        }
-
-        public Identifier getTexture() {
-            return texture;
         }
     }
 }

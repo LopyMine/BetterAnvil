@@ -4,11 +4,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.*;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.render.entity.PlayerModelPart;
-import net.minecraft.client.util.*;
+import net.minecraft.client.util.SkinTextures;
 import net.minecraft.stat.StatHandler;
-import net.minecraft.util.*;
-
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 import org.jetbrains.annotations.Nullable;
 
