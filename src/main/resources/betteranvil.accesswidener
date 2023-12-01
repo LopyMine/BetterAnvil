@@ -1,0 +1,4 @@
+accessWidener v1 named
+accessible class net/minecraft/resource/ZipResourcePack$ZipFileWrapper
+accessible field net/minecraft/resource/ZipResourcePack$ZipFileWrapper file Ljava/io/File;
+accessible method net/minecraft/client/gui/widget/EntryListWidget getRowTop (I)I

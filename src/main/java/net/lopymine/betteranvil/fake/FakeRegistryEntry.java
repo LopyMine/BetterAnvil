@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public record FakeRegistryEntry<T>(T value, RegistryKey<? extends Registry<T>> key) implements RegistryEntry<T> {
     @Override
     public boolean hasKeyAndValue() {
-        return false;
+        return true;
     }
 
     @Override
@@ -30,37 +30,37 @@ public record FakeRegistryEntry<T>(T value, RegistryKey<? extends Registry<T>> k
     }
 
     @Override
-    public boolean matches(Predicate<RegistryKey<T>> predicate) {
-        return false;
-    }
-
-    @Override
     public boolean isIn(TagKey<T> tag) {
         return false;
     }
 
     @Override
-    public Stream<TagKey<T>> streamTags() {
-        return null;
+    public boolean matches(Predicate<RegistryKey<T>> predicate) {
+        return false;
     }
 
     @Override
     public Either<RegistryKey<T>, T> getKeyOrValue() {
-        return null;
+        return Either.right(this.value);
     }
 
     @Override
     public Optional<RegistryKey<T>> getKey() {
-        return Optional.of(RegistryKey.of(key, new Identifier(BetterAnvil.MOD_ID, "")));
+        return Optional.of(RegistryKey.of(key, BetterAnvil.i("fake_registry_entry")));
     }
 
     @Override
     public Type getType() {
-        return null;
+        return Type.DIRECT;
     }
 
     @Override
     public boolean ownerEquals(RegistryEntryOwner<T> owner) {
-        return false;
+        return true;
+    }
+
+    @Override
+    public Stream<TagKey<T>> streamTags() {
+        return Stream.of();
     }
 }

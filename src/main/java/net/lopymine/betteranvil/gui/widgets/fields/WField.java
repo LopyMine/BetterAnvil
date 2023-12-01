@@ -12,11 +12,6 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.lopymine.betteranvil.BetterAnvil;
 
 public class WField extends WWidget {
-    public static final Identifier FIELD_NAME_FOCUS_DARK = new Identifier(BetterAnvil.MOD_ID, "gui/name_field/name_field_focus_dark.png");
-    public static final Identifier FIELD_NAME_DARK = new Identifier(BetterAnvil.MOD_ID, "gui/name_field/name_field_dark.png");
-    public static final Identifier FIELD_NAME_FOCUS = new Identifier(BetterAnvil.MOD_ID, "gui/name_field/name_field_focus_light.png");
-    public static final Identifier FIELD_NAME = new Identifier(BetterAnvil.MOD_ID, "gui/name_field/name_field_light.png");
-
     private Text text = Text.of("");
     private String string = "";
 
@@ -37,15 +32,17 @@ public class WField extends WWidget {
 
     @Override
     public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        boolean bl = shouldRenderInDarkMode();
+        int yOffset = 24 / 2 - 9 / 2;
 
-        int yOffset = height / 2 - 9 / 2;
+        State state = State.getState(shouldRenderInDarkMode());
 
-        if (!string.isEmpty()) {
-            ScreenDrawing.texturedRect(context, x, y, 164, 24, bl ? FIELD_NAME_FOCUS_DARK : FIELD_NAME_FOCUS, 0xFFFFFFFF);
-        } else {
-            ScreenDrawing.texturedRect(context, x, y, 164, 24, bl ? FIELD_NAME_DARK : FIELD_NAME, 0xFFFFFFFF);
-        }
+        float px = 1 / 128f;
+
+        float buttonLeft = 0;
+        float buttonTop = (string.isEmpty() ? 16 : 0) * px;
+        float buttonHeight = 16 * px;
+        float buttonWidth = 110 * px;
+        ScreenDrawing.texturedRect(context, x, y, 164, 24, state.getTexture(), buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
 
         ScreenDrawing.drawString(context, text.asOrderedText(), HorizontalAlignment.CENTER, x, y + yOffset, 164, 0xE0E0E0);
     }
@@ -75,5 +72,24 @@ public class WField extends WWidget {
     @Override
     public int getHeight() {
         return 24;
+    }
+
+    private enum State {
+        LIGHT(BetterAnvil.i("textures/gui/field/field_light.png")),
+        DARK(BetterAnvil.i("textures/gui/field/field_dark.png"));
+
+        private final Identifier texture;
+
+        State(Identifier texture) {
+            this.texture = texture;
+        }
+
+        public static State getState(boolean isDarkMode) {
+            return (isDarkMode ? DARK : LIGHT);
+        }
+
+        public Identifier getTexture() {
+            return texture;
+        }
     }
 }

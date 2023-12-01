@@ -114,7 +114,7 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
                         return Stream.of(ItemUtils.getItemByName(s).getDefaultStack());
                     }).toList(), true)
                     .setOnClick(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                         field.setText(item.getCustomName());
 
@@ -127,7 +127,7 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
                         keyboard.setClipboard(item.getCustomName());
                     })
                     .setOnCtrlDown(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                     });
 
@@ -209,7 +209,7 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
                         return Stream.of(ItemUtils.getItemByName(s).getDefaultStack());
                     }).toList(), true)
                     .setOnClick(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                         field.setText(item.getCustomName());
 
@@ -222,7 +222,7 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
                         keyboard.setClipboard(item.getCustomName());
                     })
                     .setOnCtrlDown(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                     });
 
@@ -236,14 +236,14 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
 
         itemPreviewButton.setIcon(new ItemIcon(Items.NAME_TAG));
         itemPreviewButton.setOnClick(() -> {
-            root.remove(mob);
             root.remove(droppedItem);
+            root.remove(mob);
             root.add(droppedItem, droppedItemPosX, droppedItemPosY, 1, 1);
         });
 
         playerPreviewButton.setOnClick(() -> {
-            root.remove(mob);
             root.remove(droppedItem);
+            root.remove(mob);
             root.add(mob, droppedItemPosX, droppedItemPosY + (entitiesSize / 2) + 30, 1, 1);
         });
 

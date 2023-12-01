@@ -2,7 +2,6 @@ package net.lopymine.betteranvil.gui.widgets.buttons;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -13,6 +12,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 
+import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.*;
 import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.*;
@@ -25,9 +25,9 @@ import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.DamageMetaData
 import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.EnchantmentLevelsMetaDataParser.EnchantmentLevelsMetaData;
 import net.lopymine.betteranvil.gui.description.interfaces.IConfigAccessor;
 import net.lopymine.betteranvil.gui.tooltip.ItemsTooltipComponent;
-import net.lopymine.betteranvil.gui.tooltip.builder.TooltipBuilder;
-import net.lopymine.betteranvil.gui.tooltip.builder.*;
 import net.lopymine.betteranvil.gui.tooltip.utils.TooltipComponentsData;
+import net.lopymine.betteranvil.gui.tooltip.utils.builder.TooltipBuilder;
+import net.lopymine.betteranvil.gui.tooltip.utils.builder.*;
 import net.lopymine.betteranvil.utils.*;
 
 import java.util.*;
@@ -35,12 +35,6 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.*;
 
 public class WRenameButton extends WWidget {
-
-    public static final Identifier MY_BUTTON = new Identifier(BetterAnvil.MOD_ID, "gui/button/button.png");
-    public static final Identifier MY_BUTTON_RENAME = new Identifier(BetterAnvil.MOD_ID, "gui/button/button_rename.png");
-    public static final Identifier MY_BUTTON_DARK = new Identifier(BetterAnvil.MOD_ID, "gui/button/button_dark.png");
-    public static final Identifier MY_BUTTON_FOCUS = new Identifier(BetterAnvil.MOD_ID, "gui/button/button_focus.png");
-
     public static final Formatting TOOLTIP_FORMATTING = Formatting.BLUE;
 
     private static boolean hasDownShift = false;
@@ -112,13 +106,11 @@ public class WRenameButton extends WWidget {
 
     @Override
     public void renderTooltip(DrawContext context, int x, int y, int tX, int tY) {
-        boolean bl = Screen.hasShiftDown();
-
         List<Text> title = List.of(tooltipTitle);
 
         Optional<TooltipData> data = Optional.empty();
 
-        if (bl) {
+        if (hasDownShift) {
             MyTooltipBuilder builder = new MyTooltipBuilder();
             addTooltip(builder);
 
@@ -134,88 +126,89 @@ public class WRenameButton extends WWidget {
     }
 
     public void addTooltip(TooltipBuilder builder) {
-        if (hasDownShift) {
+        builder.add(Text.of(""));
+        builder.add(Text.translatable("better_anvil.rename_button.tooltip.resource_pack"));
+        builder.add(ScreenTexts.space().append(Text.literal(resourcePack).formatted(TOOLTIP_FORMATTING)));
+
+        if (lore != null && !lore.isEmpty()) {
             builder.add(Text.of(""));
-            builder.add(Text.translatable("better_anvil.rename_button.tooltip.resource_pack"));
-            builder.add(ScreenTexts.space().append(Text.literal(resourcePack).formatted(TOOLTIP_FORMATTING)));
-
-            if (lore != null && !lore.isEmpty()) {
-                builder.add(Text.of(""));
-                builder.add(Text.translatable("better_anvil.rename_button.tooltip.lore"));
-                for (String text : lore) {
-                    builder.add(ScreenTexts.space().append(text));
-                }
-            }
-
-            if (enchantments != null && !enchantments.isEmpty()) {
-                builder.add(Text.of(""));
-                Text text = enchantments.size() > 1 ? Text.translatable("better_anvil.rename_button.tooltip.enchantments") : Text.translatable("better_anvil.rename_button.tooltip.enchantment");
-                builder.add(text);
-                for (Enchantment enchantment : enchantments) {
-                    int level = enchantment.getMaxLevel();
-                    if(enchantmentLevels != null) {
-                        level = enchantmentLevels.maxLevel();
-                    }
-                    builder.add(ScreenTexts.space().append(enchantment.getName(level).copy().formatted(TOOLTIP_FORMATTING)));
-                }
-            }
-
-            if (damageMetaData != null) {
-                builder.add(Text.of(""));
-                builder.add(Text.translatable("better_anvil.rename_button.tooltip.damage"));
-                float min = damageMetaData.minDamage();
-                float max = damageMetaData.maxDamage();
-                boolean bl = false;
-
-                if (items != null) {
-                    bl = items.size() == 1;
-                }
-
-                if (bl) {
-                    ItemStack itemStack = items.get(0);
-                    min = (int) (itemStack.getMaxDamage() * min);
-                    max = (int) (itemStack.getMaxDamage() * max);
-                }
-
-                String damage = damageMetaData.hasMaxDamage() ? min + "-" + max : String.valueOf(min);
-                builder.add(ScreenTexts.space().append(Text.literal(damage + (bl ? "" : "%")).formatted(TOOLTIP_FORMATTING)));
-            }
-
-            if (countMetaData != null) {
-                builder.add(Text.of(""));
-                builder.add(Text.translatable("better_anvil.rename_button.tooltip.count"));
-                float min = countMetaData.minCount();
-                float max = countMetaData.maxCount();
-                boolean bl = false;
-
-                if (items != null) {
-                    bl = items.size() == 1;
-                }
-
-                if (bl) {
-                    ItemStack itemStack = items.get(0);
-                    min = (int) (itemStack.getMaxCount() * min);
-                    max = (int) (itemStack.getMaxCount() * max);
-                }
-
-                String count = countMetaData.hasMaxCount() ? min + "-" + max : String.valueOf(min);
-                builder.add(ScreenTexts.space().append(Text.literal(count + (bl ? "" : "%"))).formatted(TOOLTIP_FORMATTING));
-            }
-
-            if (items != null && !items.isEmpty() && showItemsInTooltip) {
-                builder.add(Text.of(""));
-                Text text = items.size() > 1 ? Text.translatable("better_anvil.rename_button.tooltip.items") : Text.translatable("better_anvil.rename_button.tooltip.item");
-                builder.add(text);
+            builder.add(Text.translatable("better_anvil.rename_button.tooltip.lore"));
+            for (String text : lore) {
+                builder.add(ScreenTexts.space().append(text));
             }
         }
+
+        if (enchantments != null && !enchantments.isEmpty()) {
+            builder.add(Text.of(""));
+            Text text = enchantments.size() > 1 ? Text.translatable("better_anvil.rename_button.tooltip.enchantments") : Text.translatable("better_anvil.rename_button.tooltip.enchantment");
+            builder.add(text);
+            for (Enchantment enchantment : enchantments) {
+                int level = enchantment.getMaxLevel();
+                if (enchantmentLevels != null) {
+                    level = enchantmentLevels.maxLevel();
+                }
+                builder.add(ScreenTexts.space().append(enchantment.getName(level).copy().formatted(TOOLTIP_FORMATTING)));
+            }
+        }
+
+        if (damageMetaData != null) {
+            builder.add(Text.of(""));
+            builder.add(Text.translatable("better_anvil.rename_button.tooltip.damage"));
+            float min = damageMetaData.minDamage();
+            float max = damageMetaData.maxDamage();
+            boolean bl = false;
+
+            if (items != null) {
+                bl = items.size() == 1;
+            }
+
+            if (bl) {
+                ItemStack itemStack = items.get(0);
+                min = (itemStack.getMaxDamage() * min);
+                max = (itemStack.getMaxDamage() * max);
+            }
+
+            String damage = damageMetaData.hasMaxDamage() ? (int) min + "-" + (int) max : String.valueOf((int) min);
+            builder.add(ScreenTexts.space().append(Text.literal(damage + (bl ? "" : "%")).formatted(TOOLTIP_FORMATTING)));
+        }
+
+        if (countMetaData != null) {
+            builder.add(Text.of(""));
+            builder.add(Text.translatable("better_anvil.rename_button.tooltip.count"));
+            float min = countMetaData.minCount();
+            float max = countMetaData.maxCount();
+            boolean bl = false;
+
+            if (items != null) {
+                bl = items.size() == 1;
+            }
+
+            if (bl) {
+                ItemStack itemStack = items.get(0);
+                min = (itemStack.getMaxCount() * min);
+                max = (itemStack.getMaxCount() * max);
+            }
+
+            String count = countMetaData.hasMaxCount() ? (int) min + "-" + (int) max : String.valueOf((int) min);
+            builder.add(ScreenTexts.space().append(Text.literal(count + (bl ? "" : "%"))).formatted(TOOLTIP_FORMATTING));
+        }
+
+        if (items != null && !items.isEmpty() && showItemsInTooltip) {
+            builder.add(Text.of(""));
+            Text text = items.size() > 1 ? Text.translatable("better_anvil.rename_button.tooltip.items") : Text.translatable("better_anvil.rename_button.tooltip.item");
+            builder.add(text);
+        }
+
     }
 
     @Override
     public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        ScreenDrawing.texturedRect(context, x, y, 155, 32, getActualTexture(), 0xFFFFFFFF);
+        State state = State.getState(getHost(), shouldRenderInDarkMode());
+
+        ScreenDrawing.texturedRect(context, x, y, 155, 32, state.getTexture(), 0xFFFFFFFF);
 
         if (isHovered() || isFocused()) {
-            ScreenDrawing.texturedRect(context, x, y, 155, 32, MY_BUTTON_FOCUS, 0xFFFFFFFF);
+            ScreenDrawing.texturedRect(context, x, y, 155, 32, State.BUTTON_FOCUS.getTexture(), 0xFFFFFFFF);
         }
 
         if (icon != null) {
@@ -224,7 +217,7 @@ public class WRenameButton extends WWidget {
 
         if (text != null) {
             int color = 0xE0E0E0;
-            if (!LibGui.isDarkMode() && getActualTexture() != MY_BUTTON_RENAME) {
+            if (!LibGui.isDarkMode() && state != State.RENAME_BUTTON) {
                 color = 0x262626;
             }
 
@@ -243,26 +236,10 @@ public class WRenameButton extends WWidget {
 
         if (onClick != null) {
             onClick.run();
+            return InputResult.PROCESSED;
         }
 
-        return InputResult.PROCESSED;
-
-    }
-
-    private Identifier getActualTexture() {
-        if (getHost() instanceof IConfigAccessor description) {
-            ButtonTextures buttonTexture = description.getConfig().buttonTextureEnum;
-
-            if (buttonTexture == ButtonTextures.THEME) {
-                return description.getConfig().isDarkMode ? MY_BUTTON_DARK : MY_BUTTON;
-            }
-
-            if (buttonTexture == ButtonTextures.RENAME) {
-                return MY_BUTTON_RENAME;
-            }
-        }
-
-        return shouldRenderInDarkMode() ? MY_BUTTON_DARK : MY_BUTTON;
+        return InputResult.IGNORED;
     }
 
     @Override
@@ -293,9 +270,8 @@ public class WRenameButton extends WWidget {
 
             if (hasDownCtrl && onCtrlDown != null) {
                 onCtrlDown.run();
+                return InputResult.PROCESSED;
             }
-
-            return InputResult.PROCESSED;
         }
 
         return InputResult.IGNORED;
@@ -409,6 +385,39 @@ public class WRenameButton extends WWidget {
 
         public WRenameButton build() {
             return new WRenameButton(icon, string, onClick, onCtrlClick, onCtrlDown, resourcePack, lore, items, showItemsInTooltip, enchantments, damageMetaData, countMetaData, enchantmentLevels);
+        }
+    }
+
+    public enum State {
+        BUTTON(BetterAnvil.i("textures/gui/buttons/rename/button.png")),
+        RENAME_BUTTON(BetterAnvil.i("textures/gui/buttons/rename/button_rename.png")),
+        DARK_BUTTON(BetterAnvil.i("textures/gui/buttons/rename/button_dark.png")),
+        BUTTON_FOCUS(BetterAnvil.i("textures/gui/buttons/rename/button_focus.png"));
+
+        private final Identifier texture;
+
+        State(Identifier texture) {
+            this.texture = texture;
+        }
+
+        public static State getState(GuiDescription host, boolean bl) {
+            if (host instanceof IConfigAccessor description) {
+                ButtonTextures buttonTexture = description.getConfig().buttonTextureEnum;
+
+                if (buttonTexture == ButtonTextures.THEME) {
+                    return description.getConfig().isDarkMode ? DARK_BUTTON : BUTTON;
+                }
+
+                if (buttonTexture == ButtonTextures.RENAME) {
+                    return RENAME_BUTTON;
+                }
+            }
+
+            return bl ? DARK_BUTTON : BUTTON;
+        }
+
+        public Identifier getTexture() {
+            return texture;
         }
     }
 }

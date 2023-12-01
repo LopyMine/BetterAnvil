@@ -1,9 +1,11 @@
 package net.lopymine.betteranvil.gui.screen;
 
 import net.minecraft.client.gui.DrawContext;
+import org.lwjgl.opengl.GL11;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
+import io.github.cottonmc.cotton.gui.client.*;
+import io.github.cottonmc.cotton.gui.impl.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 
@@ -105,13 +107,18 @@ public class BetterAnvilScreen extends CottonClientScreen {
         int containerX = mouseX - left;
         int containerY = mouseY - top;
 
+        WWidget focus = description.getFocus();
+        if (focus instanceof WRenameButton || focus instanceof WStarButton) {
+            description.releaseFocus(focus);
+        }
+
         WWidget hit = description.getRootPanel().hit(containerX, containerY);
         if (hit instanceof WRenameButton || hit instanceof WStarButton) {
             description.requestFocus(hit);
         }
+
         super.render(context, mouseX, mouseY, partialTicks);
     }
-
 
     @Override
     public boolean shouldCloseOnEsc() {

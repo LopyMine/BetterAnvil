@@ -121,11 +121,11 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
         switch (position) {
             case RIGHT -> {
                 context.drawItem(new ItemStack(Items.NAME_TAG), 181, 5);
-                ScreenDrawing.texturedRect(context, 183, 32, 12, 12, Painters.SEARCH, 0xFFFFFFFF);
+                Painters.drawSearch(context, 183, 32, false);
             }
             case LEFT -> {
                 context.drawItem(new ItemStack(Items.NAME_TAG), -22, 5);
-                ScreenDrawing.texturedRect(context, -22, 32, 12, 12, Painters.SEARCH, 0xFFFFFFFF);
+                Painters.drawSearch(context, -22, 32, false);
             }
         }
 

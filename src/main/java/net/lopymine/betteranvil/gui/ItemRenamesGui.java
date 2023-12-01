@@ -95,7 +95,7 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                     .setItems(List.of(anvilItem.getItem().getDefaultStack()), false)
                     .setOnClick(() -> {
                         field.setText(item.getCustomName());
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                         selectButton.setOnClick(() -> {
                             client.setScreen(parent);
@@ -107,7 +107,7 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                         renameItem(item.getCustomName());
                     })
                     .setOnCtrlDown(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                     });
 
@@ -188,7 +188,7 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                     .setItems(List.of(anvilItem.getItem().getDefaultStack()), false)
                     .setOnClick(() -> {
                         field.setText(item.getCustomName());
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                         selectButton.setOnClick(() -> {
                             client.setScreen(parent);
@@ -200,7 +200,7 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                         renameItem(item.getCustomName());
                     })
                     .setOnCtrlDown(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                     });
 

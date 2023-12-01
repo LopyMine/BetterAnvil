@@ -1,6 +1,7 @@
 package net.lopymine.betteranvil.mixin;
 
 import net.minecraft.resource.*;
+import net.minecraft.resource.ZipResourcePack.ZipFileWrapper;
 import org.spongepowered.asm.mixin.*;
 
 import net.lopymine.betteranvil.utils.mixins.ResourcePackAccessor;
@@ -10,13 +11,11 @@ import java.io.File;
 @Mixin(ZipResourcePack.class)
 public class ZipResourcePackMixin implements ResourcePackAccessor {
 
-    @Shadow
-    @Final
-    private File backingZipFile;
+    @Shadow @Final private ZipFileWrapper zipFile;
 
     @Override
     public File betterAnvil$getFile() {
-        return backingZipFile;
+        return zipFile.file;
     }
 
     @Override

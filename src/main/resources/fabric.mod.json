@@ -28,6 +28,7 @@
   "mixins": [
     "betteranvil.mixins.json"
   ],
+  "accessWidener" : "betteranvil.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.21",
     "fabric": ">=0.83.0",

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class WSwitcher extends WWidget {
     public static final Identifier VANILLA_TEXTURE = new Identifier("textures/gui/resource_packs.png");
-    public static final Identifier DARK_TEXTURE = new Identifier(BetterAnvil.MOD_ID, "gui/switchers/resource_packs_dark.png");
+    public static final Identifier DARK_TEXTURE = BetterAnvil.i("textures/gui/switchers/resource_packs_dark.png");
     private final Type type;
     private Runnable onClick;
 

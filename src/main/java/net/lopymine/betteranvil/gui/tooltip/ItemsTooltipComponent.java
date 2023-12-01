@@ -12,10 +12,9 @@ import net.lopymine.betteranvil.BetterAnvil;
 
 import java.util.List;
 
-import static net.minecraft.client.gui.tooltip.BundleTooltipComponent.TEXTURE;
-
 public class ItemsTooltipComponent implements TooltipComponent {
-    public static Identifier BUNDLE_DARK = new Identifier(BetterAnvil.MOD_ID, "gui/items_tooltip/bundle_dark.png");
+    private static final Identifier BACKGROUND_TEXTURE_DARK = BetterAnvil.i("bundle/background");
+    private static final Identifier BACKGROUND_TEXTURE = new Identifier("container/bundle/background");
     private final List<ItemStack> items;
     private final boolean isDarkMode;
 
@@ -25,11 +24,19 @@ public class ItemsTooltipComponent implements TooltipComponent {
     }
 
     public int getHeight() {
-        return this.getRows() * 20 + 2;
+        return this.getRowsHeight();
     }
 
     public int getWidth(TextRenderer textRenderer) {
+        return this.getColumnsWidth();
+    }
+
+    private int getColumnsWidth() {
         return this.getColumns() * 18 + 2;
+    }
+
+    private int getRowsHeight() {
+        return this.getRows() * 20 + 2;
     }
 
     @Override
@@ -38,48 +45,31 @@ public class ItemsTooltipComponent implements TooltipComponent {
         int j = this.getRows();
         int k = 0;
 
+        context.drawGuiTexture((isDarkMode ? BACKGROUND_TEXTURE_DARK : BACKGROUND_TEXTURE), x, y, this.getColumnsWidth(), this.getRowsHeight());
+
         for (int l = 0; l < j; ++l) {
             for (int m = 0; m < i; ++m) {
                 int n = x + m * 18 + 1;
                 int o = y + l * 20 + 1;
-                this.drawSlot(n, o, k++, context);
+                this.drawSlot(n, o, k++, context, textRenderer);
             }
         }
-
-        this.drawOutline(x, y, i, j, context);
     }
 
-    private void drawSlot(int x, int y, int index, DrawContext context) {
+    private void drawSlot(int x, int y, int index, DrawContext context, TextRenderer textRenderer) {
+        Sprite sprite = isDarkMode ? Sprite.DARK_SLOT : Sprite.SLOT;
         if (index >= this.items.size()) {
-            this.draw(context, x, y, Sprite.SLOT);
+            this.draw(context, x, y, sprite);
         } else {
             ItemStack itemStack = this.items.get(index);
-            this.draw(context, x, y, Sprite.SLOT);
+            this.draw(context, x, y, sprite);
             context.drawItem(itemStack, x + 1, y + 1, index);
+            context.drawItemInSlot(textRenderer, itemStack, x + 1, y + 1);
         }
-    }
-
-    private void drawOutline(int x, int y, int columns, int rows, DrawContext context) {
-        this.draw(context, x, y, Sprite.BORDER_CORNER_TOP);
-        this.draw(context, x + columns * 18 + 1, y, Sprite.BORDER_CORNER_TOP);
-
-        int i;
-        for (i = 0; i < columns; ++i) {
-            this.draw(context, x + 1 + i * 18, y, Sprite.BORDER_HORIZONTAL_TOP);
-            this.draw(context, x + 1 + i * 18, y + rows * 20, Sprite.BORDER_HORIZONTAL_BOTTOM);
-        }
-
-        for (i = 0; i < rows; ++i) {
-            this.draw(context, x, y + i * 20 + 1, Sprite.BORDER_VERTICAL);
-            this.draw(context, x + columns * 18 + 1, y + i * 20 + 1, Sprite.BORDER_VERTICAL);
-        }
-
-        this.draw(context, x, y + rows * 20, Sprite.BORDER_CORNER_BOTTOM);
-        this.draw(context, x + columns * 18 + 1, y + rows * 20, Sprite.BORDER_CORNER_BOTTOM);
     }
 
     private void draw(DrawContext context, int x, int y, Sprite sprite) {
-        context.drawTexture(isDarkMode ? BUNDLE_DARK : TEXTURE, x, y, 0, (float) sprite.u, (float) sprite.v, sprite.width, sprite.height, 128, 128);
+        context.drawGuiTexture(sprite.texture, x, y, 0, sprite.width, sprite.height);
     }
 
     private int getColumns() {
@@ -92,21 +82,15 @@ public class ItemsTooltipComponent implements TooltipComponent {
 
     @Environment(EnvType.CLIENT)
     private enum Sprite {
-        SLOT(0, 0, 18, 20),
-        BORDER_VERTICAL(0, 18, 1, 20),
-        BORDER_HORIZONTAL_TOP(0, 20, 18, 1),
-        BORDER_HORIZONTAL_BOTTOM(0, 60, 18, 1),
-        BORDER_CORNER_TOP(0, 20, 1, 1),
-        BORDER_CORNER_BOTTOM(0, 60, 1, 1);
+        SLOT(new Identifier("container/bundle/slot"), 18, 20),
+        DARK_SLOT(BetterAnvil.i("bundle/slot"), 18, 20);
 
-        public final int u;
-        public final int v;
+        public final Identifier texture;
         public final int width;
         public final int height;
 
-        Sprite(int u, int v, int width, int height) {
-            this.u = u;
-            this.v = v;
+         Sprite(Identifier texture, int width, int height) {
+            this.texture = texture;
             this.width = width;
             this.height = height;
         }

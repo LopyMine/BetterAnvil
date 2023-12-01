@@ -1,13 +1,10 @@
 package net.lopymine.betteranvil.mixin;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.RunArgs.QuickPlay;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.realms.RealmsClient;
-import net.minecraft.resource.ResourceReload;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.*;
 
 import net.lopymine.betteranvil.BetterAnvil;
 import net.lopymine.betteranvil.fake.*;
@@ -26,9 +23,8 @@ public class MinecraftClientMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "onInitFinished")
-    private void onInitFinished(RealmsClient realms, ResourceReload reload, QuickPlay quickPlay, CallbackInfo ci) {
+    private void onInitFinished(CallbackInfoReturnable<Runnable> cir) {
         Thread thread = new Thread(()-> {
-            FakeClientPlayNetworkHandler.onInitialize();
             FakeWorld.onInitialize();
             FakeClientPlayerEntity.onInitialize();
             BetterAnvil.LOGGER.info("FakeClientPlayNetworkHandler, FakeWorld,  FakeClientPlayerEntity Initialized");

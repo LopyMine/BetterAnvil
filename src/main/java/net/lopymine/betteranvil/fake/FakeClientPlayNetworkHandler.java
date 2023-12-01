@@ -1,14 +1,15 @@
 package net.lopymine.betteranvil.fake;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.*;
 import net.minecraft.entity.damage.*;
 import net.minecraft.network.*;
 import net.minecraft.registry.*;
-import net.minecraft.registry.entry.*;
-import net.minecraft.registry.entry.RegistryEntry.Reference;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.dimension.DimensionType;
 
 import com.mojang.serialization.Lifecycle;
 
@@ -19,16 +20,17 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class FakeClientPlayNetworkHandler extends ClientPlayNetworkHandler {
-    private static FakeClientPlayNetworkHandler INSTANCE;
-    private final RegistryEntryOwner<Biome> fakeBiomeRegistryOwner = new RegistryEntryOwner<>(){};
-    private final Registry<Biome> fakeBiomeRegistry = new SimpleDefaultedRegistry<>("fake_player", RegistryKeys.BIOME, Lifecycle.stable(), true) {
+    private static final Registry<DimensionType> FAKE_DIMENSION_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKeys.DIMENSION_TYPE, Lifecycle.stable());
+    private static final Registry<Biome> FAKE_BIOME_REGISTRY = new SimpleDefaultedRegistry<>("fake", RegistryKeys.BIOME, Lifecycle.stable(), true) {
         @Override
         public RegistryEntry.Reference<Biome> entryOf(RegistryKey<Biome> key) {
-            return Reference.standAlone(fakeBiomeRegistryOwner, key);
+            return null;
         }
     };
-    private final DynamicRegistryManager cursedRegistryManager = new DynamicRegistryManager.Immutable() {
-        private final FakeRegistry<DamageType> damageTypes = new FakeRegistry<>(RegistryKeys.DAMAGE_TYPE, new Identifier(BetterAnvil.MOD_ID, "fake_damage"), new DamageType("", DamageScaling.NEVER, 0));
+
+    private static final DynamicRegistryManager.Immutable FAKE_REGISTRY_MANAGER = new DynamicRegistryManager.Immutable() {
+        private final FakeRegistry<DamageType> damageTypes = new FakeRegistry<>(RegistryKeys.DAMAGE_TYPE, BetterAnvil.i("fake_damage"),
+                new DamageType("", DamageScaling.NEVER, 0));
 
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
@@ -39,7 +41,9 @@ public class FakeClientPlayNetworkHandler extends ClientPlayNetworkHandler {
             } else if (RegistryKeys.DAMAGE_TYPE.equals(key)) {
                 return Optional.of(damageTypes);
             } else if (RegistryKeys.BIOME.equals(key)) {
-                return Optional.of(fakeBiomeRegistry);
+                return Optional.of(FAKE_BIOME_REGISTRY);
+            } else if (RegistryKeys.DIMENSION_TYPE.equals(key)) {
+                return Optional.of(FAKE_DIMENSION_TYPE_REGISTRY);
             }
 
             return Optional.empty();
@@ -51,23 +55,25 @@ public class FakeClientPlayNetworkHandler extends ClientPlayNetworkHandler {
         }
     };
 
+    private static FakeClientPlayNetworkHandler INSTANCE;
+
     private FakeClientPlayNetworkHandler() {
-        super(MinecraftClient.getInstance(), null, new ClientConnection(NetworkSide.CLIENTBOUND), MinecraftClient.getInstance().getCurrentServerEntry(), MinecraftClient.getInstance().getSession().getProfile(), MinecraftClient.getInstance().getTelemetryManager().createWorldSession(false, Duration.ofSeconds(0), ""));
+        super(MinecraftClient.getInstance(), new ClientConnection(NetworkSide.CLIENTBOUND), new ClientConnectionState(MinecraftClient.getInstance().getGameProfile(), MinecraftClient.getInstance().getTelemetryManager().createWorldSession(true, Duration.ZERO, null), FAKE_REGISTRY_MANAGER.toImmutable(), FeatureSet.empty(), "", new ServerInfo("", "", ServerInfo.ServerType.OTHER), null));
     }
 
     public static FakeClientPlayNetworkHandler getInstance() {
-        if (INSTANCE == null){
+        if (INSTANCE == null) {
             INSTANCE = new FakeClientPlayNetworkHandler();
         }
         return INSTANCE;
     }
 
-    public static void onInitialize() {
-        INSTANCE = new FakeClientPlayNetworkHandler();
+    @Override
+    public DynamicRegistryManager.Immutable getRegistryManager() {
+        return FAKE_REGISTRY_MANAGER;
     }
 
-    @Override
-    public DynamicRegistryManager getRegistryManager() {
-        return cursedRegistryManager;
+    static {
+        Registry.register(FAKE_DIMENSION_TYPE_REGISTRY, BetterAnvil.i("fake_dimension"), FakeDimension.getInstance());
     }
 }

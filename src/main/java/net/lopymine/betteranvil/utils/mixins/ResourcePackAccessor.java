@@ -14,7 +14,7 @@ public interface ResourcePackAccessor {
 
             @Override
             public ResourcePack betterAnvil$getResourcePack() {
-                return new ZipResourcePack(name, file, false);
+                return new ZipResourcePack.ZipBackedFactory(file, false).open(name);
             }
 
             @Override

@@ -1,4 +1,4 @@
-package net.lopymine.betteranvil.gui.tooltip.builder;
+package net.lopymine.betteranvil.gui.tooltip.utils.builder;
 
 import net.minecraft.text.Text;
 

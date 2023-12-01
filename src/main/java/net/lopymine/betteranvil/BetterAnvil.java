@@ -1,5 +1,6 @@
 package net.lopymine.betteranvil;
 
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -15,5 +16,9 @@ public class BetterAnvil implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("Better Anvil Initialized");
+    }
+
+    public static Identifier i(String path) {
+        return new Identifier(MOD_ID, path);
     }
 }

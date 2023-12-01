@@ -135,7 +135,6 @@ public record FakeRegistry<T>(RegistryKey<? extends Registry<T>> registryKey, Id
         return Optional.empty();
     }
 
-
     @Override
     public RegistryEntryList.Named<T> getOrCreateEntryList(TagKey<T> tag) {
         return RegistryEntryList.of(this, tag);

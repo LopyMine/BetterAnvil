@@ -5,7 +5,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Items;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import net.fabricmc.fabric.api.util.TriState;
 
@@ -22,11 +21,10 @@ import net.lopymine.betteranvil.gui.description.interfaces.*;
 import net.lopymine.betteranvil.gui.panels.WConfigPanel;
 import net.lopymine.betteranvil.gui.search.SearchTags;
 import net.lopymine.betteranvil.gui.widgets.buttons.*;
-import net.lopymine.betteranvil.gui.widgets.buttons.WStarButton.States;
+import net.lopymine.betteranvil.gui.widgets.buttons.WStarButton.State;
 import net.lopymine.betteranvil.gui.widgets.buttons.WSwitcher.Type;
 import net.lopymine.betteranvil.gui.widgets.entity.*;
 import net.lopymine.betteranvil.gui.widgets.fields.*;
-import net.lopymine.betteranvil.gui.widgets.list.WListPanelExt;
 import net.lopymine.betteranvil.utils.*;
 
 import java.util.*;
@@ -47,7 +45,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
     protected final int panelDHeight;
     protected final int panelWidth = 208;
     protected final int ind = 5;
-    protected final int copyButtonPos;
+    protected final int selectButtonPos;
     protected final int favoriteButtonPos = 9;
     protected final int x;
     protected final int y;
@@ -101,8 +99,8 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
     public BiConsumer<I, WConfigPanel> mainConsumer = (I s, WConfigPanel panel) -> {
     };
 
-    protected WListPanelExt<I, WConfigPanel> favoriteListPanel;
-    protected WListPanelExt<I, WConfigPanel> mainListPanel;
+    protected WListPanel<I, WConfigPanel> favoriteListPanel;
+    protected WListPanel<I, WConfigPanel> mainListPanel;
 
     protected WField field = new WField();
 
@@ -204,7 +202,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
             tooltip.add(Text.translatable("better_anvil.item_view_button.tooltip"));
         }
     };
-    protected WButton playerPreviewButton = new WButton(new TextureIcon(new Identifier(BetterAnvil.MOD_ID, "gui/sprites/player_skin.png"))) {
+    protected WButton playerPreviewButton = new WButton(new TextureIcon(BetterAnvil.i("textures/gui/buttons/player_icon.png"))) {
         @Override
         public void addTooltip(TooltipBuilder tooltip) {
             tooltip.add(Text.translatable("better_anvil.player_view_button.tooltip"));
@@ -231,7 +229,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         int tabHeight = 32;
 
         panelDHeight = panelHeight - tabHeight;
-        copyButtonPos = panelDHeight - 30;
+        selectButtonPos = panelDHeight - 30;
 
         x = (screenWidth / 2 - (panelWidth / 2)) - 5;
         y = ((ind + tabHeight) - 7);
@@ -247,16 +245,19 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         int entitiesPanelWidth = screenWidth - (x + panelWidth);
 
         entitiesSize = 10 * (entitiesPanelWidth / 40) + 20;
-        droppedItem.setItemSize(entitiesSize);
+        droppedItem.setEntitySize(entitiesSize);
         mob.setEntitySize(entitiesSize);
+
+        droppedItem.setScissors(x + panelWidth, 0, screenWidth, screenHeight);
+        mob.setScissors(x + panelWidth, 0, screenWidth, screenHeight);
 
         droppedItemPosX = screenWidth - (entitiesPanelWidth / 2);
         droppedItemPosY = screenHeight / 2;
 
         // Adding Widgets
         root.add(droppedItem, droppedItemPosX, droppedItemPosY, 1, 1);
-        root.add(itemPreviewButton, x + panelWidth + 2, y + 2, 20, 30);
-        root.add(playerPreviewButton, x + panelWidth + 2, y + 24, 20, 30);
+        root.add(itemPreviewButton, x + panelWidth + 2, y + 2, 20, 20);
+        root.add(playerPreviewButton, x + panelWidth + 2, y + 24, 20, 20);
 
         favoritePanel.setBackgroundPainter(Painters.BACKGROUND_PAINTER);
         favoritePanel.add(favoriteTextField, calcPos(130), favoriteButtonPos + 24, 130, 10);
@@ -267,8 +268,8 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         if (!hasFavoriteTab) {
             mainPanel.add(openFavoriteMenuButton, 10, favoriteButtonPos);
         }
-        mainPanel.add(selectButton, calcPos(174), copyButtonPos, 174, 50);
-        mainPanel.add(field, calcPos(field.getWidth()), copyButtonPos - 26);
+        mainPanel.add(selectButton, calcPos(174), selectButtonPos, 174, 20);
+        mainPanel.add(field, calcPos(field.getWidth()), selectButtonPos - 26);
         mainPanel.add(mainTextField, calcPos(130), favoriteButtonPos + 24, 130, 10);
 
         root.add(mainPanel, x, y, panelWidth, panelDHeight);
@@ -300,8 +301,8 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         }
 
         int scroll = (favoriteListPanel != null ? favoriteListPanel.getScrollBar().getValue() : 0);
-        favoriteListPanel = new WListPanelExt<>(list.stream().toList(), WConfigPanel::new, consumer);
-        favoriteListPanel.getScrollBar().setValue(scroll).setHost(this);
+        favoriteListPanel = new WListPanel<>(list.stream().toList(), WConfigPanel::new, consumer);
+        favoriteListPanel.getScrollBar().setValue(scroll).setScrollingSpeed(1).setHost(this);
         favoriteListPanel.setHost(this);
         favoriteListPanel.setListItemHeight(config.spacing);
         favoriteListPanel.setBackgroundPainter(Painters.CONFIG_PAINTER);
@@ -327,18 +328,18 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         }
 
         int scroll = (mainListPanel != null ? mainListPanel.getScrollBar().getValue() : 0);
-        mainListPanel = new WListPanelExt<>(list.stream().toList(), WConfigPanel::new, consumer);
-        mainListPanel.getScrollBar().setValue(scroll).setHost(this);
+        mainListPanel = new WListPanel<>(list.stream().toList(), WConfigPanel::new, consumer);
+        mainListPanel.getScrollBar().setValue(scroll).setScrollingSpeed(1).setHost(this);
         mainListPanel.setHost(this);
         mainListPanel.setListItemHeight(config.spacing);
         mainListPanel.setBackgroundPainter(Painters.CONFIG_PAINTER);
         mainListPanel.layout();
 
         int d = 8;
-        root.add(mainListPanel, d, favoriteButtonPos + 50, panelWidth - (d * 2), copyButtonPos - 88);
+        root.add(mainListPanel, d, favoriteButtonPos + 50, panelWidth - (d * 2), selectButtonPos - 88);
 
         if (list.isEmpty()) {
-            root.add(mainListEmptyLabel, d, favoriteButtonPos + 50, panelWidth - (d * 2), copyButtonPos - 88);
+            root.add(mainListEmptyLabel, d, favoriteButtonPos + 50, panelWidth - (d * 2), selectButtonPos - 88);
             mainListEmptyLabel.setHost(mainListPanel.getHost());
         }
     }
@@ -380,7 +381,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
             float buttonLeft = 0;
             float buttonTop = 0;
             float buttonWidth = 7 * px;
-            ScreenDrawing.texturedRect(context, x + 1, y + 1, 16, 16, States.STARRED.getTexture(), buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonWidth, 0xFFFFFFFF);
+            ScreenDrawing.texturedRect(context, x + 1, y + 1, 16, 16, State.STARRED.getTexture(), buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonWidth, 0xFFFFFFFF);
         });
 
         tabButton.setOnToggle((on) -> {
@@ -532,17 +533,17 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         }
     }
 
+    @Override
+    public void addPainters() {
+        // Remove root panel background
+    }
+
     private boolean isOpenFavoriteTab() {
         return hasFavoriteTab && favoriteTab != null && favoriteTab.getToggle();
     }
 
     protected int calcPos(int width) {
         return (panelWidth - width) / 2;
-    }
-
-    @Override
-    public void addPainters() {
-        // Removing Background
     }
 
     @Override

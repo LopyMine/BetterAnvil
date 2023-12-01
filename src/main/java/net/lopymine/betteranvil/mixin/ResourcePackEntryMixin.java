@@ -19,7 +19,6 @@ import net.lopymine.betteranvil.gui.SelectionGui;
 import net.lopymine.betteranvil.gui.screen.SimpleGuiScreen;
 import net.lopymine.betteranvil.resourcepacks.*;
 import net.lopymine.betteranvil.utils.*;
-import net.lopymine.betteranvil.utils.mixins.EntryListWidgetAccessor;
 
 import java.util.HashSet;
 
@@ -67,13 +66,9 @@ public abstract class ResourcePackEntryMixin {
             return false;
         }
 
-        if (!(widget instanceof EntryListWidgetAccessor accessor)) {
-            return false;
-        }
-
         int x = (int) mouseX - widget.getRowLeft();
         int index = widget.children().indexOf(((ResourcePackEntry) (Object) this));
-        int y = (int) mouseY - accessor.betterAnvil$getRowTop(index);
+        int y = (int) mouseY - widget.getRowTop(index);
 
         return x >= 176 && x <= 188 && y >= 0 & y <= 13;
     }
@@ -84,11 +79,7 @@ public abstract class ResourcePackEntryMixin {
             return;
         }
         if (hovered && !types.isEmpty()) {
-            if (!isMagnifierHovered(mouseX, mouseY)) {
-                ScreenDrawing.texturedRect(context, x + 176, y + 1, 12, 12, Painters.SEARCH, 0xFFFFFFFF);
-            } else {
-                ScreenDrawing.texturedRect(context, x + 176, y + 1, 12, 12, Painters.SEARCH_HOVERED, 0xFFFFFFFF);
-            }
+            Painters.drawSearch(context, x + 176, y + 1, isMagnifierHovered(mouseX, mouseY));
         }
     }
 

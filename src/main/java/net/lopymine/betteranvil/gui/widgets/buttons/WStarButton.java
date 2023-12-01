@@ -30,7 +30,7 @@ public class WStarButton extends WToggleButton {
 
     @Override
     public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
-        States state = this.getState(isOn);
+        State state = this.getState(isOn);
 
         float px = 1 / 14f;
 
@@ -60,11 +60,11 @@ public class WStarButton extends WToggleButton {
         return 16;
     }
 
-    private States getState(boolean isOn) {
+    private State getState(boolean isOn) {
         if (isOn) {
-            return States.STARRED;
+            return State.STARRED;
         } else {
-            return (shouldRenderInDarkMode() ? States.DARK : States.LIGHT);
+            return State.getState(shouldRenderInDarkMode());
         }
     }
 
@@ -81,15 +81,19 @@ public class WStarButton extends WToggleButton {
         this.isOn = on;
     }
 
-    public enum States {
-        STARRED(new Identifier(BetterAnvil.MOD_ID, "gui/star/star.png")),
-        LIGHT(new Identifier(BetterAnvil.MOD_ID, "gui/star/star_light.png")),
-        DARK(new Identifier(BetterAnvil.MOD_ID, "gui/star/star_dark.png"));
+    public enum State {
+        STARRED(BetterAnvil.i("textures/gui/star/star.png")),
+        LIGHT(BetterAnvil.i("textures/gui/star/star_light.png")),
+        DARK(BetterAnvil.i("textures/gui/star/star_dark.png"));
 
         private final Identifier texture;
 
-        States(Identifier texture) {
+        State(Identifier texture) {
             this.texture = texture;
+        }
+
+        public static State getState(boolean bl) {
+            return (bl ? State.DARK : State.LIGHT);
         }
 
         public Identifier getTexture() {

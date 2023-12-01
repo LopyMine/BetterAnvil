@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.*;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.render.entity.PlayerModelPart;
-import net.minecraft.client.util.DefaultSkinHelper;
+import net.minecraft.client.util.*;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.util.*;
 
@@ -14,19 +14,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class FakeClientPlayerEntity extends ClientPlayerEntity {
     private static FakeClientPlayerEntity INSTANCE;
-
-    private Identifier skin = null;
-    private String model = null;
+    private final SkinTextures skinTextures;
 
     private FakeClientPlayerEntity() {
         super(MinecraftClient.getInstance(), FakeWorld.getInstance(), FakeClientPlayNetworkHandler.getInstance(), new StatHandler(), new ClientRecipeBook(), false, false);
 
-        MinecraftClient.getInstance().getSkinProvider().loadSkin(getGameProfile(), (type, identifier, texture) -> {
-            if (type == MinecraftProfileTexture.Type.SKIN) {
-                this.model = texture.getMetadata("model");
-                this.skin = identifier;
-            }
-        }, true);
+        this.skinTextures = MinecraftClient.getInstance().getSkinProvider().getSkinTextures(getGameProfile());
     }
 
     public static FakeClientPlayerEntity getInstance() {
@@ -46,18 +39,8 @@ public class FakeClientPlayerEntity extends ClientPlayerEntity {
     }
 
     @Override
-    public boolean hasSkinTexture() {
-        return true;
-    }
-
-    @Override
-    public String getModel() {
-        return model != null ? model : DefaultSkinHelper.getModel(Uuids.getUuidFromProfile(MinecraftClient.getInstance().getSession().getProfile()));
-    }
-
-    @Override
-    public Identifier getSkinTexture() {
-        return skin != null ? skin : DefaultSkinHelper.getTexture(Uuids.getUuidFromProfile(MinecraftClient.getInstance().getSession().getProfile()));
+    public SkinTextures getSkinTextures() {
+        return skinTextures;
     }
 
     @Nullable

@@ -26,8 +26,8 @@ public class WAutoCompleterTextField extends WTextField {
     }
 
     @Override
-    public InputResult onMouseScroll(int x, int y, double amount) {
-        int a = (int) amount;
+    public InputResult onMouseScroll(int x, int y, double horizontalAmount, double verticalAmount) {
+        int a = (int) verticalAmount;
         SearchTags tag = SearchTags.getTag(getText());
         if (tag == null) {
             return InputResult.IGNORED;
@@ -45,7 +45,7 @@ public class WAutoCompleterTextField extends WTextField {
         }
 
         setText(tag.getAlias(getText()) + " " + text);
-        return super.onMouseScroll(x, y, amount);
+        return super.onMouseScroll(x, y, horizontalAmount, verticalAmount);
     }
 
     private String scrollAutoCompleter(int amount, AutoCompleter autoCompleter) {
