@@ -69,11 +69,13 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
     protected WLabel favoriteListEmptyLabel = new WLabel(Text.translatable("better_anvil.search.empty"))
             .setHorizontalAlignment(HorizontalAlignment.CENTER)
             .setVerticalAlignment(VerticalAlignment.CENTER)
-            .setColor(0xFFFFFFFF, 0xbcbcbc);    protected final WSwitcher switcherLeft = new WSwitcher(Type.LEFT).setOnClick(this::backSwitch);
+            .setColor(0xFFFFFFFF, 0xbcbcbc);
+    protected final WSwitcher switcherLeft = new WSwitcher(Type.LEFT).setOnClick(this::backSwitch);
     protected WLabel mainListEmptyLabel = new WLabel(Text.translatable("better_anvil.search.empty"))
             .setHorizontalAlignment(HorizontalAlignment.CENTER)
             .setVerticalAlignment(VerticalAlignment.CENTER)
-            .setColor(0xFFFFFFFF, 0xbcbcbc);    protected final WSwitcher switcherRight = new WSwitcher(Type.RIGHT).setOnClick(this::nextSwitch);
+            .setColor(0xFFFFFFFF, 0xbcbcbc);
+    protected final WSwitcher switcherRight = new WSwitcher(Type.RIGHT).setOnClick(this::nextSwitch);
     protected WListPanelExt<I, WConfigPanel> favoriteListPanel;
     protected WListPanelExt<I, WConfigPanel> mainListPanel;
     protected final WAutoCompleterTextField favoriteTextField = new WAutoCompleterTextField(ResourcePackUtils.getStringResourcePacksWithServer(), Text.translatable("better_anvil.search"))
@@ -193,6 +195,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
             tooltip.add(Text.translatable("better_anvil.player_view_button.tooltip"));
         }
     };
+
     protected GuiDescription(H handler, Screen parent, Text title) {
         this.handler = handler;
         this.parent = parent;
@@ -393,7 +396,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
 
             if (resourcePack.equals("all")) {
                 WTabButton defaultTab = createDefaultTab((list == null ? new LinkedHashSet<>() : list));
-                tabButtons.add(defaultTab);
+                tabButtons.add(0, defaultTab);
                 hasDefaultTab = true;
                 continue;
             }

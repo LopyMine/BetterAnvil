@@ -1,27 +1,30 @@
 package net.lopymine.betteranvil.fake;
 
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.client.network.*;
+import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.client.util.DefaultSkinHelper;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Uuids;
+import net.minecraft.stat.StatHandler;
+import net.minecraft.util.*;
+
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+
 import org.jetbrains.annotations.Nullable;
 
 public class FakeClientPlayerEntity extends ClientPlayerEntity {
     private Identifier skin = null;
     private String model = null;
+
     public static FakeClientPlayerEntity getInstance() {
         return new FakeClientPlayerEntity();
     }
 
     private FakeClientPlayerEntity() {
-        super(MinecraftClient.getInstance(), FakeWorld.getInstance(), FakeClientPlayNetworkHandler.getInstance(), null, null,false, false);
+        super(MinecraftClient.getInstance(), FakeWorld.getInstance(), FakeClientPlayNetworkHandler.getInstance(), new StatHandler(), new ClientRecipeBook(), false, false);
 
-        client.getSkinProvider().loadSkin(getGameProfile(), (type, identifier, texture) -> {
-            if(type == MinecraftProfileTexture.Type.SKIN){
+        MinecraftClient.getInstance().getSkinProvider().loadSkin(MinecraftClient.getInstance().getSession().getProfile(), (type, identifier, texture) -> {
+            if (type == MinecraftProfileTexture.Type.SKIN) {
                 this.model = texture.getMetadata("model");
                 this.skin = identifier;
             }
@@ -41,12 +44,12 @@ public class FakeClientPlayerEntity extends ClientPlayerEntity {
 
     @Override
     public String getModel() {
-        return model != null ? model : DefaultSkinHelper.getModel(Uuids.getUuidFromProfile(client.getSession().getProfile()));
+        return model != null ? model : DefaultSkinHelper.getModel(Uuids.getUuidFromProfile(MinecraftClient.getInstance().getSession().getProfile()));
     }
 
     @Override
     public Identifier getSkinTexture() {
-        return skin != null ? skin : DefaultSkinHelper.getTexture(Uuids.getUuidFromProfile(client.getSession().getProfile()));
+        return skin != null ? skin : DefaultSkinHelper.getTexture(Uuids.getUuidFromProfile(MinecraftClient.getInstance().getSession().getProfile()));
     }
 
     @Nullable
