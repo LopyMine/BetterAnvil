@@ -537,8 +537,4 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
     public BetterAnvilConfig getConfig() {
         return config;
     }
-
-
-
-
 }

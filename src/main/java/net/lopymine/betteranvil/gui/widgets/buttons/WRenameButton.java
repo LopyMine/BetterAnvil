@@ -2,6 +2,7 @@ package net.lopymine.betteranvil.gui.widgets.buttons;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -18,7 +19,6 @@ import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.*;
 
 import net.lopymine.betteranvil.BetterAnvil;
-import net.lopymine.betteranvil.config.BetterAnvilConfig;
 import net.lopymine.betteranvil.config.enums.ButtonTextures;
 import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.CountMetaDataParser.CountMetaData;
 import net.lopymine.betteranvil.config.resourcepacks.cit.metadata.DamageMetaDataParser.DamageMetaData;
@@ -36,9 +36,6 @@ import org.jetbrains.annotations.*;
 
 public class WRenameButton extends WWidget {
     public static final Formatting TOOLTIP_FORMATTING = Formatting.BLUE;
-
-    private static boolean hasDownShift = false;
-    private static boolean hasDownCtrl = false;
 
     @Nullable
     private final WItem icon;
@@ -110,7 +107,7 @@ public class WRenameButton extends WWidget {
 
         Optional<TooltipData> data = Optional.empty();
 
-        if (hasDownShift) {
+        if (Screen.hasShiftDown()) {
             MyTooltipBuilder builder = new MyTooltipBuilder();
             addTooltip(builder);
 
@@ -239,7 +236,7 @@ public class WRenameButton extends WWidget {
     public InputResult onClick(int x, int y, int button) {
         MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
-        if (hasDownCtrl && onCtrlClick != null) {
+        if (Screen.hasControlDown() && onCtrlClick != null) {
             onCtrlClick.run();
             return InputResult.PROCESSED;
         }
@@ -253,35 +250,10 @@ public class WRenameButton extends WWidget {
     }
 
     @Override
-    public InputResult onKeyReleased(int ch, int key, int modifiers) {
-        if (getHost() instanceof IConfigAccessor description) {
-            BetterAnvilConfig config = description.getConfig();
-
-            if (ch == config.shiftKey) {
-                hasDownShift = false;
-                return InputResult.PROCESSED;
-            }
-            if (ch == config.ctrlKey) {
-                hasDownCtrl = false;
-                return InputResult.PROCESSED;
-            }
-        }
-
-        return InputResult.IGNORED;
-    }
-
-    @Override
     public InputResult onKeyPressed(int ch, int key, int modifiers) {
-        if (getHost() instanceof IConfigAccessor description) {
-            BetterAnvilConfig config = description.getConfig();
-
-            hasDownShift = ch == config.shiftKey;
-            hasDownCtrl = ch == config.ctrlKey;
-
-            if (hasDownCtrl && onCtrlDown != null) {
-                onCtrlDown.run();
-                return InputResult.PROCESSED;
-            }
+        if (Screen.hasControlDown() && onCtrlDown != null) {
+            onCtrlDown.run();
+            return InputResult.PROCESSED;
         }
 
         return InputResult.IGNORED;
