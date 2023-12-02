@@ -19,12 +19,12 @@ import org.jetbrains.annotations.Nullable;
 public class WTabButton extends WToggleButton {
 
     public static final BackgroundPainter SELECTED_TAB = BackgroundPainter.createLightDarkVariants(
-            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.MOD_ID, "gui/tab/selected_light.png")).setTopPadding(2),
-            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.MOD_ID, "gui/tab/selected_dark.png")).setTopPadding(2)
+            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.MOD_ID, "textures/gui/tab/selected_light.png")).setTopPadding(2),
+            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.MOD_ID, "textures/gui/tab/selected_dark.png")).setTopPadding(2)
     );
     public static final BackgroundPainter UNSELECTED_TAB = BackgroundPainter.createLightDarkVariants(
-            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.MOD_ID, "gui/tab/unselected_light.png")),
-            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.MOD_ID, "gui/tab/unselected_dark.png"))
+            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.MOD_ID, "textures/gui/tab/unselected_light.png")),
+            BackgroundPainter.createNinePatch(new Identifier(BetterAnvil.MOD_ID, "textures/gui/tab/unselected_dark.png"))
     );
     private final WPlainPanel panel = new WPlainPanel() {
         @Override

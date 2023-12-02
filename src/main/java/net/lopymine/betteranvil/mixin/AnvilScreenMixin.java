@@ -20,7 +20,7 @@ import net.lopymine.betteranvil.config.BetterAnvilConfig;
 import net.lopymine.betteranvil.config.enums.ButtonPositions;
 import net.lopymine.betteranvil.gui.*;
 import net.lopymine.betteranvil.gui.screen.BetterAnvilScreen;
-import net.lopymine.betteranvil.utils.Painters;
+import net.lopymine.betteranvil.utils.*;
 
 @Mixin(AnvilScreen.class)
 public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> {
@@ -40,7 +40,7 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     @Unique
     private final ButtonPositions position = BetterAnvilConfig.getInstance().positionEnum;
     @Unique
-    private final boolean noPacks = MinecraftClient.getInstance().getResourcePackManager().getNames().isEmpty();
+    private final boolean noPacks = ResourcePackUtils.getStringResourcePacksWithServer().isEmpty();
     @Unique
     private final ButtonWidget citLeft = ButtonWidget.builder(Text.of(" "), (button -> {
         if (this.handler.getSlot(0).getStack().isEmpty()) {
@@ -121,11 +121,11 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
         switch (position) {
             case RIGHT -> {
                 context.drawItem(new ItemStack(Items.NAME_TAG), 181, 5);
-                ScreenDrawing.texturedRect(context, 183, 32, 12, 12, Painters.SEARCH, 0xFFFFFFFF);
+                Painters.drawSearch(context, 183, 32, false);
             }
             case LEFT -> {
                 context.drawItem(new ItemStack(Items.NAME_TAG), -22, 5);
-                ScreenDrawing.texturedRect(context, -22, 32, 12, 12, Painters.SEARCH, 0xFFFFFFFF);
+                Painters.drawSearch(context, -22, 32, false);
             }
         }
 

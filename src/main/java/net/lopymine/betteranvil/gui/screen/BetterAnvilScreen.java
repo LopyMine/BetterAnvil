@@ -105,13 +105,18 @@ public class BetterAnvilScreen extends CottonClientScreen {
         int containerX = mouseX - left;
         int containerY = mouseY - top;
 
+        WWidget focus = description.getFocus();
+        if (focus instanceof WRenameButton || focus instanceof WStarButton) {
+            description.releaseFocus(focus);
+        }
+
         WWidget hit = description.getRootPanel().hit(containerX, containerY);
         if (hit instanceof WRenameButton || hit instanceof WStarButton) {
             description.requestFocus(hit);
         }
+
         super.render(context, mouseX, mouseY, partialTicks);
     }
-
 
     @Override
     public boolean shouldCloseOnEsc() {

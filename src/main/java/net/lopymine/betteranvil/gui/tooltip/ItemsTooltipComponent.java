@@ -15,7 +15,7 @@ import java.util.List;
 import static net.minecraft.client.gui.tooltip.BundleTooltipComponent.TEXTURE;
 
 public class ItemsTooltipComponent implements TooltipComponent {
-    public static Identifier BUNDLE_DARK = new Identifier(BetterAnvil.MOD_ID, "gui/items_tooltip/bundle_dark.png");
+    public static Identifier BUNDLE_DARK = new Identifier(BetterAnvil.MOD_ID, "textures/gui/bundle/bundle_dark.png");
     private final List<ItemStack> items;
     private final boolean isDarkMode;
 

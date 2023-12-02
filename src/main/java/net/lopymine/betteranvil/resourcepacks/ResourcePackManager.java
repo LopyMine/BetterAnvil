@@ -19,6 +19,7 @@ public class ResourcePackManager {
                 .getResourcePackManager()
                 .getEnabledProfiles()
                 .stream()
+                .filter(profile -> profile.getName().startsWith("file/"))
                 .flatMap(profile -> Stream.of(profile.createResourcePack()))
                 .toList();
 
@@ -26,6 +27,10 @@ public class ResourcePackManager {
     }
 
     public static void startWriting(List<ResourcePack> list, BetterAnvilConfig config) {
+        if (list.isEmpty()) {
+            return;
+        }
+
         LOGGER.info("Start writing resource packs to json configs...");
 
         List<ParsableResourcePack> parsableResourcePacks = ResourcePackUtils.convertList(list, config);

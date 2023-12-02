@@ -70,14 +70,14 @@ public abstract class CustomModelDataItemsGui extends CMDGuiDescription {
                     .setResourcePack(cmdItem.getResourcePack())
                     .setItems(List.of(item.getDefaultStack()), true)
                     .setOnClick(() -> {
-                        droppedItem.setStack(itemStack);
+                        droppedItem.setItemStack(itemStack);
                         mob.setArmor(itemStack);
                         field.setText("ID: " + cmdItem.getId());
                         selectButton.setOnClick(onClick);
                     })
                     .setOnCtrlClick(onClick)
                     .setOnCtrlDown(() -> {
-                        droppedItem.setStack(itemStack);
+                        droppedItem.setItemStack(itemStack);
                         mob.setArmor(itemStack);
                     });
 
@@ -131,14 +131,14 @@ public abstract class CustomModelDataItemsGui extends CMDGuiDescription {
                     .setResourcePack(cmdItem.getResourcePack())
                     .setItems(List.of(item.getDefaultStack()), true)
                     .setOnClick(() -> {
-                        droppedItem.setStack(itemStack);
+                        droppedItem.setItemStack(itemStack);
                         mob.setArmor(itemStack);
                         field.setText("ID: " + cmdItem.getId());
                         selectButton.setOnClick(onClick);
                     })
                     .setOnCtrlClick(onClick)
                     .setOnCtrlDown(() -> {
-                        droppedItem.setStack(itemStack);
+                        droppedItem.setItemStack(itemStack);
                         mob.setArmor(itemStack);
                     });
 

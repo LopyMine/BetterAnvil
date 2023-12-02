@@ -41,7 +41,7 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
         LinkedHashSet<String> packs = new LinkedHashSet<>(mainList.keySet().stream().flatMap(key -> Stream.of(ResourcePackUtils.getResourcePackNameWithZip(key))).toList());
         favoriteList = favoriteManager.getResourcePacksItems(items, packs);
 
-        mainTitle = tabButtons.size() > 1
+        mainTitle = mainList.keySet().size() > 1
                 ?
                 mainTitle.setText(Text.translatable("better_anvil.packs_menu.title"))
                 :
@@ -73,7 +73,16 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
                 NbtList nbtLore = new NbtList();
 
                 for (String line : lore) {
-                    nbtLore.add(NbtString.of(Serializer.toJson(Text.of(line))));
+                    String l = line;
+
+                    if (line.contains("|")) {
+                        String[] split = line.split("\\|");
+                        if (split.length > 0) {
+                            l = split[0];
+                        }
+                    }
+
+                    nbtLore.add(NbtString.of(Serializer.toJson(Text.of(l))));
                 }
 
                 NbtCompound compound = anvilItem.getOrCreateNbt();
@@ -114,7 +123,7 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
                         return Stream.of(ItemUtils.getItemByName(s).getDefaultStack());
                     }).toList(), true)
                     .setOnClick(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                         field.setText(item.getCustomName());
 
@@ -127,7 +136,7 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
                         keyboard.setClipboard(item.getCustomName());
                     })
                     .setOnCtrlDown(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                     });
 
@@ -168,7 +177,16 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
                 NbtList nbtLore = new NbtList();
 
                 for (String line : lore) {
-                    nbtLore.add(NbtString.of(Serializer.toJson(Text.of(line))));
+                    String l = line;
+
+                    if (line.contains("|")) {
+                        String[] split = line.split("\\|");
+                        if (split.length > 0) {
+                            l = split[0];
+                        }
+                    }
+
+                    nbtLore.add(NbtString.of(Serializer.toJson(Text.of(l))));
                 }
 
                 NbtCompound compound = anvilItem.getOrCreateNbt();
@@ -209,7 +227,7 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
                         return Stream.of(ItemUtils.getItemByName(s).getDefaultStack());
                     }).toList(), true)
                     .setOnClick(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                         field.setText(item.getCustomName());
 
@@ -222,7 +240,7 @@ public class ResourcePackRenamesGui extends CITGuiDescription {
                         keyboard.setClipboard(item.getCustomName());
                     })
                     .setOnCtrlDown(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                     });
 

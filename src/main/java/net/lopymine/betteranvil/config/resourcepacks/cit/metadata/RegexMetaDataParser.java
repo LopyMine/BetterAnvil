@@ -25,7 +25,9 @@ public class RegexMetaDataParser {
 
         propertiesRegex = propertiesRegex.replaceAll("iregex:|regex:|ipattern:|pattern:", "");
 
-        if (propertiesRegex.isEmpty()) return "";
+        if (propertiesRegex.isEmpty()) {
+            return "";
+        }
 
         for (int i = 0; i < propertiesRegex.length(); i++) {
             char ch = propertiesRegex.charAt(i);
@@ -42,8 +44,7 @@ public class RegexMetaDataParser {
             }
         }
 
-        String string = StringEscapeUtils.unescapeJava(new String(convertList2Array(characters)))
-                .replaceAll(":|iregex:|regex:|ipattern:|pattern:", "");
+        String string = StringEscapeUtils.unescapeJava(new String(convertList2Array(characters))).replaceAll(":|iregex:|regex:|ipattern:|pattern:", "");
 
         return optimizeString(string);
     }

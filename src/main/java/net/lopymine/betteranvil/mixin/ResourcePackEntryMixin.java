@@ -84,11 +84,7 @@ public abstract class ResourcePackEntryMixin {
             return;
         }
         if (hovered && !types.isEmpty()) {
-            if (!isMagnifierHovered(mouseX, mouseY)) {
-                ScreenDrawing.texturedRect(context, x + 176, y + 1, 12, 12, Painters.SEARCH, 0xFFFFFFFF);
-            } else {
-                ScreenDrawing.texturedRect(context, x + 176, y + 1, 12, 12, Painters.SEARCH_HOVERED, 0xFFFFFFFF);
-            }
+            Painters.drawSearch(context, x + 176, y + 1, isMagnifierHovered(mouseX, mouseY));
         }
     }
 

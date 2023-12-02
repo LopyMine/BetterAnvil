@@ -29,9 +29,16 @@ public class DamageMetaDataParser {
 
         if (hasRange && !hasPercentage) {
             String[] split = damage.split("-");
+            if(split.length == 0) {
+                return null;
+            }
 
-            int min = Integer.parseInt(split[0]);
-            int max = split[1].isEmpty() ? min : Integer.parseInt(split[1]);
+            String s = split[0];
+            if (s.isEmpty()) {
+                s = split[1];
+            }
+            int min = Integer.parseInt(s.trim());
+            int max = split.length > 1 ? Integer.parseInt(split[1]) : min;
 
             return new DamageMetaData(damage, min, max);
         }

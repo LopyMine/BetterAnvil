@@ -22,7 +22,7 @@ import net.lopymine.betteranvil.gui.description.interfaces.*;
 import net.lopymine.betteranvil.gui.panels.WConfigPanel;
 import net.lopymine.betteranvil.gui.search.SearchTags;
 import net.lopymine.betteranvil.gui.widgets.buttons.*;
-import net.lopymine.betteranvil.gui.widgets.buttons.WStarButton.States;
+import net.lopymine.betteranvil.gui.widgets.buttons.WStarButton.State;
 import net.lopymine.betteranvil.gui.widgets.buttons.WSwitcher.Type;
 import net.lopymine.betteranvil.gui.widgets.entity.*;
 import net.lopymine.betteranvil.gui.widgets.fields.*;
@@ -37,78 +37,80 @@ import static net.lopymine.betteranvil.BetterAnvil.LOGGER;
 public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDescription implements ITabbedGui<I>, IConfigAccessor {
     protected final BetterAnvilConfig config = BetterAnvilConfig.getInstance();
     protected final List<WTabButton> tabButtons = new ArrayList<>();
-    protected WTabButton favoriteTab;
-
     protected final WPlainPanel mainPanel = new WPlainPanel();
     protected final WPlainPanel favoritePanel = new WPlainPanel();
-
     protected final int screenHeight;
     protected final int screenWidth;
     protected final int panelDHeight;
     protected final int panelWidth = 208;
     protected final int ind = 5;
-    protected final int copyButtonPos;
+    protected final int selectButtonPos;
     protected final int favoriteButtonPos = 9;
     protected final int x;
     protected final int y;
     protected final int droppedItemPosX;
     protected final int droppedItemPosY;
     protected final int entitiesSize;
-
-    protected boolean isFavoriteOpen = false;
-    protected boolean hasFavoriteTab = false;
-    protected int panelFHeight = 244;
-    protected int s = 0;
-
-    protected HashMap<String, LinkedHashSet<I>> mainList = new HashMap<>();
-    protected LinkedHashSet<I> favoriteList = new LinkedHashSet<>();
-
-    protected String active_pack = "all";
-    protected MinecraftClient client;
     protected final Screen parent;
-
-    protected final WPlainPanel root = new WPlainPanel() {
-        @Override
-        public InputResult onKeyPressed(int ch, int key, int modifiers) {
-            if (ch == 256) {
-                GuiDescription.this.client.setScreen(GuiDescription.this.parent);
-                return InputResult.PROCESSED;
-            }
-            if (ch == 70) {
-                GuiDescription.this.mob.swapItem();
-                return InputResult.PROCESSED;
-            }
-
-            return InputResult.IGNORED;
-        }
-    }.setInsets(Insets.ROOT_PANEL);
-
-    protected WLabel favoriteListEmptyLabel = new WLabel(Text.translatable("better_anvil.search.empty"))
-            .setHorizontalAlignment(HorizontalAlignment.CENTER)
-            .setVerticalAlignment(VerticalAlignment.CENTER)
-            .setColor(0xFFFFFFFF, 0xbcbcbc);
-
-    protected WLabel mainListEmptyLabel = new WLabel(Text.translatable("better_anvil.search.empty"))
-            .setHorizontalAlignment(HorizontalAlignment.CENTER)
-            .setVerticalAlignment(VerticalAlignment.CENTER)
-            .setColor(0xFFFFFFFF, 0xbcbcbc);
-
-    protected final WSwitcher switcherLeft = new WSwitcher(Type.LEFT).setOnClick(this::backSwitch);
-    protected final WSwitcher switcherRight = new WSwitcher(Type.RIGHT).setOnClick(this::nextSwitch);
-
+    protected final H handler;
     public BiConsumer<I, WConfigPanel> favoriteConsumer = (I s, WConfigPanel panel) -> {
     };
     public BiConsumer<I, WConfigPanel> mainConsumer = (I s, WConfigPanel panel) -> {
     };
-
+    protected WTabButton favoriteTab;
+    protected boolean isFavoriteOpen = false;
+    protected boolean hasFavoriteTab = false;
+    protected int panelFHeight = 244;
+    protected int s = 0;
+    protected HashMap<String, LinkedHashSet<I>> mainList = new HashMap<>();
+    protected LinkedHashSet<I> favoriteList = new LinkedHashSet<>();
+    protected String active_pack = "all";
+    protected MinecraftClient client;
+    protected WLabel favoriteListEmptyLabel = new WLabel(Text.translatable("better_anvil.search.empty"))
+            .setHorizontalAlignment(HorizontalAlignment.CENTER)
+            .setVerticalAlignment(VerticalAlignment.CENTER)
+            .setColor(0xFFFFFFFF, 0xbcbcbc);    protected final WSwitcher switcherLeft = new WSwitcher(Type.LEFT).setOnClick(this::backSwitch);
+    protected WLabel mainListEmptyLabel = new WLabel(Text.translatable("better_anvil.search.empty"))
+            .setHorizontalAlignment(HorizontalAlignment.CENTER)
+            .setVerticalAlignment(VerticalAlignment.CENTER)
+            .setColor(0xFFFFFFFF, 0xbcbcbc);    protected final WSwitcher switcherRight = new WSwitcher(Type.RIGHT).setOnClick(this::nextSwitch);
     protected WListPanelExt<I, WConfigPanel> favoriteListPanel;
     protected WListPanelExt<I, WConfigPanel> mainListPanel;
+    protected final WAutoCompleterTextField favoriteTextField = new WAutoCompleterTextField(ResourcePackUtils.getStringResourcePacksWithServer(), Text.translatable("better_anvil.search"))
+            .setMaxLength(200)
+            .setChangedListener(text -> {
+                if (text.isEmpty()) {
+                    createFavoriteListPanel(favoritePanel, favoriteList, favoriteConsumer);
+                    return;
+                }
 
+                LinkedHashSet<I> search;
+                SearchTags tag = SearchTags.getTag(text);
+                if (tag != null) {
+                    final String textWithoutTags = tag.getTextContent(text);
+                    search = switch (tag) {
+                        case ITEM -> GuiDescription.this.handler.getSearchByItem(textWithoutTags, favoriteList);
+                        case RESOURCE_PACK ->
+                                GuiDescription.this.handler.getSearchByPack(textWithoutTags, favoriteList);
+                        case ENCHANTMENTS ->
+                                GuiDescription.this.handler.getSearchByEnchantments(textWithoutTags, favoriteList);
+                        case LORE -> GuiDescription.this.handler.getSearchByLore(textWithoutTags, favoriteList);
+                        case COUNT -> GuiDescription.this.handler.getSearchByCount(textWithoutTags, favoriteList);
+                        case DAMAGE -> GuiDescription.this.handler.getSearchByDamage(textWithoutTags, favoriteList);
+                    };
+                } else {
+                    if (text.startsWith("#")) {
+                        search = favoriteList;
+                    } else {
+                        search = GuiDescription.this.handler.getSearch(text, favoriteList);
+                    }
+                }
+
+                createFavoriteListPanel(favoritePanel, search, favoriteConsumer);
+            });
     protected WField field = new WField();
-
     protected WLabel favoriteTitle = new WLabel(Text.translatable("better_anvil.favorite.title")).setHorizontalAlignment(HorizontalAlignment.CENTER);
     protected WLabel mainTitle;
-
     protected WAutoCompleterTextField mainTextField = new WAutoCompleterTextField(ResourcePackUtils.getStringResourcePacksWithServer(), Text.translatable("better_anvil.search"))
             .setMaxLength(200)
             .setChangedListener(text -> {
@@ -149,41 +151,23 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
 
                 createMainListPanel(mainPanel, (search == null ? list : search), consumer);
             });
-
-    protected final WAutoCompleterTextField favoriteTextField = new WAutoCompleterTextField(ResourcePackUtils.getStringResourcePacksWithServer(), Text.translatable("better_anvil.search"))
-            .setMaxLength(200)
-            .setChangedListener(text -> {
-                if (text.isEmpty()) {
-                    createFavoriteListPanel(favoritePanel, favoriteList, favoriteConsumer);
-                    return;
-                }
-
-                LinkedHashSet<I> search;
-                SearchTags tag = SearchTags.getTag(text);
-                if (tag != null) {
-                    final String textWithoutTags = tag.getTextContent(text);
-                    search = switch (tag) {
-                        case ITEM -> GuiDescription.this.handler.getSearchByItem(textWithoutTags, favoriteList);
-                        case RESOURCE_PACK -> GuiDescription.this.handler.getSearchByPack(textWithoutTags, favoriteList);
-                        case ENCHANTMENTS -> GuiDescription.this.handler.getSearchByEnchantments(textWithoutTags, favoriteList);
-                        case LORE -> GuiDescription.this.handler.getSearchByLore(textWithoutTags, favoriteList);
-                        case COUNT -> GuiDescription.this.handler.getSearchByCount(textWithoutTags, favoriteList);
-                        case DAMAGE -> GuiDescription.this.handler.getSearchByDamage(textWithoutTags, favoriteList);
-                    };
-                } else {
-                    if (text.startsWith("#")) {
-                        search = favoriteList;
-                    } else {
-                        search = GuiDescription.this.handler.getSearch(text, favoriteList);
-                    }
-                }
-
-                createFavoriteListPanel(favoritePanel, search, favoriteConsumer);
-            });
-
     protected WDroppedItem droppedItem = new WDroppedItem(Items.AIR.getDefaultStack());
     protected WMob mob = new WMob(FakeClientPlayerEntity.getInstance());
+    protected final WPlainPanel root = new WPlainPanel() {
+        @Override
+        public InputResult onKeyPressed(int ch, int key, int modifiers) {
+            if (ch == 256) {
+                GuiDescription.this.client.setScreen(GuiDescription.this.parent);
+                return InputResult.PROCESSED;
+            }
+            if (ch == 70) {
+                GuiDescription.this.mob.swapItem();
+                return InputResult.PROCESSED;
+            }
 
+            return InputResult.IGNORED;
+        }
+    }.setInsets(Insets.ROOT_PANEL);
     protected WStarButton openFavoriteMenuButton = new WStarButton().setOnToggle(on -> {
         isFavoriteOpen = on;
 
@@ -197,22 +181,18 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         }
     });
     protected WButton selectButton = new WButton(Text.translatable("better_anvil.button.select"));
-
     protected WButton itemPreviewButton = new WButton(new ItemIcon(Items.AIR)) {
         @Override
         public void addTooltip(TooltipBuilder tooltip) {
             tooltip.add(Text.translatable("better_anvil.item_view_button.tooltip"));
         }
     };
-    protected WButton playerPreviewButton = new WButton(new TextureIcon(new Identifier(BetterAnvil.MOD_ID, "gui/sprites/player_skin.png"))) {
+    protected WButton playerPreviewButton = new WButton(new TextureIcon(new Identifier(BetterAnvil.MOD_ID, "textures/gui/buttons/player_icon.png"))) {
         @Override
         public void addTooltip(TooltipBuilder tooltip) {
             tooltip.add(Text.translatable("better_anvil.player_view_button.tooltip"));
         }
     };
-
-    protected final H handler;
-
     protected GuiDescription(H handler, Screen parent, Text title) {
         this.handler = handler;
         this.parent = parent;
@@ -231,7 +211,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         int tabHeight = 32;
 
         panelDHeight = panelHeight - tabHeight;
-        copyButtonPos = panelDHeight - 30;
+        selectButtonPos = panelDHeight - 30;
 
         x = (screenWidth / 2 - (panelWidth / 2)) - 5;
         y = ((ind + tabHeight) - 7);
@@ -247,16 +227,19 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         int entitiesPanelWidth = screenWidth - (x + panelWidth);
 
         entitiesSize = 10 * (entitiesPanelWidth / 40) + 20;
-        droppedItem.setItemSize(entitiesSize);
+        droppedItem.setEntitySize(entitiesSize);
         mob.setEntitySize(entitiesSize);
+
+        droppedItem.setScissors(x + panelWidth + 5, 0, screenWidth, screenHeight);
+        mob.setScissors(x + panelWidth + 5, 0, screenWidth, screenHeight);
 
         droppedItemPosX = screenWidth - (entitiesPanelWidth / 2);
         droppedItemPosY = screenHeight / 2;
 
         // Adding Widgets
         root.add(droppedItem, droppedItemPosX, droppedItemPosY, 1, 1);
-        root.add(itemPreviewButton, x + panelWidth + 2, y + 2, 20, 30);
-        root.add(playerPreviewButton, x + panelWidth + 2, y + 24, 20, 30);
+        root.add(itemPreviewButton, x + panelWidth + 2, y + 2, 20, 20);
+        root.add(playerPreviewButton, x + panelWidth + 2, y + 24, 20, 20);
 
         favoritePanel.setBackgroundPainter(Painters.BACKGROUND_PAINTER);
         favoritePanel.add(favoriteTextField, calcPos(130), favoriteButtonPos + 24, 130, 10);
@@ -267,8 +250,8 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         if (!hasFavoriteTab) {
             mainPanel.add(openFavoriteMenuButton, 10, favoriteButtonPos);
         }
-        mainPanel.add(selectButton, calcPos(174), copyButtonPos, 174, 50);
-        mainPanel.add(field, calcPos(field.getWidth()), copyButtonPos - 26);
+        mainPanel.add(selectButton, calcPos(174), selectButtonPos, 174, 20);
+        mainPanel.add(field, calcPos(field.getWidth()), selectButtonPos - 26);
         mainPanel.add(mainTextField, calcPos(130), favoriteButtonPos + 24, 130, 10);
 
         root.add(mainPanel, x, y, panelWidth, panelDHeight);
@@ -335,10 +318,10 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         mainListPanel.layout();
 
         int d = 8;
-        root.add(mainListPanel, d, favoriteButtonPos + 50, panelWidth - (d * 2), copyButtonPos - 88);
+        root.add(mainListPanel, d, favoriteButtonPos + 50, panelWidth - (d * 2), selectButtonPos - 88);
 
         if (list.isEmpty()) {
-            root.add(mainListEmptyLabel, d, favoriteButtonPos + 50, panelWidth - (d * 2), copyButtonPos - 88);
+            root.add(mainListEmptyLabel, d, favoriteButtonPos + 50, panelWidth - (d * 2), selectButtonPos - 88);
             mainListEmptyLabel.setHost(mainListPanel.getHost());
         }
     }
@@ -380,7 +363,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
             float buttonLeft = 0;
             float buttonTop = 0;
             float buttonWidth = 7 * px;
-            ScreenDrawing.texturedRect(context, x + 1, y + 1, 16, 16, States.STARRED.getTexture(), buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonWidth, 0xFFFFFFFF);
+            ScreenDrawing.texturedRect(context, x + 1, y + 1, 16, 16, State.STARRED.getTexture(), buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonWidth, 0xFFFFFFFF);
         });
 
         tabButton.setOnToggle((on) -> {
@@ -532,17 +515,17 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
         }
     }
 
+    @Override
+    public void addPainters() {
+        // Remove root panel background
+    }
+
     private boolean isOpenFavoriteTab() {
         return hasFavoriteTab && favoriteTab != null && favoriteTab.getToggle();
     }
 
     protected int calcPos(int width) {
         return (panelWidth - width) / 2;
-    }
-
-    @Override
-    public void addPainters() {
-        // Removing Background
     }
 
     @Override
@@ -554,4 +537,8 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
     public BetterAnvilConfig getConfig() {
         return config;
     }
+
+
+
+
 }

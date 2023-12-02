@@ -55,7 +55,16 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                 NbtList nbtLore = new NbtList();
 
                 for (String line : lore) {
-                    nbtLore.add(NbtString.of(Serializer.toJson(Text.of(line))));
+                    String l = line;
+
+                    if (line.contains("|")) {
+                        String[] split = line.split("\\|");
+                        if (split.length > 0) {
+                            l = split[0];
+                        }
+                    }
+
+                    nbtLore.add(NbtString.of(Serializer.toJson(Text.of(l))));
                 }
 
                 NbtCompound compound = anvilItem.getOrCreateNbt();
@@ -95,7 +104,7 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                     .setItems(List.of(anvilItem.getItem().getDefaultStack()), false)
                     .setOnClick(() -> {
                         field.setText(item.getCustomName());
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                         selectButton.setOnClick(() -> {
                             client.setScreen(parent);
@@ -107,7 +116,7 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                         renameItem(item.getCustomName());
                     })
                     .setOnCtrlDown(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                     });
 
@@ -148,7 +157,16 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                 NbtList nbtLore = new NbtList();
 
                 for (String line : lore) {
-                    nbtLore.add(NbtString.of(Serializer.toJson(Text.of(line))));
+                    String l = line;
+
+                    if (line.contains("|")) {
+                        String[] split = line.split("\\|");
+                        if (split.length > 0) {
+                            l = split[0];
+                        }
+                    }
+
+                    nbtLore.add(NbtString.of(Serializer.toJson(Text.of(l))));
                 }
 
                 NbtCompound compound = anvilItem.getOrCreateNbt();
@@ -188,7 +206,7 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                     .setItems(List.of(anvilItem.getItem().getDefaultStack()), false)
                     .setOnClick(() -> {
                         field.setText(item.getCustomName());
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                         selectButton.setOnClick(() -> {
                             client.setScreen(parent);
@@ -200,7 +218,7 @@ public abstract class ItemRenamesGui extends CITGuiDescription {
                         renameItem(item.getCustomName());
                     })
                     .setOnCtrlDown(() -> {
-                        droppedItem.setStack(anvilItem);
+                        droppedItem.setItemStack(anvilItem);
                         mob.setArmor(anvilItem);
                     });
 

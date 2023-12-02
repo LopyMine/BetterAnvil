@@ -16,6 +16,7 @@ import net.lopymine.betteranvil.config.resourcepacks.cmd.CMDItem;
 import net.lopymine.betteranvil.gui.CustomModelDataItemsGui;
 import net.lopymine.betteranvil.gui.screen.BetterAnvilScreen;
 import net.lopymine.betteranvil.gui.widgets.vanilla.BetterButtonWidget;
+import net.lopymine.betteranvil.utils.ResourcePackUtils;
 
 @Mixin(ChatScreen.class)
 public abstract class ChatScreenMixin extends Screen {
@@ -30,7 +31,9 @@ public abstract class ChatScreenMixin extends Screen {
 
     @Inject(at = @At("TAIL"), method = "init")
     private void init(CallbackInfo ci) {
-        if (!bl) return;
+        if (!bl) {
+            return;
+        }
 
         BetterButtonWidget cmdButton = BetterButtonWidget.builder(Text.of(" "), button -> {
             MinecraftClient.getInstance().setScreen(new BetterAnvilScreen(new CustomModelDataItemsGui(this, false, null) {
@@ -41,7 +44,7 @@ public abstract class ChatScreenMixin extends Screen {
             }));
         }).dimensions(this.width - 25, 5, 20, 20).build();
 
-        if (MinecraftClient.getInstance().getResourcePackManager().getNames().isEmpty()) {
+        if (ResourcePackUtils.getStringResourcePacksWithServer().isEmpty()) {
             cmdButton.active = false;
             cmdButton.setTooltip(Tooltip.of(Text.translatable("better_anvil.pack_button.disable")));
         }

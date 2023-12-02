@@ -12,20 +12,19 @@ import net.lopymine.betteranvil.resourcepacks.ResourcePackManager;
 
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Stream;
 
 @Mixin(ReloadableResourceManagerImpl.class)
 public class ReloadableResourceManagerImplMixin {
     @Inject(at = @At("HEAD"), method = "reload")
     private void scan(Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage, List<ResourcePack> packs, CallbackInfoReturnable<ResourceReload> cir) {
-        if (packs.stream().filter(resourcePack -> resourcePack.getName().startsWith("file/")).toList().isEmpty()) {
-            return;
-        }
         BetterAnvilConfig config = BetterAnvilConfig.getInstance();
 
         if (config.overwritingEnum != Overwriting.RELOAD) {
             return;
         }
 
-        ResourcePackManager.startWriting(packs, config);
+        List<ResourcePack> resourcePacks = packs.stream().filter(resourcePack -> resourcePack.getName().startsWith("file/")).toList();
+        ResourcePackManager.startWriting(resourcePacks, config);
     }
 }
