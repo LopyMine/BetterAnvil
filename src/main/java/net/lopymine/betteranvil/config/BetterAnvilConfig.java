@@ -29,8 +29,6 @@ public class BetterAnvilConfig {
     public Renames renamesCountEnum = Renames.ONE;
     public int customRenamesCount = 1;
 
-    public int shiftKey = 340;
-    public int ctrlKey = 341;
     public int spacing = 30;
 
     public static BetterAnvilConfig getInstance(){
