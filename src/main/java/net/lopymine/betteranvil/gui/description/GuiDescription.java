@@ -391,7 +391,7 @@ public class GuiDescription<H extends GuiHandler<I>, I> extends LightweightGuiDe
 
             if (resourcePack.equals("all")) {
                 WTabButton defaultTab = createDefaultTab((list == null ? new LinkedHashSet<>() : list));
-                tabButtons.add(defaultTab);
+                tabButtons.add(0, defaultTab);
                 hasDefaultTab = true;
                 continue;
             }

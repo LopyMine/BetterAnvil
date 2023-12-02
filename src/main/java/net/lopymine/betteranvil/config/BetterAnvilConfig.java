@@ -13,7 +13,7 @@ import static net.lopymine.betteranvil.config.resourcepacks.ResourcePackConfigsM
 
 public class BetterAnvilConfig {
 
-    private static final File FILE_PATH = new File(FabricLoader.getInstance().getConfigDir().toFile(), "betteranvil.json");
+    private static final File FILE_PATH = new File(FabricLoader.getInstance().getConfigDir().toFile(), "better-anvil.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public Overwriting overwritingEnum = Overwriting.CHECKBOX;
@@ -29,8 +29,6 @@ public class BetterAnvilConfig {
     public Renames renamesCountEnum = Renames.ONE;
     public int customRenamesCount = 1;
 
-    public int shiftKey = 340;
-    public int ctrlKey = 341;
     public int spacing = 30;
 
     public static BetterAnvilConfig getInstance() {

@@ -2,6 +2,7 @@ package net.lopymine.betteranvil.gui.widgets.buttons;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -36,9 +37,6 @@ import org.jetbrains.annotations.*;
 
 public class WRenameButton extends WWidget {
     public static final Formatting TOOLTIP_FORMATTING = Formatting.BLUE;
-
-    private static boolean hasDownShift = false;
-    private static boolean hasDownCtrl = false;
 
     @Nullable
     private final WItem icon;
@@ -110,7 +108,7 @@ public class WRenameButton extends WWidget {
 
         Optional<TooltipData> data = Optional.empty();
 
-        if (hasDownShift) {
+        if (Screen.hasShiftDown()) {
             MyTooltipBuilder builder = new MyTooltipBuilder();
             addTooltip(builder);
 
@@ -162,14 +160,18 @@ public class WRenameButton extends WWidget {
                 bl = items.size() == 1;
             }
 
+
             if (bl) {
                 ItemStack itemStack = items.get(0);
-                min = (itemStack.getMaxDamage() * min);
-                max = (itemStack.getMaxDamage() * max);
-            }
+                int min1 = (int) (itemStack.getMaxDamage() * min);
+                int max1 = (int) (itemStack.getMaxDamage() * max);
 
-            String damage = damageMetaData.hasMaxDamage() ? (int) min + "-" + (int) max : String.valueOf((int) min);
-            builder.add(ScreenTexts.space().append(Text.literal(damage + (bl ? "" : "%")).formatted(TOOLTIP_FORMATTING)));
+                String damage = damageMetaData.hasMaxDamage() ?  min1 + "-" + max1 : String.valueOf(min1);
+                builder.add(ScreenTexts.space().append(Text.literal(damage).formatted(TOOLTIP_FORMATTING)));
+            } else {
+                String damage = damageMetaData.hasMaxDamage() ?  min + "-" + max : String.valueOf(min);
+                builder.add(ScreenTexts.space().append(Text.literal(damage + "%").formatted(TOOLTIP_FORMATTING)));
+            }
         }
 
         if (countMetaData != null) {
@@ -185,12 +187,15 @@ public class WRenameButton extends WWidget {
 
             if (bl) {
                 ItemStack itemStack = items.get(0);
-                min = (itemStack.getMaxCount() * min);
-                max = (itemStack.getMaxCount() * max);
-            }
+                int min1 = (int) (itemStack.getMaxCount() * min);
+                int max1 = (int) (itemStack.getMaxCount() * max);
 
-            String count = countMetaData.hasMaxCount() ? (int) min + "-" + (int) max : String.valueOf((int) min);
-            builder.add(ScreenTexts.space().append(Text.literal(count + (bl ? "" : "%"))).formatted(TOOLTIP_FORMATTING));
+                String count = countMetaData.hasMaxCount() ?  min1 + "-" + max1 : String.valueOf(min1);
+                builder.add(ScreenTexts.space().append(Text.literal(count).formatted(TOOLTIP_FORMATTING)));
+            } else {
+                String count = countMetaData.hasMaxCount() ? min + "-" + max : String.valueOf(min);
+                builder.add(ScreenTexts.space().append(Text.literal(count + "%").formatted(TOOLTIP_FORMATTING)));
+            }
         }
 
         if (items != null && !items.isEmpty() && showItemsInTooltip) {
@@ -198,7 +203,6 @@ public class WRenameButton extends WWidget {
             Text text = items.size() > 1 ? Text.translatable("better_anvil.rename_button.tooltip.items") : Text.translatable("better_anvil.rename_button.tooltip.item");
             builder.add(text);
         }
-
     }
 
     @Override
@@ -229,7 +233,7 @@ public class WRenameButton extends WWidget {
     public InputResult onClick(int x, int y, int button) {
         MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
-        if (hasDownCtrl && onCtrlClick != null) {
+        if (Screen.hasControlDown() && onCtrlClick != null) {
             onCtrlClick.run();
             return InputResult.PROCESSED;
         }
@@ -243,35 +247,10 @@ public class WRenameButton extends WWidget {
     }
 
     @Override
-    public InputResult onKeyReleased(int ch, int key, int modifiers) {
-        if (getHost() instanceof IConfigAccessor description) {
-            BetterAnvilConfig config = description.getConfig();
-
-            if (ch == config.shiftKey) {
-                hasDownShift = false;
-                return InputResult.PROCESSED;
-            }
-            if (ch == config.ctrlKey) {
-                hasDownCtrl = false;
-                return InputResult.PROCESSED;
-            }
-        }
-
-        return InputResult.IGNORED;
-    }
-
-    @Override
     public InputResult onKeyPressed(int ch, int key, int modifiers) {
-        if (getHost() instanceof IConfigAccessor description) {
-            BetterAnvilConfig config = description.getConfig();
-
-            hasDownShift = ch == config.shiftKey;
-            hasDownCtrl = ch == config.ctrlKey;
-
-            if (hasDownCtrl && onCtrlDown != null) {
-                onCtrlDown.run();
-                return InputResult.PROCESSED;
-            }
+        if (Screen.hasControlDown() && onCtrlDown != null) {
+            onCtrlDown.run();
+            return InputResult.PROCESSED;
         }
 
         return InputResult.IGNORED;

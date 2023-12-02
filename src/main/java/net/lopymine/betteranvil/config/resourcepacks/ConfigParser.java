@@ -43,7 +43,10 @@ public abstract class ConfigParser<I extends ResourcePackItem<I>, K extends Conf
             LinkedHashSet<I> configList = parseItemsFromConfig(ResourcePackUtils.getResourcePackName(resourcePack), ResourcePackConfigsManager.getConfigPath(type));
             LinkedHashSet<I> list = setResourcePackToItems(configList, ResourcePackUtils.getResourcePackNameWithZip(resourcePack));
 
-            allItems.addAll(list);
+            LinkedHashSet<I> combList = new LinkedHashSet<>(list);
+            combList.addAll(allItems);
+            allItems = combList;
+
             map.put(resourcePack, list);
         }
 

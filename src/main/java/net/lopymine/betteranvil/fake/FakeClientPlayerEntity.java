@@ -10,24 +10,16 @@ import net.minecraft.stat.StatHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class FakeClientPlayerEntity extends ClientPlayerEntity {
-    private static FakeClientPlayerEntity INSTANCE;
     private final SkinTextures skinTextures;
 
     private FakeClientPlayerEntity() {
         super(MinecraftClient.getInstance(), FakeWorld.getInstance(), FakeClientPlayNetworkHandler.getInstance(), new StatHandler(), new ClientRecipeBook(), false, false);
 
-        this.skinTextures = MinecraftClient.getInstance().getSkinProvider().getSkinTextures(getGameProfile());
+        this.skinTextures = MinecraftClient.getInstance().getSkinProvider().getSkinTextures(MinecraftClient.getInstance().getGameProfile());
     }
 
     public static FakeClientPlayerEntity getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new FakeClientPlayerEntity();
-        }
-        return INSTANCE;
-    }
-
-    public static void onInitialize() {
-        INSTANCE = new FakeClientPlayerEntity();
+        return new FakeClientPlayerEntity();
     }
 
     @Override

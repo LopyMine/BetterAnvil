@@ -45,9 +45,9 @@ public class WMob extends WRotatableWidget {
         }
 
         try {
-            applyScissor(context);
+            //applyScissor(context);
             renderPlayer(context, x, y, size, angleX, getRotation(tickDeltaX), entity);
-            disableScissor(context);
+            //disableScissor(context);
         } catch (Exception o) {
             if (this.hasException) {
                 return;

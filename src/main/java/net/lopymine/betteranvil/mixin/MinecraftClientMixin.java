@@ -26,8 +26,7 @@ public class MinecraftClientMixin {
     private void onInitFinished(CallbackInfoReturnable<Runnable> cir) {
         Thread thread = new Thread(() -> {
             FakeWorld.onInitialize();
-            FakeClientPlayerEntity.onInitialize();
-            BetterAnvil.LOGGER.info("FakeClientPlayNetworkHandler, FakeWorld,  FakeClientPlayerEntity Initialized");
+            BetterAnvil.LOGGER.info("FakeClientPlayNetworkHandler and FakeWorld Initialized");
         }, "FakeLoader");
         thread.start();
     }

@@ -36,9 +36,9 @@ public class WDroppedItem extends WRotatableWidget {
         }
 
         try {
-            applyScissor(context);
+            //applyScissor(context);
             this.renderItem(context.getMatrices(), x, y, size, bakedModel, angleX, tickDeltaX, tickDeltaY);
-            disableScissor(context);
+            //disableScissor(context);
         } catch (Exception o) {
             if (this.hasException) {
                 return;
