@@ -1,4 +1,4 @@
-[![Discord link to the Better Anvil discrod server](https://cdn.modrinth.com/data/cached_images/219842bdb5bbef9c2038ec2cc67a350a3fa092fd.png)](https://discord.gg/NZzxdkrV4s)
+[![Discord link to the "LopyMine's Project" discord server](https://cdn.modrinth.com/data/cached_images/21f178aff2b64844fefeaf94a3a3a418440fd43f.png)](https://discord.gg/NZzxdkrV4s)
 
 ### Description
 
